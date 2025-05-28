@@ -1,0 +1,105 @@
+{
+  "timestamp": "2025-05-28T16:54:35.320Z",
+  "totalTests": 19,
+  "passed": 19,
+  "failed": 0,
+  "successRate": 100,
+  "isProductionReady": true,
+  "tests": [
+    {
+      "name": "Backend Server",
+      "passed": true,
+      "details": "Running on port 5000"
+    },
+    {
+      "name": "Frontend Server",
+      "passed": true,
+      "details": "Running on port 3000"
+    },
+    {
+      "name": "MongoDB Connection",
+      "passed": true,
+      "details": "3 blogs in database"
+    },
+    {
+      "name": "Admin Login",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Token Validation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Admin Role Access",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Get Products",
+      "passed": true,
+      "details": "Found 3 products"
+    },
+    {
+      "name": "Get Single Product",
+      "passed": true,
+      "details": "Test Olive Oil"
+    },
+    {
+      "name": "Get Blogs",
+      "passed": true,
+      "details": "Found 3 blogs"
+    },
+    {
+      "name": "Get Single Blog",
+      "passed": true,
+      "details": "Zeytinyağının Sağlığa Faydaları"
+    },
+    {
+      "name": "Get User Orders",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Create Order",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Get Created Order",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Track Order",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Admin - Get All Users",
+      "passed": true,
+      "details": "Found 5 users"
+    },
+    {
+      "name": "Admin - Get All Orders",
+      "passed": true,
+      "details": "Found 2 orders"
+    },
+    {
+      "name": "Invalid Login Handling",
+      "passed": true,
+      "details": "Should return 401 for invalid credentials"
+    },
+    {
+      "name": "Protected Route Without Token",
+      "passed": true,
+      "details": "Should return 401 for missing auth"
+    },
+    {
+      "name": "Invalid Product ID Handling",
+      "passed": true,
+      "details": "Should handle invalid MongoDB ObjectId gracefully"
+    }
+  ]
+}
