@@ -1,8 +1,12 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import Header from '../../components/Header';
+import { blogAPI } from '../../utils/api';
 
 interface Blog {
   _id: string;
@@ -19,26 +23,14 @@ export default function BlogDetail() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchBlog = async () => {
       if (!id) return;
       
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/blogs/${id}`);
-        
-        if (!response.ok) {
-          throw new Error('Blog bulunamadı');
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          setBlog(data.blog);
-        } else {
-          throw new Error(data.message || 'Blog yüklenemedi');
-        }
+        const data = await blogAPI.getById(id as string);
+        setBlog(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Bir hata oluştu');
       } finally {
@@ -98,13 +90,12 @@ export default function BlogDetail() {
           <div className="flex items-center text-sm text-gray-500 mb-8">
             <span className="mr-4">Yazar: {blog.author}</span>
             <span>{formatDate(blog.date)}</span>
-          </div>
-
-          <div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
-            <img
+          </div>          <div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
+            <Image
               src={blog.image}
               alt={blog.title}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
           </div>
 

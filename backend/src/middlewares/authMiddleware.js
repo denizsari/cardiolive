@@ -1,67 +1,94 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
-exports.protect = async (req, res, next) => {
+// JWT token doğrulama middleware
+const protect = async (req, res, next) => {
   try {
-    console.log('=== AUTH MIDDLEWARE CALLED ===');
     let token;
 
+    // Token'ı header'dan al
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
-      console.log('Token found:', token ? token.substring(0, 20) + '...' : 'None');
     }
 
+    // Token kontrolü
     if (!token) {
-      console.log('No token provided');
       return res.status(401).json({
         success: false,
-        message: 'Bu işlem için giriş yapmanız gerekmektedir'
+        message: 'Bu işlem için giriş yapmanız gerekiyor'
       });
+    }    // Token doğrulama
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (jwtError) {
+      console.error('JWT verification error:', jwtError.message);
+      if (jwtError.name === 'JsonWebTokenError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Geçersiz token formatı'
+        });
+      } else if (jwtError.name === 'TokenExpiredError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Token süresi dolmuş'
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          message: 'Token doğrulama hatası'
+        });
+      }
     }
 
-    console.log('Attempting to verify token...');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Token decoded successfully:', decoded);
-
+    // Kullanıcı kontrolü
     const user = await User.findById(decoded.id);
-    console.log('User found:', user ? user.email : 'No user');
-
     if (!user) {
-      console.log('User not found in database');
       return res.status(401).json({
         success: false,
-        message: 'Kullanıcı bulunamadı'
+        message: 'Geçersiz token'
       });
     }
 
-    // Set consistent user object
+    // User objesini req'e ekle - hem id hem userId ile uyumluluk için
     req.user = {
       id: user._id,
-      userId: user._id, // Keep for backward compatibility
+      userId: user._id,
       name: user.name,
       email: user.email,
       role: user.role
     };
 
-    console.log('Authentication successful, calling next()');
     next();
   } catch (error) {
-    console.log('Auth middleware error:', error.message);
-    res.status(401).json({
+    console.error('Auth middleware error:', error);
+    return res.status(401).json({
       success: false,
-      message: 'Yetkilendirme hatası'
+      message: 'Geçersiz token'
     });
   }
 };
 
-exports.authorize = (...roles) => {
+// Yetkilendirme middleware
+const authorize = (...roles) => {
   return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Giriş yapmanız gerekiyor'
+      });
+    }
+
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: 'Bu işlem için yetkiniz bulunmamaktadır'
+        message: 'Bu işlem için yetkiniz yok'
       });
     }
+
     next();
   };
 };
+
+exports.protect = protect;
+exports.authorize = authorize;

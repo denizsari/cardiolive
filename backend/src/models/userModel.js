@@ -37,24 +37,43 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  tokenVersion: {
+    type: Number,
+    default: 1
+  },
+  passwordResetToken: {
+    type: String,
+    select: false
+  },
+  passwordResetExpiry: {
+    type: Date,
+    select: false
+  },
+  lastLogin: {
+    type: Date
+  },
   createdAt: {
     type: Date,
     default: Date.now
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date
-});
-
-// Şifreyi hashleme
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+}, {
+  timestamps: true
 });
 
-// Şifre karşılaştırma metodu
+// Remove automatic password hashing since we handle it in controller
+// userSchema.pre('save', async function(next) {
+//   if (!this.isModified('password')) {
+//     next();
+//   }
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+// });
+
+// Şifre karşılaştırma metodu (keep for backward compatibility)
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

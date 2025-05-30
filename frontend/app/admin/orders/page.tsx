@@ -1,7 +1,11 @@
 'use client';
 
+// Force dynamic rendering to avoid prerender issues
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
-import { Eye, Package, Clock, CheckCircle, XCircle, Truck } from 'lucide-react';
+import Image from 'next/image';
+import { Eye, Package } from 'lucide-react';
 
 interface Order {
   _id: string;
@@ -18,7 +22,7 @@ interface Order {
     quantity: number;
     price: number;
   }>;
-  totalAmount: number;
+  total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   createdAt: string;
   shippingAddress: {
@@ -42,7 +46,7 @@ export default function AdminOrders() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/admin/all`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/admin`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -70,13 +74,11 @@ export default function AdminOrders() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (response.ok) {
+      });      if (response.ok) {
         // Update local state
         setOrders(orders.map(order => 
           order._id === orderId 
-            ? { ...order, status: newStatus as any }
+            ? { ...order, status: newStatus as Order['status'] }
             : order
         ));
         alert('Sipariş durumu güncellendi');
@@ -86,19 +88,7 @@ export default function AdminOrders() {
     } catch (error) {
       console.error('Error updating order status:', error);
       alert('Sipariş durumu güncellenirken hata oluştu');
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending': return <Clock className="w-4 h-4" />;
-      case 'processing': return <Package className="w-4 h-4" />;
-      case 'shipped': return <Truck className="w-4 h-4" />;
-      case 'delivered': return <CheckCircle className="w-4 h-4" />;
-      case 'cancelled': return <XCircle className="w-4 h-4" />;
-      default: return <Clock className="w-4 h-4" />;
-    }
-  };
+    }  };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -225,10 +215,9 @@ export default function AdminOrders() {
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   İşlemler
                 </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => (
+              </tr>            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">{
+              filteredOrders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
@@ -244,14 +233,16 @@ export default function AdminOrders() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex flex-col space-y-1">
-                      {order.items.slice(0, 2).map((item, index) => (
+                    <div className="flex flex-col space-y-1">                      {order.items.slice(0, 2).map((item, index) => (
                         <div key={index} className="flex items-center space-x-2">
-                          <img
-                            src={item.product.image || '/products/default.jpg'}
-                            alt={item.product.name}
-                            className="w-8 h-8 object-cover rounded"
-                          />
+                          <div className="relative w-8 h-8 rounded overflow-hidden">
+                            <Image
+                              src={item.product.image || '/products/default.jpg'}
+                              alt={item.product.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                           <span className="text-sm text-gray-900">
                             {item.product.name} (x{item.quantity})
                           </span>
@@ -265,7 +256,7 @@ export default function AdminOrders() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {formatPrice(order.totalAmount)}
+                    {formatPrice(order.total)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <select
@@ -295,9 +286,8 @@ export default function AdminOrders() {
                       <Eye size={16} />
                     </button>
                   </td>
-                </tr>
-              ))}
-            </tbody>
+                </tr>              ))
+            }</tbody>
           </table>
         </div>
 

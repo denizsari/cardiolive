@@ -1,18 +1,112 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getMe, getUserCount, getAllUsers, getAllUsersAdmin, updateUserRole, updateUserStatus, deleteUser } = require('../controllers/userController');
-const { protect, authorize } = require('../middlewares/authMiddleware');
+const { 
+  register, 
+  login, 
+  getMe, 
+  updateProfile, 
+  getUserCount, 
+  getAllUsers, 
+  getAllUsersAdmin, 
+  updateUserRole, 
+  updateUserStatus, 
+  deleteUser, 
+  changePassword,
+  forgotPassword,
+  resetPassword
+} = require('../controllers/userController');
+const { authenticateToken, authorizeRoles, refreshTokens, logout } = require('../middlewares/auth');
+const { userValidation, validateUser, validateUserQuery } = require('../validations/userValidation');
+const rateLimiter = require('../middlewares/rateLimiter');
 
-router.post('/register', register);
-router.post('/login', login);
-router.get('/me', protect, getMe);
+// Public routes with rate limiting
+router.post('/register', 
+  rateLimiter.authLimiter,
+  validateUser(userValidation.register), 
+  register
+);
+
+router.post('/login', 
+  rateLimiter.authLimiter,
+  validateUser(userValidation.login), 
+  login
+);
+
+router.post('/forgot-password', 
+  rateLimiter.passwordResetLimiter,
+  validateUser(userValidation.forgotPassword), 
+  forgotPassword
+);
+
+router.post('/reset-password', 
+  rateLimiter.passwordResetLimiter,
+  validateUser(userValidation.resetPassword), 
+  resetPassword
+);
+
+router.post('/refresh-token', 
+  rateLimiter.authLimiter,
+  refreshTokens
+);
+
+// Protected routes
+router.get('/me', authenticateToken, getMe);
+
+router.put('/profile', 
+  authenticateToken,
+  validateUser(userValidation.updateProfile), 
+  updateProfile
+);
+
+router.put('/change-password', 
+  authenticateToken,
+  validateUser(userValidation.changePassword), 
+  changePassword
+);
+
+router.post('/logout', 
+  authenticateToken, 
+  logout
+);
 
 // Admin routes
-router.get('/count', protect, authorize('admin'), getUserCount);
-router.get('/all', protect, authorize('admin'), getAllUsers);
-router.get('/admin/users', protect, authorize('admin'), getAllUsersAdmin);
-router.put('/admin/users/:userId/role', protect, authorize('admin'), updateUserRole);
-router.put('/admin/users/:userId/status', protect, authorize('admin'), updateUserStatus);
-router.delete('/admin/users/:userId', protect, authorize('admin'), deleteUser);
+router.get('/count', 
+  authenticateToken, 
+  authorizeRoles('admin'), 
+  getUserCount
+);
+
+router.get('/all', 
+  authenticateToken, 
+  authorizeRoles('admin'),
+  validateUserQuery,
+  getAllUsers
+);
+
+router.get('/admin/users', 
+  authenticateToken, 
+  authorizeRoles('admin'), 
+  getAllUsersAdmin
+);
+
+router.put('/admin/users/:userId/role', 
+  authenticateToken, 
+  authorizeRoles('admin'),
+  validateUser(userValidation.updateUserRole), 
+  updateUserRole
+);
+
+router.put('/admin/users/:userId/status', 
+  authenticateToken, 
+  authorizeRoles('admin'),
+  validateUser(userValidation.updateUserStatus), 
+  updateUserStatus
+);
+
+router.delete('/admin/users/:userId', 
+  authenticateToken, 
+  authorizeRoles('admin'), 
+  deleteUser
+);
 
 module.exports = router;

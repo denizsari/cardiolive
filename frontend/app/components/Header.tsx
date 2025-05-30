@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, User, LogOut, Package, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, User, LogOut, Package, ChevronDown, Heart } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 
 interface UserType {
@@ -20,6 +20,8 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -46,10 +48,19 @@ export default function Header() {
     router.push('/');
     router.refresh();
   };
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+      setIsSearchOpen(false);
+    }
+  };
 
   const closeMenus = () => {
     setIsMenuOpen(false);
     setIsUserMenuOpen(false);
+    setIsSearchOpen(false);
   };
 
   return (
@@ -79,14 +90,46 @@ export default function Header() {
             <Link href="/track-order" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
               Sipariş Takip
             </Link>
-          </nav>
-
-          {/* Sağ: Arama, Sepet ve Hesap */}
+          </nav>          {/* Sağ: Arama, Sepet ve Hesap */}
           <div className="flex items-center space-x-4">
-            <button aria-label="Search" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
-              <Search size={20} />
-            </button>
-              <Link href="/cart" aria-label="Cart" className="text-gray-700 hover:text-[#70BB1B] transition-colors relative">
+            {/* Search */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                aria-label="Search" 
+                className="text-gray-700 hover:text-[#70BB1B] transition-colors"
+              >
+                <Search size={20} />
+              </button>
+              
+              {/* Search Dropdown */}
+              {isSearchOpen && (
+                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border p-4 z-50">
+                  <form onSubmit={handleSearch} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Ürün ara..."
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-[#70BB1B] text-white rounded-lg hover:bg-[#5ea516] transition-colors"
+                    >
+                      Ara
+                    </button>
+                  </form>
+                </div>              )}
+            </div>
+            
+            {/* Wishlist Link */}
+            <Link href="/wishlist" aria-label="Wishlist" className="text-gray-700 hover:text-[#70BB1B] transition-colors relative">
+              <Heart size={20} />
+            </Link>
+            
+            <Link href="/cart" aria-label="Cart" className="text-gray-700 hover:text-[#70BB1B] transition-colors relative">
               <ShoppingCart size={20} />
               {getTotalItems() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#70BB1B] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">

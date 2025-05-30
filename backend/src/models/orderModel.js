@@ -73,16 +73,27 @@ const orderSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
     default: 'pending'
-  },
-  paymentMethod: {
+  },  paymentMethod: {
     type: String,
     enum: ['cash_on_delivery', 'credit_card', 'bank_transfer'],
     default: 'cash_on_delivery'
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'paid', 'failed'],
+    enum: ['pending', 'paid', 'failed', 'refunded'],
     default: 'pending'
+  },
+  paymentReference: {
+    type: String
+  },
+  paidAt: {
+    type: Date
+  },
+  paymentDetails: {
+    transactionId: String,
+    method: String,
+    amount: Number,
+    fees: Number
   },
   shippingAddress: shippingAddressSchema,
   trackingNumber: String,

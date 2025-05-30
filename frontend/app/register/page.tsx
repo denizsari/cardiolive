@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -252,9 +254,8 @@ export default function RegisterPage() {
                   </Link>
                   {' '}ve{' '}
                   <Link href="/privacy" className="text-[#70BB1B] hover:underline">
-                    Gizlilik Politikası
-                  </Link>
-                  'nı kabul ediyorum
+                    Gizlilik Politikası                </Link>
+                  &apos;nı kabul ediyorum
                 </label>
               </div>
 

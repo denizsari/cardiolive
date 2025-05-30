@@ -1,28 +1,58 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
-const { protect } = require('../middlewares/authMiddleware');
-
-// Admin middleware
-const adminAuth = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    return res.status(403).json({ message: 'Admin yetkilendirme gerekli' });
-  }
-};
+const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
+const { applyRateLimit } = require('../middlewares/rateLimiter');
+const { orderValidation, validateOrder, validateOrderQuery } = require('../validations/orderValidation');
 
 // Admin routes (must come before user routes to avoid conflicts)
-router.get('/admin', protect, adminAuth, orderController.getAllOrders);
-router.patch('/admin/:id/status', protect, adminAuth, orderController.updateOrderStatus);
+router.get('/admin', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  authorizeRoles('admin'), 
+  validateOrderQuery,
+  orderController.getAllOrders
+);
 
-// Public tracking route
-router.get('/track/:orderNumber', orderController.trackOrder);
+router.patch('/admin/:id/status', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  authorizeRoles('admin'), 
+  validateOrder(orderValidation.updateStatus),
+  orderController.updateOrderStatus
+);
+
+// Public tracking route (with rate limiting)
+router.get('/track/:orderNumber', 
+  applyRateLimit('tracking'),
+  orderController.trackOrder
+);
 
 // User routes (authentication required)
-router.post('/', protect, orderController.createOrder);
-router.get('/user', protect, orderController.getUserOrders);
-router.get('/:id', protect, orderController.getOrder);
-router.patch('/:id/cancel', protect, orderController.cancelOrder);
+router.post('/', 
+  applyRateLimit('orders'),
+  authenticateToken, 
+  validateOrder(orderValidation.create),
+  orderController.createOrder
+);
+
+router.get('/user', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  validateOrderQuery,
+  orderController.getUserOrders
+);
+
+router.get('/:id', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  orderController.getOrder
+);
+
+router.patch('/:id/cancel', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  orderController.cancelOrder
+);
 
 module.exports = router;

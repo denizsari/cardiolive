@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Plus, Edit, Trash2, Eye, Search } from 'lucide-react';
+
+// Force dynamic rendering to avoid prerender issues
+export const dynamic = 'force-dynamic';
 
 interface Product {
   _id: string;
@@ -32,10 +36,9 @@ export default function AdminProducts() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-      });
-
-      if (response.ok) {
+      });      if (response.ok) {
         const data = await response.json();
+        // Backend returns products directly for admin endpoint
         setProducts(data || []);
       }
     } catch (error) {
@@ -68,6 +71,23 @@ export default function AdminProducts() {
       console.error('Error deleting product:', error);
       alert('Ürün silinirken hata oluştu');
     }
+  };
+  const getImageSrc = (product: Product) => {
+    const image = product.images && product.images[0];
+    if (!image) return '/products/default.jpg';
+    
+    // If it's already an absolute URL, return as is
+    if (image.startsWith('http://') || image.startsWith('https://')) {
+      return image;
+    }
+    
+    // If it starts with '/', return as is
+    if (image.startsWith('/')) {
+      return image;
+    }
+    
+    // Otherwise, prepend with /products/
+    return `/products/${image}`;
   };
 
   const formatPrice = (price: number) => {
@@ -172,18 +192,18 @@ export default function AdminProducts() {
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   İşlemler
                 </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredProducts.map((product) => (
-                <tr key={product._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <img
-                        src={product.images[0] || '/products/default.jpg'}
-                        alt={product.name}
-                        className="w-12 h-12 object-cover rounded-lg"
-                      />
+              </tr>            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">{
+              filteredProducts.map((product) => (
+                <tr key={product._id} className="hover:bg-gray-50">                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">                      <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                        <Image
+                          src={getImageSrc(product)}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
                           {product.name}
@@ -245,9 +265,8 @@ export default function AdminProducts() {
                       </button>
                     </div>
                   </td>
-                </tr>
-              ))}
-            </tbody>
+                </tr>              ))
+            }</tbody>
           </table>
         </div>
 

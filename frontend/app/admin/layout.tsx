@@ -20,8 +20,15 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
+interface AdminUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();

@@ -1,37 +1,55 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
+import { blogAPI } from '../../utils/api';
 
-const blogPosts = [
-  {
-    id: 1,
-    title: 'Zeytinyağının Faydaları ve Cardiolive\'ın Kalite Standartları',
-    excerpt: 'Soğuk sıkım zeytinyağının sağlığa faydaları ve Cardiolive olarak kalite standartlarımız hakkında detaylı bilgi...',
-    image: '/blog/zeytinyagi-faydalari.jpg',
-    date: '15 Mayıs 2024',
-    slug: 'zeytinyagi-faydalari-kalite-standartlari'
-  },
-  {
-    id: 2,
-    title: 'Zeytinyağı İnsan Sağlığına Olan 5 Önemli Faydası',
-    excerpt: 'Zeytinyağının kalp sağlığından cilt bakımına kadar birçok alanda insan sağlığına olan etkileri...',
-    image: '/blog/saglikli-yasam.jpg',
-    date: '12 Mayıs 2024',
-    slug: 'zeytinyagi-saglik-faydalari'
-  },
-  {
-    id: 3,
-    title: 'Cardiolive\'ın Sürdürülebilir Tarım Politikası',
-    excerpt: 'Doğaya saygılı üretim yöntemlerimiz ve sürdürülebilir tarım uygulamalarımız hakkında bilgi...',
-    image: '/blog/surdurulebilir-tarim.jpg',
-    date: '10 Mayıs 2024',
-    slug: 'surdurulebilir-tarim-politikasi'
-  }
-];
+interface Blog {
+  _id: string;
+  title: string;
+  summary: string;
+  content: string;
+  image: string;
+  author: string;
+  date: string;
+}
 
 export default function BlogPreview() {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const data = await blogAPI.getAll();
+        // Get last 3 blog posts
+        setBlogs(data.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+  // Image URL helper
+  const getImageSrc = (blog: Blog) => {
+    if (blog.image.startsWith('http')) return blog.image;
+    if (blog.image.startsWith('/')) return blog.image;
+    return `/blog/${blog.image}`;
+  };
+
   return (
     <section className="py-16 bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,54 +61,71 @@ export default function BlogPreview() {
           <p className="text-gray-600 max-w-3xl mx-auto">
             Zeytinyağı kültürü, sağlıklı yaşam ve sürdürülebilir tarım hakkında bilgi edinmek için blog yazılarımızı keşfedin.
           </p>
-        </div>
-
-        {/* Blog Kartları */}
+        </div>        {/* Blog Kartları */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post) => (
-            <Link 
-              key={post.id} 
-              href={`/blog/${post.slug}`}
-              className="group"
-            >
-              <article className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                {/* Görsel */}
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className="object-cover transform group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-
-                {/* İçerik */}
+          {loading ? (
+            // Loading skeleton
+            [...Array(3)].map((_, index) => (
+              <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="relative aspect-[16/9] bg-gray-200 animate-pulse"></div>
                 <div className="p-6">
-                  {/* Tarih */}
-                  <div className="flex items-center text-sm text-gray-500 mb-3">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {post.date}
-                  </div>
-
-                  {/* Başlık */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#70BB1B] transition-colors line-clamp-2">
-                    {post.title}
-                  </h3>
-
-                  {/* Özet */}
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {post.excerpt}
-                  </p>
-
-                  {/* Devamını Oku */}
-                  <div className="flex items-center text-[#70BB1B] font-medium group-hover:underline">
-                    Devamını Oku
-                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                  </div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-3"></div>
+                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
                 </div>
-              </article>
-            </Link>
-          ))}
+              </div>
+            ))
+          ) : blogs.length > 0 ? (
+            blogs.map((blog) => (
+              <Link 
+                key={blog._id} 
+                href={`/blog/${blog._id}`}
+                className="group"
+              >
+                <article className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  {/* Görsel */}
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <Image
+                      src={getImageSrc(blog)}
+                      alt={blog.title}
+                      fill
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+
+                  {/* İçerik */}
+                  <div className="p-6">
+                    {/* Tarih */}
+                    <div className="flex items-center text-sm text-gray-500 mb-3">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {formatDate(blog.date)}
+                    </div>
+
+                    {/* Başlık */}
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#70BB1B] transition-colors line-clamp-2">
+                      {blog.title}
+                    </h3>
+
+                    {/* Özet */}
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {blog.summary}
+                    </p>
+
+                    {/* Devamını Oku */}
+                    <div className="flex items-center text-[#70BB1B] font-medium group-hover:underline">
+                      Devamını Oku
+                      <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </article>
+              </Link>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8 text-gray-500">
+              Henüz blog yazısı bulunmamaktadır.
+            </div>
+          )}
         </div>
 
         {/* Tüm Yazılar Butonu */}

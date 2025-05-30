@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+export const dynamic = 'force-dynamic';
+
+import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 
-export default function CartPage() {
-  const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
-  const [isLoading, setIsLoading] = useState(false);
+export default function CartPage() {  const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     updateQuantity(productId, newQuantity);
@@ -81,14 +82,16 @@ export default function CartPage() {
                   </button>
                 </div>
 
-                <div className="space-y-4">
-                  {items.map((item) => (
+                <div className="space-y-4">                  {items.map((item) => (
                     <div key={`${item._id}-${item.size}`} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
+                      <div className="relative w-20 h-20 rounded-lg overflow-hidden">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                       
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900">{item.name}</h3>

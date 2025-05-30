@@ -4,6 +4,8 @@ import "./globals.css";
 import { ReactNode } from "react";
 import Header from "@/components/Header";
 import { CartProvider } from "./contexts/CartContext";
+import ReactQueryProvider from "./providers/ReactQueryProvider";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,10 +34,34 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="tr" className={`${inter.variable} ${playfair.variable} ${abril.variable}`}>
       <body className={`${inter.variable} font-sans`}>
-        <CartProvider>
-          <Header />
-          <main>{children}</main>
-        </CartProvider>
+        <ReactQueryProvider>
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+            <Toaster 
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#fff',
+                  color: '#333',
+                },
+                success: {
+                  style: {
+                    background: '#10b981',
+                    color: '#fff',
+                  },
+                },
+                error: {
+                  style: {
+                    background: '#ef4444',
+                    color: '#fff',
+                  },
+                },
+              }}
+            />
+          </CartProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )

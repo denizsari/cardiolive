@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to avoid prerender issues
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { FiSave, FiMail, FiShield, FiDatabase, FiSettings } from 'react-icons/fi';
 

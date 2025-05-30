@@ -1,27 +1,71 @@
 const Product = require('../models/productModel');
+const ResponseHandler = require('../utils/responseHandler');
+const productValidation = require('../validations/productValidation');
+
+// Helper function to generate slug from name and size
+const generateSlug = (name, size) => {
+  const baseSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .trim('-'); // Remove leading/trailing hyphens
+  
+  const sizeSlug = size.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return `${baseSlug}-${sizeSlug}`;
+};
 
 // Ürün Oluşturma
 exports.createProduct = async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.status(201).json({
-      success: true,
-      product
+    // Validate request body
+    const { error, value } = productValidation.createProduct.validate(req.body);
+    if (error) {
+      const errors = error.details.map(detail => detail.message);
+      return ResponseHandler.validationError(res, errors);
+    }
+
+    // Generate slug if not provided
+    if (!value.slug) {
+      value.slug = generateSlug(value.name, value.size);
+    }
+
+    // Check if product with same name and size already exists
+    const existingProduct = await Product.findOne({
+      name: value.name,
+      size: value.size,
+      isActive: true
     });
+
+    if (existingProduct) {
+      return ResponseHandler.error(res, 'Bu isim ve boyutta bir ürün zaten mevcut', 409);
+    }
+
+    const product = await Product.create(value);
+    return ResponseHandler.success(res, { product }, 'Ürün başarıyla oluşturuldu', 201);
+    
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Ürün oluşturulamadı',
-      error: error.message
-    });
+    console.error('Product creation error:', error);
+    return ResponseHandler.error(res, 'Ürün oluşturulamadı', 500, error.message);
   }
 };
 
 // Tüm Ürünleri Getirme
 exports.getAllProducts = async (req, res) => {
   try {
-    const { category, size, minPrice, maxPrice, sort, search } = req.query;
+    // Validate query parameters
+    const { error, value } = productValidation.getProducts.validate(req.query);
+    if (error) {
+      const errors = error.details.map(detail => detail.message);
+      return ResponseHandler.validationError(res, errors);
+    }
+
+    const { category, size, minPrice, maxPrice, sort, search, featured, limit, page } = value;
     let query = { isActive: true };
+
+    // Öne çıkan ürünler filtresi
+    if (featured === 'true') {
+      query.featured = true;
+    }
 
     // Kategori filtresi
     if (category) {
@@ -36,8 +80,8 @@ exports.getAllProducts = async (req, res) => {
     // Fiyat filtresi
     if (minPrice || maxPrice) {
       query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+      if (minPrice) query.price.$gte = minPrice;
+      if (maxPrice) query.price.$lte = maxPrice;
     }
 
     // Arama filtresi
@@ -48,28 +92,26 @@ exports.getAllProducts = async (req, res) => {
       ];
     }
 
-    // Sıralama
-    let sortOption = {};
-    if (sort) {
-      const [field, order] = sort.split(':');
-      sortOption[field] = order === 'desc' ? -1 : 1;
-    } else {
-      sortOption = { createdAt: -1 };
-    }
+    // Calculate pagination
+    const skip = (page - 1) * limit;
+    const total = await Product.countDocuments(query);
 
-    const products = await Product.find(query).sort(sortOption);
+    // Execute query with pagination
+    const products = await Product.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
 
-    res.status(200).json({
-      success: true,
-      count: products.length,
-      products
-    });
+    // Return paginated response
+    return ResponseHandler.paginated(res, products, {
+      page,
+      limit,
+      total
+    }, 'Ürünler başarıyla getirildi');
+
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Ürünler getirilemedi',
-      error: error.message
-    });
+    console.error('Get products error:', error);
+    return ResponseHandler.error(res, 'Ürünler getirilemedi', 500, error.message);
   }
 };
 
@@ -77,6 +119,31 @@ exports.getAllProducts = async (req, res) => {
 exports.getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ürün bulunamadı'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      product
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Ürün getirilemedi',
+      error: error.message
+    });
+  }
+};
+
+// Slug ile Ürün Getirme
+exports.getProductBySlug = async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug, isActive: true });
     
     if (!product) {
       return res.status(404).json({

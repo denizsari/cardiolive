@@ -89,10 +89,8 @@ async function testServerHealth() {
       logTest('Frontend Server', true, `Running on port 3000`);
     } catch (error) {
       logTest('Frontend Server', false, 'Not responding on port 3000');
-    }
-    
-    // Test MongoDB connection
-    const blogsCount = backendResponse.data.length;
+    }    // Test MongoDB connection
+    const blogsCount = backendResponse.data?.data?.count || 0;
     logTest('MongoDB Connection', blogsCount > 0, `${blogsCount} blogs in database`);
     
     return true;
@@ -110,16 +108,20 @@ async function testAuthentication() {
     email: 'admin@cardiolive.com',
     password: 'admin123'
   };
-  
   const adminLoginResult = await makeRequest('POST', '/users/login', adminLoginData);
   logTest('Admin Login', adminLoginResult.success, adminLoginResult.error);
-  
   if (!adminLoginResult.success) {
     return { success: false, token: null, userId: null };
   }
+
+  // Extract token and user info from the correct response structure
+  const token = adminLoginResult.data.message.accessToken;
+  const userId = adminLoginResult.data.message.user.id;
   
-  const token = adminLoginResult.data.token;
-  const userId = adminLoginResult.data.user.id;
+  if (!userId || !token) {
+    logTest('User ID/Token Extraction', false, 'Could not extract user ID or token from response');
+    return { success: false, token: null, userId: null };
+  }
   
   // Test token validation
   const profileResult = await makeRequest('GET', '/users/me', null, token);
@@ -138,48 +140,43 @@ async function testAuthentication() {
 
 async function testProductSystem() {
   log('\n🛒 Testing Product System', 'blue');
-  
-  // Get all products
+    // Get all products
   const productsResult = await makeRequest('GET', '/products');
-  const productsWorking = productsResult.success && productsResult.data.products && productsResult.data.products.length > 0;
+  const productsWorking = productsResult.success && productsResult.data?.data && productsResult.data.data.length > 0;
   logTest('Get Products', productsWorking, 
-    productsWorking ? `Found ${productsResult.data.products.length} products` : productsResult.error);
+    productsWorking ? `Found ${productsResult.data.data.length} products` : productsResult.error);
   
   if (!productsWorking) {
     return { success: false, productId: null };
   }
   
-  const productId = productsResult.data.products[0]._id;
-  const productName = productsResult.data.products[0].name;
+  const productId = productsResult.data.data[0]._id;
+  const productName = productsResult.data.data[0].name;
   
   // Get single product
   const singleProductResult = await makeRequest('GET', `/products/${productId}`);
   logTest('Get Single Product', singleProductResult.success, 
     singleProductResult.success ? productName : singleProductResult.error);
-  
-  return { 
+    return { 
     success: productsWorking && singleProductResult.success, 
     productId,
     productName,
-    productPrice: productsResult.data.products[0].price
+    productPrice: productsResult.data.data[0].price
   };
 }
 
 async function testBlogSystem() {
-  log('\n📝 Testing Blog System', 'blue');
-  
-  // Get all blogs
+  log('\n📝 Testing Blog System', 'blue');    // Get all blogs
   const blogsResult = await makeRequest('GET', '/blogs');
-  const blogsWorking = blogsResult.success && blogsResult.data.length > 0;
+  const blogsWorking = blogsResult.success && blogsResult.data?.data?.blogs && blogsResult.data.data.blogs.length > 0;
   logTest('Get Blogs', blogsWorking, 
-    blogsWorking ? `Found ${blogsResult.data.length} blogs` : blogsResult.error);
+    blogsWorking ? `Found ${blogsResult.data.data.blogs.length} blogs` : blogsResult.error);
   
   if (!blogsWorking) {
     return false;
   }
-  
-  const blogId = blogsResult.data[0]._id;
-  const blogTitle = blogsResult.data[0].title;
+    const blogId = blogsResult.data.data.blogs[0]._id;
+  const blogTitle = blogsResult.data.data.blogs[0].title;
   
   // Get single blog
   const singleBlogResult = await makeRequest('GET', `/blogs/${blogId}`);
@@ -222,8 +219,7 @@ async function testOrderSystem(authData, productData) {
     paymentMethod: "credit_card",
     notes: "Test order for system validation"
   };
-  
-  const createOrderResult = await makeRequest('POST', '/orders', orderData, authData.token);
+    const createOrderResult = await makeRequest('POST', '/orders', orderData, authData.token);
   logTest('Create Order', createOrderResult.success, createOrderResult.error, true);
   
   if (!createOrderResult.success) {
@@ -231,8 +227,8 @@ async function testOrderSystem(authData, productData) {
     return false;
   }
   
-  const orderId = createOrderResult.data.order._id;
-  const orderNumber = createOrderResult.data.order.orderNumber;
+  const orderId = createOrderResult.data.data.order.id;
+  const orderNumber = createOrderResult.data.data.order.orderNumber;
   
   // Get the created order
   const getOrderResult = await makeRequest('GET', `/orders/${orderId}`, null, authData.token);
@@ -252,15 +248,14 @@ async function testAdminOperations(authData) {
     logTest('Admin Prerequisites', false, 'Admin auth not available');
     return false;
   }
-  
-  // Test admin endpoints
+    // Test admin endpoints
   const adminUsersResult = await makeRequest('GET', '/users/admin/users', null, authData.token);
   logTest('Admin - Get All Users', adminUsersResult.success, 
-    adminUsersResult.success ? `Found ${adminUsersResult.data.length} users` : adminUsersResult.error);
+    adminUsersResult.success ? `Found ${adminUsersResult.data?.message?.users?.length || 0} users` : adminUsersResult.error);
   
   const adminOrdersResult = await makeRequest('GET', '/orders/admin', null, authData.token);
   logTest('Admin - Get All Orders', adminOrdersResult.success, 
-    adminOrdersResult.success ? `Found ${adminOrdersResult.data.orders.length} orders` : adminOrdersResult.error);
+    adminOrdersResult.success ? `Found ${adminOrdersResult.data?.message?.orders?.length || 0} orders` : adminOrdersResult.error);
   
   return adminUsersResult.success && adminOrdersResult.success;
 }

@@ -1,27 +1,11 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { FiSearch, FiPackage, FiTruck, FiCheckCircle, FiClock } from 'react-icons/fi';
-
-interface OrderStatus {
-  status: string;
-  date: string;
-  description: string;
-}
-
-interface TrackingInfo {
-  orderId: string;
-  status: string;
-  estimatedDelivery: string;
-  trackingNumber: string;
-  shippingAddress: {
-    name: string;
-    address: string;
-    city: string;
-    postalCode: string;
-  };
-  statusHistory: OrderStatus[];
-}
+import { orderAPI } from '../utils/api';
+import { TrackingInfo } from '../types';
 
 export default function OrderTrackingPage() {
   const [orderId, setOrderId] = useState('');
@@ -34,30 +18,17 @@ export default function OrderTrackingPage() {
     if (!orderId.trim()) return;
 
     setLoading(true);
-    setError('');
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/track/${orderId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTrackingInfo(data);
-      } else {
-        setError('Order not found or invalid order ID');
-      }
-    } catch (error) {
-      setError('Error tracking order');
+    setError('');    try {
+      const trackingInfo = await orderAPI.track(orderId);
+      setTrackingInfo(trackingInfo);
+    } catch {
+      setError('Order not found or invalid order ID');
     } finally {
       setLoading(false);
     }
   };
-
   const getStatusIcon = (status: string) => {
+    if (!status) return <FiClock className="text-gray-500" />;
     switch (status.toLowerCase()) {
       case 'pending':
         return <FiClock className="text-yellow-500" />;
@@ -73,6 +44,7 @@ export default function OrderTrackingPage() {
   };
 
   const getStatusColor = (status: string) => {
+    if (!status) return 'bg-gray-100 text-gray-800';
     switch (status.toLowerCase()) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
@@ -143,7 +115,7 @@ export default function OrderTrackingPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Order #{trackingInfo.orderId}</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">Order #{trackingInfo.orderNumber}</h2>
                   <p className="text-gray-600">Tracking Number: {trackingInfo.trackingNumber}</p>
                 </div>
                 <div className="text-right">
@@ -156,11 +128,10 @@ export default function OrderTrackingPage() {
                 </div>
               </div>
 
-              {/* Shipping Address */}
-              <div className="border-t pt-4">
+              {/* Shipping Address */}              <div className="border-t pt-4">
                 <h3 className="font-medium text-gray-900 mb-2">Shipping Address</h3>
                 <div className="text-gray-600">
-                  <p>{trackingInfo.shippingAddress.name}</p>
+                  <p>{trackingInfo.shippingAddress.fullName}</p>
                   <p>{trackingInfo.shippingAddress.address}</p>
                   <p>{trackingInfo.shippingAddress.city}, {trackingInfo.shippingAddress.postalCode}</p>
                 </div>

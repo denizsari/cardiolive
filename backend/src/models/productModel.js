@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-  name: {
+const productSchema = new mongoose.Schema({  name: {
     type: String,
     required: [true, 'Ürün adı zorunludur'],
     trim: true
+  },  slug: {
+    type: String,
+    unique: true,
+    sparse: true  // Allow null/undefined values temporarily
   },
   description: {
     type: String,
@@ -40,10 +43,13 @@ const productSchema = new mongoose.Schema({
       values: ['250ml', '500ml', '1L', '2L', '5L'],
       message: 'Lütfen geçerli bir boyut seçin'
     }
-  },
-  isActive: {
+  },  isActive: {
     type: Boolean,
     default: true
+  },
+  featured: {
+    type: Boolean,
+    default: false
   },
   createdAt: {
     type: Date,

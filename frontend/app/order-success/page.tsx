@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { CheckCircle, Package, Phone, Mail } from 'lucide-react';
 
-export default function OrderSuccessPage() {
+export const dynamic = 'force-dynamic';
+
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber');
   const [showConfetti, setShowConfetti] = useState(true);
@@ -121,9 +123,17 @@ export default function OrderSuccessPage() {
               </Link>
             </div>
           </div>
-        </div>
-      </main>
+        </div>      </main>
       <Footer />
     </>
+  );
+}
+
+// Main component with Suspense wrapper
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }

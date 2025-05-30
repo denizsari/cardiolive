@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Minus, Plus, Heart } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import Header from '../../components/Header';
+import ReviewsSection from '../../components/ReviewsSection';
+import WishlistButton from '../../components/WishlistButton';
+import { useAuth } from '../../hooks/useAuth';
+import { useCart } from '../../contexts/CartContext';
 
 // Bu veriyi normalde API'den alacağız
 const product = {
@@ -29,10 +35,40 @@ const product = {
   ]
 };
 
-export default function ProductDetail({ params }: { params: { slug: string } }) {
+export default function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { isLoggedIn, token } = useAuth();
+  const { addItem } = useCart();
+  const [resolvedParams, setResolvedParams] = useState<{ slug: string } | null>(null);
+
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setResolvedParams(resolvedParams);
+    });
+  }, [params]);
+  useEffect(() => {
+    // Modern Next.js için params'ı handle et
+    const resolveParams = async () => {
+      const resolved = await Promise.resolve(params);
+      setResolvedParams(resolved);
+    };
+    resolveParams();
+  }, [params]);
+  const handleAddToCart = () => {
+    // Hard-coded product data'yı cart'a ekle
+    addItem({
+      _id: resolvedParams?.slug || 'default',
+      name: product.name,
+      price: Number(selectedSize.price),
+      image: product.images[0],
+      size: selectedSize.value
+    }, quantity);
+    
+    // User feedback için bir toast notification eklenebilir
+    alert(`${product.name} (${selectedSize.value}) sepete eklendi!`);
+  };
 
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -123,18 +159,27 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                   >
                     <Plus size={20} />
                   </button>
-                </div>
-                <button className="flex-1 bg-[#70BB1B] text-white py-3 px-8 rounded-full hover:bg-opacity-90 transition-colors">
+                </div>                <button 
+                  className="flex-1 bg-[#70BB1B] text-white py-3 px-8 rounded-full hover:bg-opacity-90 transition-colors"
+                  onClick={handleAddToCart}
+                >
                   Sepete Ekle
-                </button>
-                <button className="p-3 border-2 border-gray-300 rounded-full hover:border-[#70BB1B] hover:text-[#70BB1B] transition-colors">
-                  <Heart size={24} />
-                </button>
-              </div>
-            </div>
+                </button><WishlistButton 
+                  productId={resolvedParams?.slug || 'default'}
+                  className="p-3 border-2 border-gray-300 rounded-full hover:border-[#70BB1B] transition-colors"
+                  size={24}
+                />
+              </div>            </div>
           </div>
+        </div>
+
+        {/* Reviews Section */}        <div className="mt-16">          <ReviewsSection
+            productId={resolvedParams?.slug || 'default'} // Using slug as productId for now
+            isLoggedIn={isLoggedIn}
+            userToken={token || undefined}
+          />
         </div>
       </main>
     </div>
   );
-} 
+}

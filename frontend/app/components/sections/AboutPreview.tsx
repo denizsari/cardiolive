@@ -22,9 +22,8 @@ export default function AboutPreview() {
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-gray-900">
               Cardiolive ile Saf Zeytinin Hikayesi
-            </h2>
-            <p className="text-gray-600 leading-relaxed">
-              Cardiolive'ın hikayesi, doğanın ve geleneklerimizin kalbiyle başladığı. Doğanın bize sunduğu nimetleri özüyle, zeytinin asırlık bilgeliğiyle harmanlıyoruz. Her bir ürünümüz, el emeğiyle özenle işleniyor ve modern teknolojilerle buluşuyor. Sağlıklı yaşamın temelini oluşturan zeytinyağlarımız, sizlere doğanın en saf halini sunuyor. Şeffaflık, hijyen ve kalite bizim de değişmez ilkelerimiz. Her şey, saf ve doğal bir yaşam için...
+            </h2>            <p className="text-gray-600 leading-relaxed">
+              Cardiolive&apos;ın hikayesi, doğanın ve geleneklerimizin kalbiyle başladığı. Doğanın bize sunduğu nimetleri özüyle, zeytinin asırlık bilgeliğiyle harmanlıyoruz. Her bir ürünümüz, el emeğiyle özenle işleniyor ve modern teknolojilerle buluşuyor. Sağlıklı yaşamın temelini oluşturan zeytinyağlarımız, sizlere doğanın en saf halini sunuyor. Şeffaflık, hijyen ve kalite bizim de değişmez ilkelerimiz. Her şey, saf ve doğal bir yaşam için...
             </p>
             <Link 
               href="/about"

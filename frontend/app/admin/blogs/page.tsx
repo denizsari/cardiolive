@@ -1,15 +1,19 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
+import { blogAPI } from '@/utils/api';
 
 interface Blog {
   _id: string;
   title: string;
   content: string;
+  summary: string;
+  image: string;
   author: string;
-  createdAt: string;
-  updatedAt: string;
+  date: string;
 }
 
 export default function AdminBlogsPage() {
@@ -17,98 +21,69 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
-  const [formData, setFormData] = useState({
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);  const [formData, setFormData] = useState({
     title: '',
     content: '',
+    summary: '',
+    image: '',
     author: ''
   });
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
-  const fetchBlogs = async () => {
+  }, []);  const fetchBlogs = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs`);
-      if (response.ok) {
-        const data = await response.json();
-        setBlogs(data);
-      } else {
-        setError('Failed to fetch blogs');
-      }
-    } catch {
-      setError('Error fetching blogs');
+      const response = await blogAPI.getAll();
+      setBlogs(response);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Error fetching blogs');
     } finally {
       setLoading(false);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     
     try {
-      const url = editingBlog 
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${editingBlog._id}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/api/blogs`;
-      
-      const method = editingBlog ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });      if (response.ok) {
-        fetchBlogs();
-        setShowCreateForm(false);
-        setEditingBlog(null);
-        setFormData({ title: '', content: '', author: '' });
+      if (editingBlog) {
+        await blogAPI.update(editingBlog._id, formData);
       } else {
-        setError('Failed to save blog');
+        await blogAPI.create(formData);
       }
-    } catch {
-      setError('Error saving blog');
+      fetchBlogs();
+      setShowCreateForm(false);
+      setEditingBlog(null);
+      setFormData({ title: '', content: '', summary: '', image: '', author: '' });
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Error saving blog');
     }
   };
 
   const handleEdit = (blog: Blog) => {
-    setEditingBlog(blog);
-    setFormData({
+    setEditingBlog(blog);    setFormData({
       title: blog.title,
       content: blog.content,
+      summary: blog.summary,
+      image: blog.image,
       author: blog.author
     });
     setShowCreateForm(true);
   };
-
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
     
-    const token = localStorage.getItem('token');
-    
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });      if (response.ok) {
-        fetchBlogs();
-      } else {
-        setError('Failed to delete blog');
-      }
-    } catch {
-      setError('Error deleting blog');
+      await blogAPI.delete(id);
+      fetchBlogs();
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Error deleting blog');
     }
   };
 
   const handleCancel = () => {
     setShowCreateForm(false);
     setEditingBlog(null);
-    setFormData({ title: '', content: '', author: '' });
+    setFormData({ title: '', content: '', summary: '', image: '', author: '' });
   };
 
   if (loading) {
@@ -122,7 +97,7 @@ export default function AdminBlogsPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Blog Management</h1>
+        <h1 className="text-2xl font-bold text-green-900">Blog Management</h1>
         <button
           onClick={() => setShowCreateForm(true)}
           className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex items-center gap-2"
@@ -140,7 +115,7 @@ export default function AdminBlogsPage() {
       {/* Create/Edit Form */}
       {showCreateForm && (
         <div className="bg-white border rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">
             {editingBlog ? 'Edit Blog Post' : 'Create New Blog Post'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -152,11 +127,11 @@ export default function AdminBlogsPage() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                placeholder="Blog Post Title"
                 required
               />
-            </div>
-            <div>
+            </div>            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Author
               </label>
@@ -164,7 +139,33 @@ export default function AdminBlogsPage() {
                 type="text"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                placeholder="Author Name"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Summary
+              </label>
+              <textarea
+                value={formData.summary}
+                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                placeholder="Short summary of the blog post"
+                rows={3}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Image URL
+              </label>
+              <input
+                type="url"
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
                 required
               />
             </div>
@@ -176,7 +177,8 @@ export default function AdminBlogsPage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={10}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                placeholder="Write your blog content here..."
                 required
               />
             </div>
@@ -217,10 +219,9 @@ export default function AdminBlogsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {blogs.map((blog) => (
+              </tr>            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">{
+              blogs.map((blog) => (
                 <tr key={blog._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{blog.title}</div>
@@ -232,7 +233,7 @@ export default function AdminBlogsPage() {
                     {blog.author}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(blog.createdAt).toLocaleDateString()}
+                    {new Date(blog.date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
@@ -259,9 +260,8 @@ export default function AdminBlogsPage() {
                       </button>
                     </div>
                   </td>
-                </tr>
-              ))}
-            </tbody>
+                </tr>              ))
+            }</tbody>
           </table>
         </div>
         {blogs.length === 0 && (

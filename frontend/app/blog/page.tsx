@@ -1,8 +1,12 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '../components/Header';
+import { blogAPI } from '../utils/api';
 
 interface Blog {
   _id: string;
@@ -18,24 +22,12 @@ export default function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/blogs`);
-        
-        if (!response.ok) {
-          throw new Error('Bloglar yüklenemedi');
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          setBlogs(data.blogs);
-        } else {
-          throw new Error(data.message || 'Bloglar yüklenemedi');
-        }
+        const data = await blogAPI.getAll();
+        setBlogs(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Bir hata oluştu');
       } finally {
@@ -95,13 +87,13 @@ export default function BlogList() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map(blog => (
-              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <Link href={`/blog/${blog._id}`}>
+              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">                <Link href={`/blog/${blog._id}`}>
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <img
+                    <Image
                       src={blog.image}
                       alt={blog.title}
-                      className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
+                      fill
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 </Link>

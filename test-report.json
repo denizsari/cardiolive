@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-28T16:54:35.320Z",
+  "timestamp": "2025-05-30T13:33:20.635Z",
   "totalTests": 19,
   "passed": 19,
   "failed": 0,
@@ -39,12 +39,12 @@
     {
       "name": "Get Products",
       "passed": true,
-      "details": "Found 3 products"
+      "details": "Found 4 products"
     },
     {
       "name": "Get Single Product",
       "passed": true,
-      "details": "Test Olive Oil"
+      "details": "Cardiolive Sızma Zeytinyağı"
     },
     {
       "name": "Get Blogs",
@@ -79,12 +79,12 @@
     {
       "name": "Admin - Get All Users",
       "passed": true,
-      "details": "Found 5 users"
+      "details": "Found 6 users"
     },
     {
       "name": "Admin - Get All Orders",
       "passed": true,
-      "details": "Found 2 orders"
+      "details": "Found 36 orders"
     },
     {
       "name": "Invalid Login Handling",

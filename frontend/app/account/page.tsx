@@ -1,28 +1,35 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
-import { User, Mail, Phone, Calendar, Edit } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Edit, MapPin } from 'lucide-react';
+import { userAPI } from '../utils/api';
 
 interface UserData {
   _id: string;
   name: string;
   email: string;
-  phone?: string;
+  phoneNumber?: string;
+  address?: string;
   role: string;
   createdAt: string;
 }
 
 export default function AccountPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<UserData | null>(null);
+  const router = useRouter();  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phoneNumber: '',
+    address: ''
   });
 
   useEffect(() => {
@@ -30,16 +37,15 @@ export default function AccountPage() {
     if (!token) {
       router.push('/login');
       return;
-    }
-
-    const userData = localStorage.getItem('user');
+    }    const userData = localStorage.getItem('user');
     if (userData) {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
       setFormData({
         name: parsedUser.name,
         email: parsedUser.email,
-        phone: parsedUser.phone || ''
+        phoneNumber: parsedUser.phoneNumber || '',
+        address: parsedUser.address || ''
       });
     }
     setLoading(false);
@@ -55,12 +61,27 @@ export default function AccountPage() {
       [e.target.name]: e.target.value
     }));
   };
-
   const handleSave = async () => {
-    // Bu kısım daha sonra API entegrasyonu ile geliştirilecek
-    setUser(prev => prev ? { ...prev, ...formData } : null);
-    localStorage.setItem('user', JSON.stringify({ ...user, ...formData }));
-    setEditing(false);
+    setSaving(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await userAPI.updateProfile(formData);
+      
+      if (response.success) {
+        setUser(response.user);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setEditing(false);
+        setSuccess('Profil başarıyla güncellendi');
+      } else {
+        setError(response.message || 'Profil güncellenirken bir hata oluştu');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {
@@ -100,8 +121,19 @@ export default function AccountPage() {
             <h1 className="text-3xl font-bold text-gray-900">Hesabım</h1>
             <p className="text-gray-600 mt-2">
               Hesap bilgilerinizi görüntüleyin ve güncelleyin
-            </p>
-          </div>
+            </p>          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+              {success}
+            </div>
+          )}
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -161,20 +193,41 @@ export default function AccountPage() {
                   <dt className="text-sm font-medium text-gray-500 flex items-center">
                     <Phone className="h-4 w-4 mr-2" />
                     Telefon
-                  </dt>
-                  <dd className="mt-1">
+                  </dt>                  <dd className="mt-1">
                     {editing ? (
                       <input
                         type="tel"
-                        name="phone"
-                        value={formData.phone}
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleChange}
                         className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#70BB1B] focus:border-[#70BB1B]"
                         placeholder="Telefon numaranız"
                       />
                     ) : (
                       <span className="text-sm text-gray-900">
-                        {user.phone || 'Telefon numarası belirtilmemiş'}
+                        {user.phoneNumber || 'Telefon numarası belirtilmemiş'}
+                      </span>                    )}
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 flex items-center">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    Adres
+                  </dt>
+                  <dd className="mt-1">
+                    {editing ? (
+                      <textarea
+                        name="address"
+                        value={formData.address}
+                        onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                        rows={3}
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                        placeholder="Adresiniz"
+                      />
+                    ) : (
+                      <span className="text-sm text-gray-900">
+                        {user.address || 'Adres belirtilmemiş'}
                       </span>
                     )}
                   </dd>
@@ -198,12 +251,12 @@ export default function AccountPage() {
                     className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#70BB1B]"
                   >
                     İptal
-                  </button>
-                  <button
+                  </button>                  <button
                     onClick={handleSave}
-                    className="bg-[#70BB1B] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#70BB1B]"
+                    disabled={saving}
+                    className="bg-[#70BB1B] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#70BB1B] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Kaydet
+                    {saving ? 'Kaydediliyor...' : 'Kaydet'}
                   </button>
                 </div>
               )}

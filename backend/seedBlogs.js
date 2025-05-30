@@ -4,12 +4,15 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Blog = require('./src/models/blogModel');
+const User = require('./src/models/userModel');
 
-const sampleBlogs = [
-  {
-    title: 'Zeytinyağının Sağlığa Faydaları',
-    summary: 'Zeytinyağının kalp sağlığından cilt bakımına kadar birçok alanda insan sağlığına olan etkileri hakkında detaylı bilgiler.',
-    content: `Zeytinyağı, Akdeniz mutfağının vazgeçilmez bir parçası olarak bilinir. Ancak, zeytinyağının faydaları sadece lezzetiyle sınırlı değildir.
+async function createSampleBlogs(adminUserId) {
+  return [
+    {
+      title: 'Zeytinyağının Sağlığa Faydaları',
+      slug: 'zeytinyaginin-sagliga-faydalari',
+      excerpt: 'Zeytinyağının kalp sağlığından cilt bakımına kadar birçok alanda insan sağlığına olan etkileri hakkında detaylı bilgiler.',
+      content: `Zeytinyağı, Akdeniz mutfağının vazgeçilmez bir parçası olarak bilinir. Ancak, zeytinyağının faydaları sadece lezzetiyle sınırlı değildir.
 
 **Zeytinyağının Sağlığa Faydaları:**
 
@@ -25,14 +28,20 @@ const sampleBlogs = [
 - Saç bakımında güçlendirici maske olarak
 
 Cardiolive olarak, en kaliteli zeytinyağlarını sofralarınıza sunmanın gururunu yaşıyoruz.`,
-    image: '/blog/zeytinyagi-faydalari.jpg',
-    author: 'Dr. Ayşe Kardiyolog',
-    date: new Date()
-  },
-  {
-    title: 'Organik Tarımın Önemi ve Cardiolive Farkı',
-    summary: 'Organik tarımın çevre ve insan sağlığı üzerindeki etkileri ve Cardiolive\'ın sürdürülebilir üretim yaklaşımı.',
-    content: `Organik tarım, doğal dengeyi koruyarak üretim yapan, çevre dostu bir tarım yöntemidir.
+      category: 'Sağlık',
+      tags: ['zeytinyağı', 'sağlık', 'kalp', 'antioksidan'],
+      image: '/blog/zeytinyagi-faydalari.jpg',
+      author: adminUserId,
+      status: 'published',
+      featured: true,
+      publishedAt: new Date(),
+      createdAt: new Date()
+    },
+    {
+      title: 'Organik Tarımın Önemi ve Cardiolive Farkı',
+      slug: 'organik-tarimin-onemi-cardiolive-farki',
+      excerpt: 'Organik tarımın çevre ve insan sağlığı üzerindeki etkileri ve Cardiolive\'ın sürdürülebilir üretim yaklaşımı.',
+      content: `Organik tarım, doğal dengeyi koruyarak üretim yapan, çevre dostu bir tarım yöntemidir.
 
 **Organik Tarımın Faydaları:**
 
@@ -52,14 +61,20 @@ Zeytinlerimizi Ege'nin bereketli topraklarında, tamamen doğal yöntemlerle yet
 - Sürdürülebilir su yönetimi
 
 Bu sayede hem çevreyi koruyor hem de en saf zeytinyağlarını üretiyoruz.`,
-    image: '/blog/organik-tarim.jpg',
-    author: 'Ziraat Mühendisi Mehmet Öztürk',
-    date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 1 hafta önce
-  },
-  {
-    title: 'Soğuk Sıkım Zeytinyağı Nedir?',
-    summary: 'Soğuk sıkım yönteminin zeytinyağının kalitesi ve besin değeri üzerindeki etkilerini keşfedin.',
-    content: `Soğuk sıkım, zeytinyağı üretiminde kullanılan en kaliteli yöntemdir.
+      category: 'Üretim',
+      tags: ['organik', 'tarım', 'sürdürülebilirlik', 'çevre'],
+      image: '/blog/organik-tarim.jpg',
+      author: adminUserId,
+      status: 'published',
+      featured: false,
+      publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    },
+    {
+      title: 'Soğuk Sıkım Zeytinyağı Nedir?',
+      slug: 'soguk-sikim-zeytinyagi-nedir',
+      excerpt: 'Soğuk sıkım yönteminin zeytinyağının kalitesi ve besin değeri üzerindeki etkilerini keşfedin.',
+      content: `Soğuk sıkım, zeytinyağı üretiminde kullanılan en kaliteli yöntemdir.
 
 **Soğuk Sıkım Nedir?**
 
@@ -84,11 +99,17 @@ Geleneksel yöntemlerde yüksek sıcaklık kullanılırken, soğuk sıkımda sad
 6. Ayırma ve filtrasyon
 
 Bu özenli süreç sayesinde, zeytinyağımızın tüm doğal özellikleri korunur.`,
-    image: '/blog/soguk-sikim.jpg',
-    author: 'Gıda Mühendisi Fatma Demir',
-    date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 2 hafta önce
-  }
-];
+      category: 'Üretim',
+      tags: ['soğuk sıkım', 'kalite', 'üretim', 'zeytinyağı'],
+      image: '/blog/soguk-sikim.jpg',
+      author: adminUserId,
+      status: 'published',
+      featured: true,
+      publishedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+    }
+  ];
+}
 
 async function seedBlogs() {
   try {
@@ -96,9 +117,29 @@ async function seedBlogs() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB\'ye bağlandı');
 
+    // Find or create admin user
+    let adminUser = await User.findOne({ role: 'admin' });
+    if (!adminUser) {
+      console.log('Admin kullanıcı bulunamadı, yeni admin oluşturuluyor...');
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      
+      adminUser = await User.create({
+        name: 'Admin',
+        email: 'admin@cardiolive.com',
+        password: hashedPassword,
+        role: 'admin',
+        isVerified: true
+      });
+      console.log('Admin kullanıcı oluşturuldu');
+    }
+
     // Mevcut blogları temizle (isteğe bağlı)
     await Blog.deleteMany({});
     console.log('Mevcut bloglar temizlendi');
+
+    // Get sample blogs with admin user ID
+    const sampleBlogs = await createSampleBlogs(adminUser._id);
 
     // Yeni blogları ekle
     const blogs = await Blog.insertMany(sampleBlogs);

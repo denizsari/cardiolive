@@ -6,12 +6,15 @@ export interface User {
   email: string;
   role: 'user' | 'admin';
   isActive: boolean;
+  phoneNumber?: string;
+  address?: string;
   createdAt: string;
 }
 
 export interface Product {
   _id: string;
   name: string;
+  slug?: string;
   description: string;
   price: number;
   images: string[];
@@ -34,7 +37,7 @@ export interface CartItem {
 
 export interface Order {
   _id: string;
-  orderId: string;
+  orderNumber: string;
   user: string | User;
   items: OrderItem[];
   total: number;
@@ -126,4 +129,109 @@ export interface PaginatedResponse<T> {
     totalItems: number;
     limit: number;
   };
+}
+
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  enabled: boolean;
+  fees: number;
+}
+
+export interface PaymentDetails {
+  // Credit Card
+  cardNumber?: string;
+  expiryMonth?: number;
+  expiryYear?: number;
+  cvv?: string;
+  cardHolder?: string;
+  
+  // Bank Transfer
+  bankAccount?: string;
+  routingNumber?: string;
+  bankName?: string;
+  
+  // Common
+  billingAddress?: ShippingAddress;
+}
+
+export interface PaymentResult {
+  success: boolean;
+  reference?: string;
+  transactionId?: string;
+  amount?: number;
+  method?: string;
+  error?: string;
+}
+
+export interface TrackingInfo {
+  orderNumber: string;
+  status: string;
+  estimatedDelivery: string;
+  trackingNumber: string;
+  shippingAddress: {
+    fullName: string;
+    address: string;
+    city: string;
+    postalCode: string;
+  };
+  statusHistory: Array<{
+    status: string;
+    date: string;
+    description: string;
+  }>;
+}
+
+export interface OrderPayment {
+  method: string;
+  status: 'pending' | 'paid' | 'failed' | 'refunded';
+  reference?: string;
+  paidAt?: string;
+  amount: number;
+  fees?: number;
+}
+
+export interface Review {
+  _id: string;
+  product: string;
+  user: { _id: string; name: string; email?: string };
+  rating: number;
+  title?: string;
+  comment: string;
+  isActive: boolean;
+  helpfulCount: number;
+  createdAt: string;
+  isVerifiedPurchase?: boolean;
+  helpfulVotes?: {
+    helpful: number;
+    notHelpful: number;
+  };
+  userHasVoted?: 'helpful' | 'not_helpful' | null;
+}
+
+export interface ReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  ratingDistribution: { [key: number]: number };
+}
+
+export interface WishlistItem {
+  _id: string;
+  product: Product;
+  addedAt: string;
+}
+
+export interface CreateReviewData {
+  productId: string;
+  rating: number;
+  comment: string;
+  title?: string;
+}
+
+export interface UpdateReviewData {
+  rating?: number;
+  comment?: string;
+  title?: string;
 }

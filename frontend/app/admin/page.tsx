@@ -1,22 +1,24 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { 
   Users, 
   Package, 
   ShoppingCart, 
-  TrendingUp, 
   DollarSign,
-  Calendar,
   Eye
 } from 'lucide-react';
+import { productAPI, orderAPI } from '../utils/api';
+import { Order } from '../types';
 
 interface DashboardStats {
   totalUsers: number;
   totalProducts: number;
   totalOrders: number;
   totalRevenue: number;
-  recentOrders: any[];
+  recentOrders: Order[];
 }
 
 export default function AdminDashboard() {
@@ -32,34 +34,27 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
-
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
       
-      // Fetch basic stats (we'll create these endpoints)
-      const [usersRes, productsRes, ordersRes] = await Promise.all([
+      // Fetch basic stats using centralized API
+      const [users, products, orders] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/count`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/admin`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        productAPI.getAll(),
+        orderAPI.getAll()
       ]);
 
-      const usersData = await usersRes.json();
-      const productsData = await productsRes.json();
-      const ordersData = await ordersRes.json();
-
+      const usersData = await users.json();
+      
       setStats({
         totalUsers: usersData.count || 0,
-        totalProducts: productsData.products?.length || 0,
-        totalOrders: ordersData.orders?.length || 0,
-        totalRevenue: ordersData.orders?.reduce((sum: number, order: any) => sum + order.totalAmount, 0) || 0,
-        recentOrders: ordersData.orders?.slice(0, 5) || []
+        totalProducts: products.length,
+        totalOrders: orders.length,
+        totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
+        recentOrders: orders.slice(0, 5)
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -209,31 +204,29 @@ export default function AdminDashboard() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Durum
                 </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {stats.recentOrders.map((order) => (
+              </tr>            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">{
+              stats.recentOrders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     #{order.orderNumber}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.user?.name || 'N/A'}
+                    {typeof order.user === 'object' ? order.user.name : 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatDate(order.createdAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {formatPrice(order.totalAmount)}
+                    {formatPrice(order.total)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                  </td>                </tr>
+              ))
+            }</tbody>
           </table>
           
           {stats.recentOrders.length === 0 && (

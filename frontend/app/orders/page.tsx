@@ -1,9 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+
+// Force dynamic rendering to avoid prerender issues
+export const dynamic = 'force-dynamic';
 
 interface OrderItem {
   _id: string;
@@ -45,9 +50,7 @@ export default function OrdersPage() {
         setError('Lütfen giriş yapın');
         setLoading(false);
         return;
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
+      }      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -56,11 +59,10 @@ export default function OrdersPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setOrders(data);
+        setOrders(data.orders || data);
       } else {
         setError('Siparişler yüklenirken hata oluştu');
-      }
-    } catch (error) {
+      }    } catch {
       setError('Siparişler yüklenirken hata oluştu');
     } finally {
       setLoading(false);
@@ -175,13 +177,12 @@ export default function OrdersPage() {
               </h2>
               <p className="text-gray-600 mb-8">
                 İlk siparişinizi vermek için mağazamızı ziyaret edin.
-              </p>
-              <a
+              </p>              <Link
                 href="/products"
                 className="inline-flex items-center px-6 py-3 bg-[#70BB1B] text-white font-medium rounded-lg hover:bg-[#5ea516] transition-colors"
               >
                 Alışverişe Başla
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="space-y-6">
@@ -206,14 +207,16 @@ export default function OrdersPage() {
                     {/* Order Items */}
                     <div>
                       <h4 className="font-medium text-gray-900 mb-3">Ürünler</h4>
-                      <div className="space-y-3">
-                        {order.items.map((item) => (
+                      <div className="space-y-3">                        {order.items.map((item) => (
                           <div key={item._id} className="flex items-center gap-3">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-12 h-12 object-cover rounded"
-                            />
+                            <div className="relative w-12 h-12 rounded overflow-hidden">
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                             <div className="flex-1">
                               <h5 className="text-sm font-medium text-gray-900">
                                 {item.name}
