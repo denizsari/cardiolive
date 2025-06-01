@@ -77,6 +77,10 @@ interface CreateBlogData {
   image: string;
 }
 
+interface Settings {
+  [key: string]: unknown;
+}
+
 interface UpdateProfileData {
   name?: string;
   email?: string;
@@ -183,14 +187,33 @@ export const authAPI = {
   
   forgotPassword: (email: string) =>
     apiClient.post<APIResponse<string>>('/api/users/forgot-password', { email }),
+  
+  // CRITICAL MISSING ENDPOINTS - IMPLEMENTING NOW
+  resetPassword: (token: string, newPassword: string) =>
+    apiClient.post<APIResponse<string>>('/api/users/reset-password', { token, newPassword }),
+  
+  refreshToken: () =>
+    apiClient.post<AuthResponse>('/api/users/refresh-token'),
+  
+  logout: () =>
+    apiClient.post<APIResponse<string>>('/api/users/logout'),
 };
 
 // Product API functions with improved response handling
 export const productAPI = {
+  // Base product endpoints - CRITICAL MISSING
   getAll: async (): Promise<Product[]> => {
     return safeCollectionCall<Product>(
       () => apiClient.get<{ success: boolean; data: { products: Product[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } } }>('/api/products'),
       'Failed to fetch products'
+    );
+  },
+  
+  // Admin product endpoints - CRITICAL MISSING  
+  getAllAdmin: async (): Promise<Product[]> => {
+    return safeCollectionCall<Product>(
+      () => apiClient.get<{ success: boolean; data: { products: Product[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } } }>('/api/products/admin/all'),
+      'Failed to fetch admin products'
     );
   },
   
@@ -209,6 +232,12 @@ export const productAPI = {
   },
   
   create: (data: CreateProductData) => apiClient.post<Product>('/api/products', data),
+  
+  // Admin-specific product management - CRITICAL MISSING
+  createAdmin: (data: CreateProductData) => apiClient.post<Product>('/api/products/admin', data),
+  updateAdmin: (id: string, data: Partial<CreateProductData>) => apiClient.put<Product>(`/api/products/admin/${id}`, data),
+  deleteAdmin: (id: string) => apiClient.delete<APIResponse<string>>(`/api/products/admin/${id}`),
+  
   update: (id: string, data: Partial<CreateProductData>) => apiClient.put<Product>(`/api/products/${id}`, data),
   delete: (id: string) => apiClient.delete<APIResponse<string>>(`/api/products/${id}`),
 };
@@ -217,9 +246,10 @@ export const productAPI = {
 export const orderAPI = {
   create: (data: CreateOrderData) => apiClient.post<Order>('/api/orders', data),
   
+  // FIXED: Updated to match backend endpoint (/api/orders/user instead of /api/orders)
   getMyOrders: async (): Promise<Order[]> => {
     return safeCollectionCall<Order>(
-      () => apiClient.get<{ success: boolean; data: Order[] }>('/api/orders'),
+      () => apiClient.get<{ success: boolean; data: Order[] }>('/api/orders/user'),
       'Failed to fetch user orders'
     );
   },
@@ -246,15 +276,17 @@ export const orderAPI = {
       () => apiClient.get<{ success: boolean; data: Order[] }>('/api/orders/admin'),
       'Failed to fetch all orders'
     );
-  },updateStatus: (id: string, status: string) => 
+  },
+    updateStatus: (id: string, status: string) => 
     apiClient.patch<Order>(`/api/orders/admin/${id}/status`, { status }),
+  
   // Payment update method for checkout process
   updatePayment: (orderId: string, paymentData: {
     paymentMethod: string;
     paymentStatus: string;
     paymentReference?: string;
     paidAt: string;
-  }) => apiClient.patch<Order>(`/api/orders/${orderId}/payment`, paymentData),
+  }) => apiClient.patch<Order>(`/api/orders/${orderId}/payment`, paymentData)
 };
 
 // Blog API functions with improved response handling
@@ -264,7 +296,25 @@ export const blogAPI = {
       () => apiClient.get<{ success: boolean; data: { blogs: BlogPost[]; pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNext: boolean; hasPrev: boolean }; count: number } }>('/api/blogs'),
       'Failed to fetch blogs'
     );
-  },    getById: async (id: string): Promise<BlogPost> => {
+  },
+  
+  // CRITICAL MISSING: Featured blogs for homepage
+  getFeatured: async (): Promise<BlogPost[]> => {
+    return safeCollectionCall<BlogPost>(
+      () => apiClient.get<{ success: boolean; data: BlogPost[] }>('/api/blogs/featured'),
+      'Failed to fetch featured blogs'
+    );
+  },
+  
+  // CRITICAL MISSING: Blog categories for navigation
+  getCategories: async (): Promise<string[]> => {
+    return safeCollectionCall<string>(
+      () => apiClient.get<{ success: boolean; data: string[] }>('/api/blogs/categories'),
+      'Failed to fetch blog categories'
+    );
+  },
+  
+  getById: async (id: string): Promise<BlogPost> => {
     try {
       const response = await apiClient.get<{ success: boolean; data: { blog: BlogPost } }>(`/api/blogs/${id}`);
       if (response.success && response.data && response.data.blog) {
@@ -283,6 +333,15 @@ export const blogAPI = {
       'Failed to fetch blog post by slug'
     );
   },
+  
+  // CRITICAL MISSING: Related blogs for blog detail page
+  getRelated: async (id: string): Promise<BlogPost[]> => {
+    return safeCollectionCall<BlogPost>(
+      () => apiClient.get<{ success: boolean; data: BlogPost[] }>(`/api/blogs/${id}/related`),
+      'Failed to fetch related blogs'
+    );
+  },
+  
   create: (data: CreateBlogData) => apiClient.post<BlogPost>('/api/blogs', data),
   update: (id: string, data: Partial<CreateBlogData>) => apiClient.put<BlogPost>(`/api/blogs/${id}`, data),
   delete: (id: string) => apiClient.delete<APIResponse<string>>(`/api/blogs/${id}`),
@@ -290,9 +349,10 @@ export const blogAPI = {
 
 // User API functions with improved response handling
 export const userAPI = {
+  // FIXED: Updated to match backend endpoint (/api/users/me instead of /api/users/profile)
   getProfile: async (): Promise<User> => {
     return safeApiCall<User>(
-      () => apiClient.get<{ success: boolean; data: User }>('/api/users/profile'),
+      () => apiClient.get<{ success: boolean; data: User }>('/api/users/me'),
       'Failed to fetch user profile'
     );
   },
@@ -304,14 +364,26 @@ export const userAPI = {
   // Admin functions
   getAllUsers: async (): Promise<User[]> => {
     return safeCollectionCall<User>(
-      () => apiClient.get<{ success: boolean; data: User[] }>('/api/users/admin/all'),
+      () => apiClient.get<{ success: boolean; data: User[] }>('/api/users/all'),
       'Failed to fetch all users'
     );
   },
+    // CRITICAL MISSING: Admin users endpoint for proper admin panel
+  getAllUsersAdmin: async (): Promise<User[]> => {
+    return safeCollectionCall<User>(
+      () => apiClient.get<{ success: boolean; data: User[] }>('/api/users/admin/users'),
+      'Failed to fetch admin users list'
+    );
+  },
+  
   updateUserRole: (userId: string, role: string) => 
     apiClient.put<User>(`/api/users/admin/users/${userId}/role`, { role }),
   updateUserStatus: (userId: string, isActive: boolean) => 
-    apiClient.put<User>(`/api/users/admin/users/${userId}/status`, { isActive }),  deleteUser: (userId: string) => apiClient.delete<APIResponse<string>>(`/api/users/admin/users/${userId}`),  // Get user count for admin dashboard
+    apiClient.put<User>(`/api/users/admin/users/${userId}/status`, { isActive }),
+  deleteUser: (userId: string) => 
+    apiClient.delete<APIResponse<string>>(`/api/users/admin/users/${userId}`),
+  
+  // Get user count for admin dashboard
   getUserCount: async (): Promise<number> => {
     return safeCountCall(
       () => apiClient.get<{ success: boolean; data: { count: number } }>('/api/users/count')
@@ -338,6 +410,15 @@ export const reviewAPI = {
     const response = await apiClient.get<{ success: boolean; data: ReviewStats }>(`/api/reviews/stats/${productId}`);
     return response.data;
   },
+  
+  // CRITICAL MISSING: User reviews history
+  getUserReviews: async (): Promise<Review[]> => {
+    return safeCollectionCall<Review>(
+      () => apiClient.get<{ success: boolean; data: Review[] }>('/api/reviews/user'),
+      'Failed to fetch user reviews'
+    );
+  },
+  
   createReview: (data: CreateReviewData) => 
     apiClient.post<Review>('/api/reviews', data),
   updateReview: (reviewId: string, data: UpdateReviewData) => 
@@ -346,7 +427,14 @@ export const reviewAPI = {
     apiClient.delete<APIResponse<string>>(`/api/reviews/${reviewId}`),
   markHelpful: (reviewId: string) => 
     apiClient.patch<Review>(`/api/reviews/${reviewId}/helpful`, {}),
-  // Admin functions
+  
+  // Admin functions - CRITICAL MISSING: Admin review management
+  getAllReviews: async (): Promise<Review[]> => {
+    return safeCollectionCall<Review>(
+      () => apiClient.get<{ success: boolean; data: Review[] }>('/api/reviews/admin/all'),
+      'Failed to fetch all reviews'
+    );
+  },
   deleteReviewAdmin: (reviewId: string) => 
     apiClient.delete<APIResponse<string>>(`/api/reviews/admin/${reviewId}`),
   updateReviewStatus: (reviewId: string, status: string) => 
@@ -362,7 +450,8 @@ export const wishlistAPI = {
   getWishlistCount: async () => {
     const response = await apiClient.get<{ success: boolean; data: { count: number } }>('/api/wishlist/count');
     return response.data.count;
-  },  checkWishlistStatus: async (productId: string) => {
+  },
+  checkWishlistStatus: async (productId: string) => {
     const response = await apiClient.get<{ success: boolean; data: { inWishlist: boolean; addedAt: string | null } }>(`/api/wishlist/check/${productId}`);
     return response.data;
   },
@@ -378,4 +467,35 @@ export const wishlistAPI = {
     apiClient.post<{ message: string }>('/api/wishlist/bulk-remove', { productIds }),
   updateNotes: (productId: string, notes: string) => 
     apiClient.patch<{ message: string }>(`/api/wishlist/${productId}/notes`, { notes }),
+};
+
+// Settings API functions - CRITICAL MISSING
+export const settingsAPI = {
+  getPublicSettings: async () => {
+    return safeApiCall<Settings>(
+      () => apiClient.get<{ success: boolean; data: Settings }>('/api/settings/public'),
+      'Failed to fetch public settings'
+    );
+  },
+  
+  // Admin settings management
+  getAllSettings: async () => {
+    return safeApiCall<Settings>(
+      () => apiClient.get<{ success: boolean; data: Settings }>('/api/settings'),
+      'Failed to fetch admin settings'
+    );
+  },
+  
+  getSettingsByCategory: async (category: string) => {
+    return safeApiCall<Settings>(
+      () => apiClient.get<{ success: boolean; data: Settings }>(`/api/settings/category?category=${category}`),
+      'Failed to fetch settings by category'
+    );
+  },
+  
+  updateSettings: (settings: Settings) => 
+    apiClient.put<APIResponse<string>>('/api/settings', settings),
+    
+  resetSettings: () => 
+    apiClient.post<APIResponse<string>>('/api/settings/reset'),
 };

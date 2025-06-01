@@ -209,20 +209,20 @@ exports.getAllUsers = async (req, res) => {
       sortOrder: order
     };
 
-    const result = await UserService.getUsers(filters, options);
-
-    logger.logBusinessEvent('admin_users_list_viewed', { 
+    const result = await UserService.getUsers(filters, options);    logger.logBusinessEvent('admin_users_list_viewed', { 
       adminId: req.user.userId, 
-      userCount: result.data.length,
+      userCount: result.documents.length,
       filters,
       options 
-    });
-
-    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', {
-      users: result.data,
+    });ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', {
+      users: result.documents,
       pagination: result.pagination
+    });  } catch (error) {
+    console.log('❌ getAllUsers ERROR DETAILS:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
     });
-  } catch (error) {
     logger.error('Error getting all users:', { adminId: req.user?.userId, error: error.message });
     ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);
   }
@@ -237,7 +237,7 @@ exports.getAllUsersAdmin = async (req, res) => {
   try {
     const result = await UserService.getUsers({}, { limit: 0 }); // No pagination
     
-    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', { users: result.data });
+    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', { users: result.documents });
   } catch (error) {
     logger.error('Error getting all users admin:', { adminId: req.user?.userId, error: error.message });
     ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);

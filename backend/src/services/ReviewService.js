@@ -352,10 +352,9 @@ class ReviewService extends BaseService {
           avgRating: { $avg: '$rating' }
         }
       }
-    ]);
-
-    return {
-      ...result,
+    ]);    return {
+      reviews: result.documents,
+      pagination: result.pagination,
       stats: stats.reduce((acc, item) => {
         acc[item._id] = {
           count: item.count,

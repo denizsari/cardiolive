@@ -286,16 +286,14 @@ exports.getFeaturedBlogs = async (req, res) => {
     logger.logEvent('business', 'featured_blogs_fetch_initiated', {
       limit,
       requestId: req.id
-    });
-
-    const result = await BlogService.getFeaturedBlogs(Number(limit));
+    });    const blogs = await BlogService.getFeaturedBlogs(Number(limit));
 
     logger.logEvent('business', 'featured_blogs_fetched', {
-      blogCount: result.blogs.length,
+      blogCount: (blogs && Array.isArray(blogs)) ? blogs.length : 0,
       requestId: req.id
     });
 
-    ResponseHandler.success(res, 'Öne çıkan bloglar getirildi', result);
+    ResponseHandler.success(res, 'Öne çıkan bloglar getirildi', { blogs: blogs || [] });
   } catch (error) {
     logger.logEvent('error', 'featured_blogs_fetch_failed', {
       error: error.message,
@@ -319,16 +317,14 @@ exports.getBlogCategories = async (req, res) => {
   try {
     logger.logEvent('business', 'blog_categories_fetch_initiated', {
       requestId: req.id
-    });
-
-    const result = await BlogService.getBlogCategories();
+    });    const categories = await BlogService.getBlogCategories();
 
     logger.logEvent('business', 'blog_categories_fetched', {
-      categoryCount: result.categories.length,
+      categoryCount: (categories && Array.isArray(categories)) ? categories.length : 0,
       requestId: req.id
     });
 
-    ResponseHandler.success(res, 'Blog kategorileri getirildi', result);
+    ResponseHandler.success(res, 'Blog kategorileri getirildi', { categories });
   } catch (error) {
     logger.logEvent('error', 'blog_categories_fetch_failed', {
       error: error.message,

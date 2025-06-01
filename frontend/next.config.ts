@@ -1,10 +1,24 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // TypeScript configuration
   typescript: {
-    // Disable type checking during build to isolate the issue
     ignoreBuildErrors: false,
   },
+  
+  // Performance optimizations
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', 'react-icons'],
+  },
+
+  // Compression and optimization
+  compress: true,
+  
+  // Output configuration for Docker
+  output: 'standalone',
+
+  // Image optimization
   images: {
     remotePatterns: [
       {

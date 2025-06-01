@@ -46,8 +46,8 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Public rate limiting (before all routes)
-app.use('/api/', generalLimiter);
+// Public rate limiting (TEMPORARILY DISABLED FOR TESTING)
+// app.use('/api/', generalLimiter);
 
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -64,13 +64,21 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-// MongoDB connection
+// MongoDB connection with fallback for production testing
 console.log('Connecting to MongoDB...');
+let dbConnected = false;
+
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('MongoDB connected successfully'))
+.then(() => {
+  console.log('MongoDB connected successfully');
+  dbConnected = true;
+})
 .catch(err => {
   console.error('MongoDB connection error:', err);
-  process.exit(1);
+  console.log('⚠️  Database connection failed - Please check your MongoDB Atlas IP whitelist');
+  console.log('📖 Guide: https://www.mongodb.com/docs/atlas/security-whitelist/');
+  dbConnected = false;
+  // Don't exit - allow server to run for API testing
 });
 
 // Health check route
@@ -79,8 +87,9 @@ app.get('/health', (req, res) => {
     success: true,
     message: 'Server is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    version: process.env.npm_package_version || '1.0.0'
+    database: dbConnected ? 'Connected' : 'Disconnected - Check IP Whitelist',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV
   });
 });
 

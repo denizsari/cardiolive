@@ -113,7 +113,18 @@ class ProductService extends BaseService {
    * Get product by slug with related products
    * @param {string} slug - Product slug
    * @returns {Promise<Object>} Product with related products
+  /**
+   * Get product by ID
+   * @param {string} productId - Product ID
+   * @returns {Promise<Object>} Product
    */
+  async getProductById(productId) {
+    const product = await this.findById(productId);
+    if (!product) {
+      throw new Error('Ürün bulunamadı');
+    }
+    return product;
+  }
   async getProductBySlug(slug) {
     const product = await this.findOne({ slug });
     if (!product) {
