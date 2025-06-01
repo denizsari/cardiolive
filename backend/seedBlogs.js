@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const Blog = require('./src/models/blogModel');
 const User = require('./src/models/userModel');
 
-async function createSampleBlogs(adminUserId) {
+async function createSampleBlogs() {
   return [
     {
       title: 'Zeytinyağının Sağlığa Faydaları',
@@ -27,11 +27,9 @@ async function createSampleBlogs(adminUserId) {
 - Cilt bakımında doğal nemlendirici olarak
 - Saç bakımında güçlendirici maske olarak
 
-Cardiolive olarak, en kaliteli zeytinyağlarını sofralarınıza sunmanın gururunu yaşıyoruz.`,
-      category: 'Sağlık',
+Cardiolive olarak, en kaliteli zeytinyağlarını sofralarınıza sunmanın gururunu yaşıyoruz.`,      category: 'Sağlık',
       tags: ['zeytinyağı', 'sağlık', 'kalp', 'antioksidan'],
       image: '/blog/zeytinyagi-faydalari.jpg',
-      author: adminUserId,
       status: 'published',
       featured: true,
       publishedAt: new Date(),
@@ -60,11 +58,9 @@ Zeytinlerimizi Ege'nin bereketli topraklarında, tamamen doğal yöntemlerle yet
 - Toprak analizi ve rotasyon sistemi
 - Sürdürülebilir su yönetimi
 
-Bu sayede hem çevreyi koruyor hem de en saf zeytinyağlarını üretiyoruz.`,
-      category: 'Üretim',
+Bu sayede hem çevreyi koruyor hem de en saf zeytinyağlarını üretiyoruz.`,      category: 'Üretim',
       tags: ['organik', 'tarım', 'sürdürülebilirlik', 'çevre'],
       image: '/blog/organik-tarim.jpg',
-      author: adminUserId,
       status: 'published',
       featured: false,
       publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -98,11 +94,9 @@ Geleneksel yöntemlerde yüksek sıcaklık kullanılırken, soğuk sıkımda sad
 5. Soğuk sıkım
 6. Ayırma ve filtrasyon
 
-Bu özenli süreç sayesinde, zeytinyağımızın tüm doğal özellikleri korunur.`,
-      category: 'Üretim',
+Bu özenli süreç sayesinde, zeytinyağımızın tüm doğal özellikleri korunur.`,      category: 'Üretim',
       tags: ['soğuk sıkım', 'kalite', 'üretim', 'zeytinyağı'],
       image: '/blog/soguk-sikim.jpg',
-      author: adminUserId,
       status: 'published',
       featured: true,
       publishedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
@@ -136,10 +130,8 @@ async function seedBlogs() {
 
     // Mevcut blogları temizle (isteğe bağlı)
     await Blog.deleteMany({});
-    console.log('Mevcut bloglar temizlendi');
-
-    // Get sample blogs with admin user ID
-    const sampleBlogs = await createSampleBlogs(adminUser._id);
+    console.log('Mevcut bloglar temizlendi');    // Get sample blogs
+    const sampleBlogs = await createSampleBlogs();
 
     // Yeni blogları ekle
     const blogs = await Blog.insertMany(sampleBlogs);

@@ -44,15 +44,17 @@ export default function LoginPage() {
 
       if (!response.ok) {
         throw new Error(data.message || 'Giriş işlemi başarısız');
-      }
-
-      if (data.success) {
+      }      if (data.success) {
         // Token'ı localStorage'a kaydet
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
         
-        // Ana sayfaya yönlendir
-        router.push('/');
+        // Admin kullanıcıyı admin paneline, normal kullanıcıyı anasayfaya yönlendir
+        if (data.data.user && data.data.user.role === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/');
+        }
         router.refresh();
       } else {
         throw new Error(data.message || 'Giriş işlemi başarısız');

@@ -6,17 +6,27 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Header from '../../components/Header';
-import { blogAPI } from '../../utils/api';
 
 interface Blog {
   _id: string;
   title: string;
-  summary: string;
-  content: string;
-  image: string;
-  author: string;
-  date: string;
+  summary?: string;
+  excerpt?: string;
+  content?: string;
+  image?: string;
+  date?: string;
+  publishedAt?: string;
 }
+
+// Utility function to ensure all img tags have alt attributes
+const sanitizeHtmlContent = (content: string | null | undefined): string => {
+  if (!content) return '';
+  
+  return content
+    .replace(/<img(?![^>]*alt\s*=)/gi, '<img alt="Blog içerik görseli"')
+    .replace(/<img([^>]*)(?<!\/)\s*>/gi, '<img$1 />')
+    .replace(/<img(?![^>]*loading\s*=)/gi, '<img loading="lazy"');
+};
 
 export default function BlogDetail() {
   const { id } = useParams();
@@ -28,9 +38,20 @@ export default function BlogDetail() {
       if (!id) return;
       
       try {
-        setLoading(true);
-        const data = await blogAPI.getById(id as string);
-        setBlog(data);
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const response = await fetch(`${API_URL}/api/blogs/${id}`);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.blog) {
+          setBlog(result.data.blog);
+        } else {
+          throw new Error('Blog not found in response');
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Bir hata oluştu');
       } finally {
@@ -40,14 +61,33 @@ export default function BlogDetail() {
 
     fetchBlog();
   }, [id]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return 'Tarih belirtilmemiş';
+    return new Date(dateString).toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const getSummary = (blog: Blog): string => {
+    return blog.summary || blog.excerpt || '';
+  };
+
+  const getImageSrc = (blog: Blog): string => {
+    if (!blog.image || blog.image.trim() === '') {
+      return '/slider/image1.jpg';
+    }
+    
+    if (blog.image.startsWith('http://') || blog.image.startsWith('https://')) {
+      return blog.image;
+    }
+    
+    if (blog.image.startsWith('/')) {
+      return blog.image;
+    }
+    
+    return `/blog/${blog.image}`;
   };
 
   if (loading) {
@@ -62,7 +102,6 @@ export default function BlogDetail() {
       </div>
     );
   }
-
   if (error || !blog) {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -85,29 +124,37 @@ export default function BlogDetail() {
         <article>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             {blog.title}
-          </h1>
-
-          <div className="flex items-center text-sm text-gray-500 mb-8">
-            <span className="mr-4">Yazar: {blog.author}</span>
-            <span>{formatDate(blog.date)}</span>
-          </div>          <div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
+          </h1>          <div className="flex items-center text-sm text-gray-500 mb-8">
+            <span className="mr-4">Yazar: Cardiolive</span>
+            <span>{formatDate(blog.date || blog.publishedAt)}</span>
+          </div><div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
             <Image
-              src={blog.image}
+              src={getImageSrc(blog)}
               alt={blog.title}
               fill
               className="object-cover"
             />
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg mb-8">
-            <p className="text-lg text-gray-700 italic">{blog.summary}</p>
-          </div>
+          {getSummary(blog) && (
+            <div className="bg-gray-50 p-6 rounded-lg mb-8">
+              <p className="text-lg text-gray-700 italic">{getSummary(blog)}</p>
+            </div>
+          )}
 
           <div className="prose prose-lg max-w-none">
-            <div 
-              className="text-gray-700 leading-relaxed whitespace-pre-line"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            />
+            {blog.content ? (
+              <div 
+                className="text-gray-700 leading-relaxed whitespace-pre-line"
+                dangerouslySetInnerHTML={{ 
+                  __html: sanitizeHtmlContent(blog.content)
+                }}
+              />
+            ) : (
+              <div className="text-gray-500 italic">
+                Bu blog yazısının içeriği henüz mevcut değil.
+              </div>
+            )}
           </div>
         </article>
       </main>

@@ -9,21 +9,19 @@ import { blogAPI } from '../../utils/api';
 interface Blog {
   _id: string;
   title: string;
-  summary: string;
+  excerpt: string;
   content: string;
   image: string;
-  author: string;
   date: string;
 }
 
 export default function BlogPreview() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const data = await blogAPI.getAll();
-        // Get last 3 blog posts
+        // Get last 3 blog posts for preview
         setBlogs(data.slice(0, 3));
       } catch (error) {
         console.error('Error fetching blogs:', error);
@@ -33,9 +31,7 @@ export default function BlogPreview() {
     };
 
     fetchBlogs();
-  }, []);
-
-  const formatDate = (dateString: string) => {
+  }, []);  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
@@ -43,6 +39,7 @@ export default function BlogPreview() {
       day: 'numeric'
     });
   };
+
   // Image URL helper
   const getImageSrc = (blog: Blog) => {
     if (blog.image.startsWith('http')) return blog.image;
@@ -105,11 +102,9 @@ export default function BlogPreview() {
                     {/* Başlık */}
                     <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#70BB1B] transition-colors line-clamp-2">
                       {blog.title}
-                    </h3>
-
-                    {/* Özet */}
+                    </h3>                    {/* Özet */}
                     <p className="text-gray-600 mb-4 line-clamp-2">
-                      {blog.summary}
+                      {blog.excerpt}
                     </p>
 
                     {/* Devamını Oku */}

@@ -4,14 +4,19 @@ const Joi = require('joi');
 const orderValidation = {
   create: Joi.object({
     items: Joi.array()
-      .items(
-        Joi.object({
+      .items(        Joi.object({
           product: Joi.string()
             .pattern(/^[0-9a-fA-F]{24}$/)
             .required()
             .messages({
               'string.pattern.base': 'Geçerli bir ürün ID\'si gereklidir',
               'any.required': 'Ürün ID\'si zorunludur'
+            }),
+          name: Joi.string()
+            .trim()
+            .required()
+            .messages({
+              'any.required': 'Ürün adı zorunludur'
             }),
           quantity: Joi.number()
             .integer()
@@ -29,6 +34,11 @@ const orderValidation = {
             .messages({
               'number.positive': 'Fiyat pozitif olmalıdır',
               'any.required': 'Fiyat zorunludur'
+            }),
+          image: Joi.string()
+            .required()
+            .messages({
+              'any.required': 'Ürün görseli zorunludur'
             })
         })
       )
@@ -79,8 +89,7 @@ const orderValidation = {
           'string.min': 'Adres en az 10 karakter olmalıdır',
           'string.max': 'Adres en fazla 500 karakter olabilir',
           'any.required': 'Adres zorunludur'
-        }),
-      city: Joi.string()
+        }),      city: Joi.string()
         .min(2)
         .max(50)
         .trim()
@@ -89,6 +98,16 @@ const orderValidation = {
           'string.min': 'Şehir en az 2 karakter olmalıdır',
           'string.max': 'Şehir en fazla 50 karakter olabilir',
           'any.required': 'Şehir zorunludur'
+        }),
+      district: Joi.string()
+        .min(2)
+        .max(50)
+        .trim()
+        .required()
+        .messages({
+          'string.min': 'İlçe en az 2 karakter olmalıdır',
+          'string.max': 'İlçe en fazla 50 karakter olabilir',
+          'any.required': 'İlçe zorunludur'
         }),
       postalCode: Joi.string()
         .pattern(/^[0-9]{5}$/)
@@ -191,15 +210,12 @@ const orderValidation = {
 // Validation middleware factory
 const validateOrder = (schema) => {
   return (req, res, next) => {
-    console.log('🔍 ORDER VALIDATION - Request body received:', JSON.stringify(req.body, null, 2));
-    
     const { error, value } = schema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true
     });
 
     if (error) {
-      console.log('❌ ORDER VALIDATION - Validation failed:', error.details);
       const errors = error.details.map(detail => ({
         field: detail.path.join('.'),
         message: detail.message
@@ -212,8 +228,6 @@ const validateOrder = (schema) => {
       });
     }
 
-    console.log('✅ ORDER VALIDATION - Validation passed');
-    console.log('🔍 ORDER VALIDATION - Validated value:', JSON.stringify(value, null, 2));
     req.body = value;
     next();
   };

@@ -47,12 +47,8 @@ const createBlogSchema = Joi.object({
   ).max(10).messages({
     'array.base': 'Etiketler dizi olmalı',
     'array.max': 'En fazla 10 etiket ekleyebilirsiniz'
-  }),
-  featured: Joi.boolean().messages({
+  }),  featured: Joi.boolean().messages({
     'boolean.base': 'Öne çıkarma durumu boolean olmalı'
-  }),
-  status: Joi.string().valid('draft', 'published', 'archived').default('draft').messages({
-    'any.only': 'Durum geçersiz (draft, published, archived)'
   }),
   image: Joi.string().uri().messages({
     'string.uri': 'Resim URL formatında olmalı'
@@ -60,8 +56,7 @@ const createBlogSchema = Joi.object({
   metaTitle: Joi.string().trim().max(60).messages({
     'string.base': 'Meta başlık metin olmalı',
     'string.max': 'Meta başlık en fazla 60 karakter olmalı'
-  }),
-  metaDescription: Joi.string().trim().max(160).messages({
+  }),  metaDescription: Joi.string().trim().max(160).messages({
     'string.base': 'Meta açıklama metin olmalı',
     'string.max': 'Meta açıklama en fazla 160 karakter olmalı'
   })
@@ -101,12 +96,8 @@ const updateBlogSchema = Joi.object({
   ).max(10).messages({
     'array.base': 'Etiketler dizi olmalı',
     'array.max': 'En fazla 10 etiket ekleyebilirsiniz'
-  }),
-  featured: Joi.boolean().messages({
+  }),  featured: Joi.boolean().messages({
     'boolean.base': 'Öne çıkarma durumu boolean olmalı'
-  }),
-  status: Joi.string().valid('draft', 'published', 'archived').messages({
-    'any.only': 'Durum geçersiz (draft, published, archived)'
   }),
   image: Joi.string().uri().messages({
     'string.uri': 'Resim URL formatında olmalı'
@@ -135,15 +126,8 @@ const blogQuerySchema = Joi.object({
     'number.integer': 'Limit tam sayı olmalı',
     'number.min': 'Limit en az 1 olmalı',
     'number.max': 'Limit en fazla 50 olmalı'
-  }),
-  category: Joi.string().trim().messages({
+  }),  category: Joi.string().trim().messages({
     'string.base': 'Kategori metin olmalı'
-  }),
-  author: Joi.string().trim().messages({
-    'string.base': 'Yazar metin olmalı'
-  }),
-  status: Joi.string().valid('all', 'draft', 'published', 'archived').default('published').messages({
-    'any.only': 'Durum geçersiz (all, draft, published, archived)'
   }),
   search: Joi.string().trim().min(2).messages({
     'string.base': 'Arama terimi metin olmalı',

@@ -1,534 +1,467 @@
-const Review = require('../models/reviewModel');
-const Product = require('../models/productModel');
-const Order = require('../models/orderModel');
-const ResponseHandler = require('../utils/responseHandler');
+/**
+ * @fileoverview Review Controller - Handles review management operations
+ * @description Manages product reviews, ratings, and moderation
+ * @author Cardiolive E-commerce Platform
+ * @version 1.0.0
+ */
 
-// Get reviews for a product
+const ReviewService = require('../services/ReviewService');
+const ResponseHandler = require('../utils/responseHandler');
+const { logger } = require('../utils/logger');
+
+/**
+ * Get reviews for a specific product
+ * @route GET /api/reviews/product/:productId
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with product reviews and statistics
+ */
 exports.getProductReviews = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { page = 1, limit = 10, rating, verified, sort = 'createdAt', order = 'desc' } = req.query;
-
-    // Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
-    }
-
-    // Build filter
-    const filter = { 
-      product: productId, 
-      status: 'approved'
-    };
-    
-    if (rating) filter.rating = rating;
-    if (verified !== undefined) filter.isVerifiedPurchase = verified;
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const reviews = await Review.find(filter)
-      .populate('user', 'name')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(Number(limit))
-      .select('-__v');
-
-    const totalReviews = await Review.countDocuments(filter);
-
-    // Calculate rating distribution
-    const ratingDistribution = await Review.aggregate([
-      { $match: { product: productId, status: 'approved' } },
-      {
-        $group: {
-          _id: '$rating',
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } }
-    ]);
-
-    // Calculate average rating
-    const avgResult = await Review.aggregate([
-      { $match: { product: productId, status: 'approved' } },
-      {
-        $group: {
-          _id: null,
-          averageRating: { $avg: '$rating' },
-          totalReviews: { $sum: 1 }
-        }
-      }
-    ]);
-
-    const stats = {
-      averageRating: avgResult[0]?.averageRating || 0,
-      totalReviews: avgResult[0]?.totalReviews || 0,
-      ratingDistribution: ratingDistribution.reduce((acc, item) => {
-        acc[item._id] = item.count;
-        return acc;
-      }, {})
+    const filterOptions = {
+      page: req.query.page || 1,
+      limit: req.query.limit || 10,
+      rating: req.query.rating,
+      verified: req.query.verified,
+      sort: req.query.sort || 'createdAt',
+      order: req.query.order || 'desc'
     };
 
-    const pagination = {
-      currentPage: Number(page),
-      totalPages: Math.ceil(totalReviews / limit),
-      totalReviews,
-      hasNext: page < Math.ceil(totalReviews / limit),
-      hasPrev: page > 1
-    };
-
-    ResponseHandler.success(res, 'Yorumlar başarıyla getirildi', {
-      reviews,
-      pagination,
-      stats
+    logger.logEvent('business', 'review_fetch_initiated', {
+      productId,
+      filters: filterOptions,
+      requestId: req.id
     });
+
+    const result = await ReviewService.getProductReviews(productId, filterOptions);
+
+    logger.logEvent('business', 'product_reviews_fetched', {
+      productId,
+      reviewCount: result.reviews.length,
+      totalReviews: result.pagination.totalReviews,
+      averageRating: result.stats.averageRating,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Yorumlar başarıyla getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'product_reviews_fetch_failed', {
+      productId: req.params.productId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorumları getirme hatası', error);
   }
 };
 
-// Create a new review
+/**
+ * Create a new product review
+ * @route POST /api/reviews
+ * @access Private (authenticated users)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with created review
+ */
 exports.createReview = async (req, res) => {
   try {
-    const { product, rating, title, comment, recommend, images } = req.body;
-    const userId = req.user.userId;
+    const reviewData = {
+      ...req.body,
+      user: req.user.userId
+    };
 
-    // Check if product exists
-    const productDoc = await Product.findById(product);
-    if (!productDoc) {
-      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
-    }
-
-    // Check if user already reviewed this product
-    const existingReview = await Review.findOne({
-      product,
-      user: userId,
-      status: { $ne: 'deleted' }
+    logger.logEvent('business', 'review_creation_initiated', {
+      userId: req.user.userId,
+      productId: reviewData.product,
+      rating: reviewData.rating,
+      requestId: req.id
     });
 
-    if (existingReview) {
-      return ResponseHandler.badRequest(res, 'Bu ürün için zaten bir yorum yapmışsınız');
-    }
+    const review = await ReviewService.createReview(reviewData);
 
-    // Check if user has purchased this product
-    const hasPurchased = await Order.findOne({
-      user: userId,
-      'items.product': product,
-      status: 'delivered'
+    logger.logEvent('business', 'review_created', {
+      reviewId: review._id,
+      userId: req.user.userId,
+      productId: reviewData.product,
+      rating: reviewData.rating,
+      isVerifiedPurchase: review.isVerifiedPurchase,
+      requestId: req.id
     });
-
-    const review = new Review({
-      product,
-      user: userId,
-      rating,
-      title,
-      comment,
-      recommend: recommend || true,
-      images: images || [],
-      isVerifiedPurchase: !!hasPurchased,
-      status: 'pending' // Reviews need approval
-    });
-
-    await review.save();
-    await review.populate('user', 'name email');
-
-    // Update product rating
-    await updateProductRating(product);
 
     ResponseHandler.created(res, 'Yorum başarıyla eklendi ve onay bekliyor', { review });
   } catch (error) {
+    logger.logEvent('error', 'review_creation_failed', {
+      userId: req.user.userId,
+      productId: req.body.product,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorum ekleme hatası', error);
   }
 };
 
-// Get user's own reviews
-exports.getUserReviews = async (req, res) => {
-  try {
-    const { page = 1, limit = 10, sort = 'createdAt', order = 'desc' } = req.query;
+/**
+ * Get current user's reviews
+ * @route GET /api/reviews/my-reviews
+ * @access Private (authenticated users)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with user's reviews
+ */
+exports.getUserReviews = async (req, res) => {  try {
     const userId = req.user.userId;
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
+    const { page = 1, limit = 10, sort = 'createdAt', order = 'desc' } = req.query;
     
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const reviews = await Review.find({
-      user: userId,
-      status: { $ne: 'deleted' }
-    })
-      .populate('product', 'name images price')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(Number(limit))
-      .select('-__v');
-
-    const totalReviews = await Review.countDocuments({
-      user: userId,
-      status: { $ne: 'deleted' }
-    });
-
-    const pagination = {
-      currentPage: Number(page),
-      totalPages: Math.ceil(totalReviews / limit),
-      totalReviews,
-      hasNext: page < Math.ceil(totalReviews / limit),
-      hasPrev: page > 1
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sort: { [sort]: order === 'desc' ? -1 : 1 }
     };
 
+    logger.logEvent('business', 'user_reviews_fetch_initiated', {
+      userId,
+      options,
+      requestId: req.id
+    });const result = await ReviewService.getUserReviews(userId, options);
+
+    logger.logEvent('business', 'user_reviews_fetched', {
+      userId,
+      reviewCount: result.documents?.length || 0,
+      totalReviews: result.pagination?.totalItems || 0,
+      requestId: req.id
+    });
+
     ResponseHandler.success(res, 'Yorumlar başarıyla getirildi', {
-      reviews,
-      pagination
+      reviews: result.documents,
+      pagination: result.pagination
     });
   } catch (error) {
+    logger.logEvent('error', 'user_reviews_fetch_failed', {
+      userId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorumları getirme hatası', error);
   }
 };
 
-// Update a review
+/**
+ * Update a user's review
+ * @route PUT /api/reviews/:reviewId
+ * @access Private (review owner only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with updated review
+ */
 exports.updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    const { rating, title, comment, recommend, images } = req.body;
     const userId = req.user.userId;
+    const updateData = req.body;
 
-    const review = await Review.findOne({
-      _id: reviewId,
-      user: userId
+    logger.logEvent('business', 'review_update_initiated', {
+      reviewId,
+      userId,
+      updateFields: Object.keys(updateData),
+      requestId: req.id
     });
 
-    if (!review) {
-      return ResponseHandler.notFound(res, 'Yorum bulunamadı veya düzenleme yetkiniz yok');
-    }
+    const review = await ReviewService.updateReview(reviewId, userId, updateData);
 
-    // Update fields
-    if (rating !== undefined) review.rating = rating;
-    if (title !== undefined) review.title = title;
-    if (comment !== undefined) review.comment = comment;
-    if (recommend !== undefined) review.recommend = recommend;
-    if (images !== undefined) review.images = images;
-    
-    review.status = 'pending'; // Re-approve after edit
-    review.updatedAt = new Date();
-
-    await review.save();
-    await review.populate('user', 'name email');
-    await review.populate('product', 'name');
-
-    // Update product rating
-    await updateProductRating(review.product._id);
+    logger.logEvent('business', 'review_updated', {
+      reviewId,
+      userId,
+      productId: review.product._id,
+      newRating: review.rating,
+      status: review.status,
+      requestId: req.id
+    });
 
     ResponseHandler.success(res, 'Yorum başarıyla güncellendi ve onay bekliyor', { review });
   } catch (error) {
+    logger.logEvent('error', 'review_update_failed', {
+      reviewId: req.params.reviewId,
+      userId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorum güncelleme hatası', error);
   }
 };
 
-// Delete a review
+/**
+ * Delete a user's review
+ * @route DELETE /api/reviews/:reviewId
+ * @access Private (review owner only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response confirmation
+ */
 exports.deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const userId = req.user.userId;
 
-    const review = await Review.findOne({
-      _id: reviewId,
-      user: userId
+    logger.logEvent('business', 'review_deletion_initiated', {
+      reviewId,
+      userId,
+      requestId: req.id
     });
 
-    if (!review) {
-      return ResponseHandler.notFound(res, 'Yorum bulunamadı veya silme yetkiniz yok');
-    }
+    await ReviewService.deleteReview(reviewId, userId);
 
-    const productId = review.product;
-    review.status = 'deleted';
-    await review.save();
-
-    // Update product rating
-    await updateProductRating(productId);
+    logger.logEvent('business', 'review_deleted', {
+      reviewId,
+      userId,
+      requestId: req.id
+    });
 
     ResponseHandler.success(res, 'Yorum başarıyla silindi');
   } catch (error) {
+    logger.logEvent('error', 'review_deletion_failed', {
+      reviewId: req.params.reviewId,
+      userId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorum silme hatası', error);
   }
 };
 
-// Mark review as helpful/unhelpful
+/**
+ * Vote on review helpfulness
+ * @route POST /api/reviews/:reviewId/vote
+ * @access Private (authenticated users)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with vote counts
+ */
 exports.voteReviewHelpful = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const { helpful } = req.body;
     const userId = req.user.userId;
 
-    const review = await Review.findOne({
-      _id: reviewId,
-      status: 'approved'
+    logger.logEvent('business', 'review_vote_initiated', {
+      reviewId,
+      userId,
+      helpful,
+      requestId: req.id
     });
 
-    if (!review) {
-      return ResponseHandler.notFound(res, 'Yorum bulunamadı');
-    }
+    const result = await ReviewService.voteReviewHelpful(reviewId, userId, helpful);
 
-    // Prevent voting on own review
-    if (review.user.toString() === userId) {
-      return ResponseHandler.badRequest(res, 'Kendi yorumunuza oy veremezsiniz');
-    }
-
-    // Check if user already voted
-    const existingVoteIndex = review.helpfulVotes.findIndex(
-      vote => vote.user.toString() === userId
-    );
-
-    if (existingVoteIndex !== -1) {
-      // Update existing vote
-      review.helpfulVotes[existingVoteIndex].helpful = helpful;
-    } else {
-      // Add new vote
-      review.helpfulVotes.push({ user: userId, helpful });
-    }
-
-    // Recalculate helpful counts
-    review.helpfulCount = review.helpfulVotes.filter(vote => vote.helpful).length;
-    review.unhelpfulCount = review.helpfulVotes.filter(vote => !vote.helpful).length;
-
-    await review.save();
-
-    ResponseHandler.success(res, 'Oy başarıyla kaydedildi', {
-      helpfulCount: review.helpfulCount,
-      unhelpfulCount: review.unhelpfulCount
+    logger.logEvent('business', 'review_voted', {
+      reviewId,
+      userId,
+      helpful,
+      newHelpfulCount: result.helpfulCount,
+      newUnhelpfulCount: result.unhelpfulCount,
+      requestId: req.id
     });
+
+    ResponseHandler.success(res, 'Oy başarıyla kaydedildi', result);
   } catch (error) {
+    logger.logEvent('error', 'review_vote_failed', {
+      reviewId: req.params.reviewId,
+      userId: req.user.userId,
+      helpful: req.body.helpful,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Oy verme hatası', error);
   }
 };
 
-// Admin: Get all reviews
+/**
+ * Get all reviews (Admin access)
+ * @route GET /api/admin/reviews
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with all reviews and statistics
+ */
 exports.getAllReviews = async (req, res) => {
   try {
-    const { 
-      page = 1, 
-      limit = 20, 
-      status, 
-      rating, 
-      productId, 
-      userId, 
-      sort = 'createdAt', 
-      order = 'desc' 
-    } = req.query;
-
-    // Build filter
-    const filter = {};
-    if (status) filter.status = status;
-    if (rating) filter.rating = rating;
-    if (productId) filter.product = productId;
-    if (userId) filter.user = userId;
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const reviews = await Review.find(filter)
-      .populate('user', 'name email')
-      .populate('product', 'name')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(Number(limit))
-      .select('-__v');
-
-    const totalReviews = await Review.countDocuments(filter);
-
-    // Get statistics
-    const stats = await Review.aggregate([
-      {
-        $group: {
-          _id: '$status',
-          count: { $sum: 1 },
-          avgRating: { $avg: '$rating' }
-        }
-      }
-    ]);
-
-    const pagination = {
-      currentPage: Number(page),
-      totalPages: Math.ceil(totalReviews / limit),
-      totalReviews,
-      hasNext: page < Math.ceil(totalReviews / limit),
-      hasPrev: page > 1
+    const filterOptions = {
+      page: req.query.page || 1,
+      limit: req.query.limit || 20,
+      status: req.query.status,
+      rating: req.query.rating,
+      productId: req.query.productId,
+      userId: req.query.userId,
+      sort: req.query.sort || 'createdAt',
+      order: req.query.order || 'desc'
     };
 
-    ResponseHandler.success(res, 'Yorumlar başarıyla getirildi', {
-      reviews,
-      pagination,
-      stats: stats.reduce((acc, item) => {
-        acc[item._id] = {
-          count: item.count,
-          avgRating: item.avgRating
-        };
-        return acc;
-      }, {})
+    logger.logEvent('business', 'admin_reviews_fetch_initiated', {
+      adminId: req.user.userId,
+      filters: filterOptions,
+      requestId: req.id
     });
+
+    const result = await ReviewService.getAllReviews(filterOptions);
+
+    logger.logEvent('business', 'admin_reviews_fetched', {
+      adminId: req.user.userId,
+      reviewCount: result.reviews.length,
+      totalReviews: result.pagination.totalReviews,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Yorumlar başarıyla getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'admin_reviews_fetch_failed', {
+      adminId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorumları getirme hatası', error);
   }
 };
 
-// Admin: Update review status
+/**
+ * Update review status (Admin access)
+ * @route PUT /api/admin/reviews/:reviewId/status
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with updated review
+ */
 exports.updateReviewStatus = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const { action, reason } = req.body;
+    const adminId = req.user.userId;
 
-    const review = await Review.findById(reviewId)
-      .populate('user', 'name email')
-      .populate('product', 'name');
+    logger.logEvent('security', 'admin_review_moderation_initiated', {
+      adminId,
+      reviewId,
+      action,
+      reason,
+      requestId: req.id
+    });
 
-    if (!review) {
-      return ResponseHandler.notFound(res, 'Yorum bulunamadı');
-    }
+    const review = await ReviewService.updateReviewStatus(reviewId, adminId, action, reason);
 
-    switch (action) {
-      case 'approve':
-        review.status = 'approved';
-        review.moderatedAt = new Date();
-        review.moderatedBy = req.user.userId;
-        break;
-      case 'reject':
-        review.status = 'rejected';
-        review.moderationReason = reason;
-        review.moderatedAt = new Date();
-        review.moderatedBy = req.user.userId;
-        break;
-      case 'feature':
-        review.isFeatured = true;
-        break;
-      case 'unfeature':
-        review.isFeatured = false;
-        break;
-      default:
-        return ResponseHandler.badRequest(res, 'Geçersiz işlem');
-    }
-
-    await review.save();
-
-    // Update product rating if status changed to approved/rejected
-    if (['approve', 'reject'].includes(action)) {
-      await updateProductRating(review.product._id);
-    }
+    logger.logEvent('security', 'review_status_updated', {
+      adminId,
+      reviewId,
+      action,
+      newStatus: review.status,
+      isFeatured: review.isFeatured,
+      moderationReason: review.moderationReason,
+      requestId: req.id
+    });
 
     ResponseHandler.success(res, 'Yorum durumu başarıyla güncellendi', { review });
   } catch (error) {
+    logger.logEvent('error', 'admin_review_moderation_failed', {
+      adminId: req.user.userId,
+      reviewId: req.params.reviewId,
+      action: req.body.action,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorum durumu güncelleme hatası', error);
   }
 };
 
-// Admin: Delete review permanently
+/**
+ * Permanently delete a review (Admin access)
+ * @route DELETE /api/admin/reviews/:reviewId
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response confirmation
+ */
 exports.adminDeleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
+    const adminId = req.user.userId;
 
-    const review = await Review.findByIdAndDelete(reviewId);
+    logger.logEvent('security', 'admin_review_deletion_initiated', {
+      adminId,
+      reviewId,
+      requestId: req.id
+    });
 
-    if (!review) {
-      return ResponseHandler.notFound(res, 'Yorum bulunamadı');
-    }
+    await ReviewService.adminDeleteReview(reviewId);
 
-    // Update product rating
-    await updateProductRating(review.product);
+    logger.logEvent('security', 'review_permanently_deleted', {
+      adminId,
+      reviewId,
+      requestId: req.id
+    });
 
     ResponseHandler.success(res, 'Yorum kalıcı olarak silindi');
   } catch (error) {
+    logger.logEvent('error', 'admin_review_deletion_failed', {
+      adminId: req.user.userId,
+      reviewId: req.params.reviewId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Yorum silme hatası', error);
   }
 };
 
-// Get review statistics for a product
+/**
+ * Get review statistics for a product
+ * @route GET /api/reviews/stats/:productId
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with review statistics
+ */
 exports.getReviewStats = async (req, res) => {
   try {
     const { productId } = req.params;
 
-    // Validate ObjectId
-    if (!isValidObjectId(productId)) {
-      return ResponseHandler.badRequest(res, 'Geçersiz ürün ID');
-    }
-
-    const stats = await Review.aggregate([
-      { 
-        $match: { 
-          product: productId, 
-          status: 'approved' 
-        } 
-      },
-      {
-        $group: {
-          _id: null,
-          totalReviews: { $sum: 1 },
-          averageRating: { $avg: '$rating' },
-          ratingCounts: {
-            $push: '$rating'
-          }
-        }
-      }
-    ]);
-
-    if (!stats.length) {
-      return ResponseHandler.success(res, 'İstatistikler getirildi', {
-        totalReviews: 0,
-        averageRating: 0,
-        ratingDistribution: {}
-      });
-    }
-
-    const { totalReviews, averageRating, ratingCounts } = stats[0];
-    
-    // Calculate rating distribution
-    const ratingDistribution = ratingCounts.reduce((acc, rating) => {
-      acc[rating] = (acc[rating] || 0) + 1;
-      return acc;
-    }, {});
-
-    ResponseHandler.success(res, 'İstatistikler getirildi', {
-      totalReviews,
-      averageRating: parseFloat(averageRating.toFixed(1)),
-      ratingDistribution
+    logger.logEvent('business', 'review_stats_fetch_initiated', {
+      productId,
+      requestId: req.id
     });
+
+    const stats = await ReviewService.getReviewStats(productId);
+
+    logger.logEvent('business', 'review_stats_fetched', {
+      productId,
+      totalReviews: stats.totalReviews,
+      averageRating: stats.averageRating,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'İstatistikler getirildi', stats);
   } catch (error) {
+    logger.logEvent('error', 'review_stats_fetch_failed', {
+      productId: req.params.productId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'İstatistik getirme hatası', error);
   }
 };
 
-// Utility function to update product rating
-const updateProductRating = async (productId) => {
-  try {
-    const reviews = await Review.find({ 
-      product: productId, 
-      status: 'approved' 
-    });
 
-    if (reviews.length === 0) {
-      await Product.findByIdAndUpdate(productId, {
-        averageRating: 0,
-        totalReviews: 0
-      });
-      return;
-    }
-
-    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const averageRating = totalRating / reviews.length;
-
-    await Product.findByIdAndUpdate(productId, {
-      averageRating: parseFloat(averageRating.toFixed(1)),
-      totalReviews: reviews.length
-    });
-  } catch (error) {
-    console.error('Error updating product rating:', error);
-  }
-};
-
-// Utility function to validate ObjectId
-const isValidObjectId = (id) => {
-  return id && id.match(/^[0-9a-fA-F]{24}$/);
-};

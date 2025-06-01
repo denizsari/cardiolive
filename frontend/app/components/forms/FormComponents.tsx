@@ -1,8 +1,10 @@
-import { useForm, UseFormReturn, FieldError } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { FieldError } from 'react-hook-form';
 import { forwardRef, InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
-import { cn } from '@/lib/utils';
+
+// Utility function for combining class names
+function cn(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(' ');
+}
 
 // Base form input component with error handling
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -229,12 +231,6 @@ export const FormErrors: React.FC<FormErrorProps> = ({ errors }) => {
             </ul>
           </div>
         </div>
-      </div>
-    </div>
+      </div>    </div>
   );
 };
-
-// Utility function for class names (if not already available)
-function cn(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}

@@ -6,7 +6,7 @@ import { Product } from '@/types';
 export const productQueryKeys = {
   all: ['products'] as const,
   lists: () => [...productQueryKeys.all, 'list'] as const,
-  list: (filters: Record<string, any>) => [...productQueryKeys.lists(), filters] as const,
+  list: (filters: Record<string, unknown>) => [...productQueryKeys.lists(), filters] as const,
   details: () => [...productQueryKeys.all, 'detail'] as const,
   detail: (id: string) => [...productQueryKeys.details(), id] as const,
   bySlug: (slug: string) => [...productQueryKeys.all, 'slug', slug] as const,

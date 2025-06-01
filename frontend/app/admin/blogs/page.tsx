@@ -10,9 +10,9 @@ interface Blog {
   _id: string;
   title: string;
   content: string;
-  summary: string;
+  excerpt: string;
+  category: string;
   image: string;
-  author: string;
   date: string;
 }
 
@@ -21,17 +21,21 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);  const [formData, setFormData] = useState({
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
+
+  const [formData, setFormData] = useState({
     title: '',
     content: '',
-    summary: '',
-    image: '',
-    author: ''
+    excerpt: '',
+    category: '',
+    image: ''
   });
 
   useEffect(() => {
     fetchBlogs();
-  }, []);  const fetchBlogs = async () => {
+  }, []);
+
+  const fetchBlogs = async () => {
     try {
       const response = await blogAPI.getAll();
       setBlogs(response);
@@ -41,8 +45,13 @@ export default function AdminBlogsPage() {
       setLoading(false);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('=== FRONTEND SUBMIT DEBUG ===');
+    console.log('Form data:', JSON.stringify(formData, null, 2));
+    console.log('============================');
     
     try {
       if (editingBlog) {
@@ -53,22 +62,25 @@ export default function AdminBlogsPage() {
       fetchBlogs();
       setShowCreateForm(false);
       setEditingBlog(null);
-      setFormData({ title: '', content: '', summary: '', image: '', author: '' });
+      setFormData({ title: '', content: '', excerpt: '', category: '', image: '' });
     } catch (error) {
+      console.error('Submit error:', error);
       setError(error instanceof Error ? error.message : 'Error saving blog');
     }
   };
 
   const handleEdit = (blog: Blog) => {
-    setEditingBlog(blog);    setFormData({
+    setEditingBlog(blog);
+    setFormData({
       title: blog.title,
       content: blog.content,
-      summary: blog.summary,
-      image: blog.image,
-      author: blog.author
+      excerpt: blog.excerpt,
+      category: blog.category,
+      image: blog.image
     });
     setShowCreateForm(true);
   };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
     
@@ -83,7 +95,7 @@ export default function AdminBlogsPage() {
   const handleCancel = () => {
     setShowCreateForm(false);
     setEditingBlog(null);
-    setFormData({ title: '', content: '', summary: '', image: '', author: '' });
+    setFormData({ title: '', content: '', excerpt: '', category: '', image: '' });
   };
 
   if (loading) {
@@ -131,29 +143,30 @@ export default function AdminBlogsPage() {
                 placeholder="Blog Post Title"
                 required
               />
-            </div>            <div>
+            </div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Author
+                Excerpt
               </label>
-              <input
-                type="text"
-                value={formData.author}
-                onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+              <textarea
+                value={formData.excerpt}
+                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
-                placeholder="Author Name"
+                placeholder="Short excerpt of the blog post"
+                rows={3}
                 required
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Summary
+                Category
               </label>
-              <textarea
-                value={formData.summary}
-                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
-                placeholder="Short summary of the blog post"
-                rows={3}
+                placeholder="Blog category"
                 required
               />
             </div>
@@ -211,7 +224,7 @@ export default function AdminBlogsPage() {
                   Title
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Author
+                  Category
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Created
@@ -219,9 +232,10 @@ export default function AdminBlogsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
-              </tr>            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">{
-              blogs.map((blog) => (
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {blogs.map((blog) => (
                 <tr key={blog._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{blog.title}</div>
@@ -230,7 +244,7 @@ export default function AdminBlogsPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {blog.author}
+                    {blog.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(blog.date).toLocaleDateString()}
@@ -260,8 +274,9 @@ export default function AdminBlogsPage() {
                       </button>
                     </div>
                   </td>
-                </tr>              ))
-            }</tbody>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
         {blogs.length === 0 && (

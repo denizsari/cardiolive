@@ -22,15 +22,22 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   useEffect(() => {
     // Check if user is logged in
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     
-    if (token && userData) {
+    if (token && userData && userData !== 'undefined') {
       try {
-        setUser(JSON.parse(userData));
+        const parsedUser = JSON.parse(userData);
+        // Validate that parsed user has required properties
+        if (parsedUser && typeof parsedUser === 'object' && parsedUser._id) {
+          setUser(parsedUser);
+        } else {
+          console.warn('Invalid user data structure, clearing localStorage');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
       } catch (error) {
         console.error('Error parsing user data:', error);
         localStorage.removeItem('token');

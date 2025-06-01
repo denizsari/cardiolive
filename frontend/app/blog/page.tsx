@@ -11,10 +11,9 @@ import { blogAPI } from '../utils/api';
 interface Blog {
   _id: string;
   title: string;
-  summary: string;
+  excerpt: string;
   content: string;
-  image: string;
-  author: string;
+  image?: string; // Make image optional to handle null/undefined cases
   date: string;
 }
 
@@ -22,7 +21,26 @@ export default function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
+
+  // Helper function to get image source with fallback
+  const getImageSrc = (blog: Blog): string => {
+    if (!blog.image || blog.image.trim() === '') {
+      return '/blog/default-blog.jpg'; // Use dedicated default blog image
+    }
+    
+    // If it's already an absolute URL, return as is
+    if (blog.image.startsWith('http://') || blog.image.startsWith('https://')) {
+      return blog.image;
+    }
+    
+    // If it starts with '/', return as is
+    if (blog.image.startsWith('/')) {
+      return blog.image;
+    }
+    
+    // Otherwise, prepend with /blog/
+    return `/blog/${blog.image}`;
+  };  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
@@ -86,22 +104,24 @@ export default function BlogList() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map(blog => (
-              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">                <Link href={`/blog/${blog._id}`}>
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image
-                      src={blog.image}
-                      alt={blog.title}
+            {blogs.map(blog => (              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <Link href={`/blog/${blog._id}`}>
+                  <div className="relative aspect-[16/9] overflow-hidden">                    <Image
+                      src={getImageSrc(blog)}
+                      alt={blog.title || 'Blog görseli'}
                       fill
                       className="object-cover transform group-hover:scale-105 transition-transform duration-300"
+                      onError={() => {
+                        // Handle image load errors by using a fallback
+                        console.warn(`Failed to load image for blog: ${blog.title}`);
+                      }}
                     />
                   </div>
                 </Link>
                 <div className="p-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{blog.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{blog.summary}</p>
-                  <div className="flex justify-between items-center text-xs text-gray-500">
-                    <span>{blog.author}</span>
+                  <p className="text-sm text-gray-600 mb-4">{blog.excerpt}</p>                  <div className="flex justify-between items-center text-xs text-gray-500">
+                    <span>Cardiolive</span>
                     <span>{formatDate(blog.date)}</span>
                   </div>
                 </div>

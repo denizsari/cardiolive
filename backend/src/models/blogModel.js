@@ -28,24 +28,12 @@ const blogSchema = new mongoose.Schema({
     type: String, 
     required: true,
     trim: true
-  },
-  tags: [{
+  },  tags: [{
     type: String,
     trim: true
-  }],
-  author: { 
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  featured: {
+  }],  featured: {
     type: Boolean,
     default: false
-  },
-  status: {
-    type: String,
-    enum: ['draft', 'published', 'archived'],
-    default: 'draft'
   },
   viewCount: {
     type: Number,
@@ -71,14 +59,14 @@ const blogSchema = new mongoose.Schema({
 });
 
 // Create indexes for performance
-blogSchema.index({ status: 1, publishedAt: -1 });
-blogSchema.index({ category: 1, status: 1 });
-blogSchema.index({ featured: 1, status: 1 });
+blogSchema.index({ publishedAt: -1 });
+blogSchema.index({ category: 1 });
+blogSchema.index({ featured: 1 });
 blogSchema.index({ tags: 1 });
 
 // Pre-save middleware to set publishedAt
 blogSchema.pre('save', function(next) {
-  if (this.isModified('status') && this.status === 'published' && !this.publishedAt) {
+  if (this.isNew || !this.publishedAt) {
     this.publishedAt = new Date();
   }
   next();

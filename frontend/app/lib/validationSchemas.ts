@@ -279,10 +279,56 @@ export const contactValidationSchema = yup.object({
     .trim(),
 });
 
-export default {
+// Blog validation schemas
+export const blogValidationSchemas = {
+  // Create/Update blog schema
+  blog: yup.object({
+    title: yup
+      .string()
+      .required('Blog başlığı zorunludur')
+      .min(5, 'Başlık en az 5 karakter olmalıdır')
+      .max(200, 'Başlık en fazla 200 karakter olmalıdır')
+      .trim(),
+    
+    content: yup
+      .string()
+      .required('Blog içeriği zorunludur')
+      .min(50, 'İçerik en az 50 karakter olmalıdır')
+      .trim(),
+    
+    excerpt: yup
+      .string()
+      .max(500, 'Özet en fazla 500 karakter olmalıdır')
+      .trim(),
+    
+    category: yup
+      .string()
+      .required('Kategori zorunludur')
+      .trim(),
+    
+    tags: yup
+      .array()
+      .of(yup.string().trim())
+      .max(10, 'En fazla 10 etiket eklenebilir'),
+    
+    featured: yup
+      .boolean()
+      .default(false),
+    
+    status: yup
+      .string()
+      .oneOf(['draft', 'published', 'archived'], 'Geçerli bir durum seçiniz')
+      .default('draft'),
+  }),
+};
+
+const validationSchemas = {
   user: userValidationSchemas,
   product: productValidationSchemas,
   order: orderValidationSchemas,
   review: reviewValidationSchemas,
   contact: contactValidationSchema,
+  blog: blogValidationSchemas,
 };
+
+export default validationSchemas;

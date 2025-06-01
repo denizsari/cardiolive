@@ -25,8 +25,7 @@ export default function WishlistButton({
     if (!productId || productId === 'default' || productId.length !== 24) {
       return;
     }
-    
-    try {
+      try {
       const result = await wishlistAPI.checkWishlistStatus(productId);
       setIsInWishlist(result.inWishlist);
     } catch (error) {

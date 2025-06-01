@@ -10,8 +10,15 @@ import {
   DollarSign,
   Eye
 } from 'lucide-react';
-import { productAPI, orderAPI } from '../utils/api';
+import { productAPI, orderAPI, userAPI } from '../utils/api';
 import { Order } from '../types';
+import { 
+  DashboardStatsSkeleton, 
+  TableSkeleton 
+} from '../components/Loading';
+import { 
+  ApiErrorFallback 
+} from '../components/ErrorBoundary';
 
 interface DashboardStats {
   totalUsers: number;
@@ -30,34 +37,59 @@ export default function AdminDashboard() {
     recentOrders: []
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
   const fetchDashboardData = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      
       const token = localStorage.getItem('token');
       
-      // Fetch basic stats using centralized API
-      const [users, products, orders] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/count`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+      // Check if user is authenticated
+      if (!token) {
+        setError('Kimlik doğrulama gerekli. Lütfen tekrar giriş yapın.');
+        return;
+      }
+      
+      // Fetch basic stats using centralized API methods with error handling
+      const [userCount, products, orders] = await Promise.all([
+        userAPI.getUserCount().catch(err => {
+          console.error('Failed to fetch user count:', err);
+          return 0;
         }),
-        productAPI.getAll(),
-        orderAPI.getAll()
+        productAPI.getAll().catch(err => {
+          console.error('Failed to fetch products:', err);
+          return [];
+        }),
+        orderAPI.getAll().catch(err => {
+          console.error('Failed to fetch orders:', err);
+          return [];
+        })
       ]);
-
-      const usersData = await users.json();
+      
+      // Calculate total revenue from non-cancelled orders
+      const totalRevenue = orders.reduce((sum: number, order: Order) => {
+        if (order.status !== 'cancelled') {
+          return sum + (order.total || 0);
+        }
+        return sum;
+      }, 0);
       
       setStats({
-        totalUsers: usersData.count || 0,
+        totalUsers: userCount || 0,
         totalProducts: products.length,
         totalOrders: orders.length,
-        totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
+        totalRevenue,
         recentOrders: orders.slice(0, 5)
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      setError(error instanceof Error ? error.message : 'Veri yüklenirken bir hata oluştu');
     } finally {
       setLoading(false);
     }
@@ -85,7 +117,7 @@ export default function AdminDashboard() {
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusText = (status: string) => {
+    const getStatusText = (status: string) => {
     const statusMap = {
       pending: 'Beklemede',
       processing: 'Hazırlanıyor',
@@ -98,11 +130,31 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#70BB1B] mx-auto mb-4"></div>
-          <p className="text-gray-600">Dashboard yükleniyor...</p>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600 mt-2">Cardiolive yönetim paneline hoş geldiniz</p>
         </div>
+        <DashboardStatsSkeleton />
+        <TableSkeleton rows={5} columns={5} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600 mt-2">Cardiolive yönetim paneline hoş geldiniz</p>
+        </div>
+        <ApiErrorFallback 
+          error={new Error(error || 'Unknown error')} 
+          reset={() => {
+            setError(null);
+            fetchDashboardData();
+          }} 
+        />
       </div>
     );
   }
@@ -184,8 +236,7 @@ export default function AdminDashboard() {
             </a>
           </div>
         </div>
-        
-        <div className="overflow-x-auto">
+          <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -204,9 +255,10 @@ export default function AdminDashboard() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Durum
                 </th>
-              </tr>            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">{
-              stats.recentOrders.map((order) => (
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {stats.recentOrders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     #{order.orderNumber}
@@ -224,9 +276,10 @@ export default function AdminDashboard() {
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </span>
-                  </td>                </tr>
-              ))
-            }</tbody>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           
           {stats.recentOrders.length === 0 && (

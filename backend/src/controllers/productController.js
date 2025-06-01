@@ -1,20 +1,13 @@
-const Product = require('../models/productModel');
+const ProductService = require('../services/ProductService');
 const ResponseHandler = require('../utils/responseHandler');
+const { logger } = require('../utils/logger');
 const productValidation = require('../validations/productValidation');
 
-// Helper function to generate slug from name and size
-const generateSlug = (name, size) => {
-  const baseSlug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .trim('-'); // Remove leading/trailing hyphens
-  
-  const sizeSlug = size.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return `${baseSlug}-${sizeSlug}`;
-};
-
-// Ürün Oluşturma
+/**
+ * @desc Create a new product
+ * @route POST /api/products
+ * @access Private/Admin
+ */
 exports.createProduct = async (req, res) => {
   try {
     // Validate request body
@@ -24,32 +17,29 @@ exports.createProduct = async (req, res) => {
       return ResponseHandler.validationError(res, errors);
     }
 
-    // Generate slug if not provided
-    if (!value.slug) {
-      value.slug = generateSlug(value.name, value.size);
-    }
+    const product = await ProductService.createProduct(value);
 
-    // Check if product with same name and size already exists
-    const existingProduct = await Product.findOne({
-      name: value.name,
-      size: value.size,
-      isActive: true
+    logger.logBusinessEvent('product_created', { 
+      adminId: req.user?.userId,
+      productId: product._id, 
+      productName: product.name 
     });
 
-    if (existingProduct) {
-      return ResponseHandler.error(res, 'Bu isim ve boyutta bir ürün zaten mevcut', 409);
-    }
-
-    const product = await Product.create(value);
-    return ResponseHandler.success(res, { product }, 'Ürün başarıyla oluşturuldu', 201);
-    
+    ResponseHandler.created(res, 'Ürün başarıyla oluşturuldu', { product });
   } catch (error) {
-    console.error('Product creation error:', error);
-    return ResponseHandler.error(res, 'Ürün oluşturulamadı', 500, error.message);
+    logger.error('Product creation error:', { adminId: req.user?.userId, error: error.message, stack: error.stack });
+      if (error.message === 'Bu isim ve boyutta bir ürün zaten mevcut') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Ürün oluşturulamadı', error);
   }
 };
 
-// Tüm Ürünleri Getirme
+/**
+ * @desc Get all products with filtering and pagination
+ * @route GET /api/products
+ * @access Public
+ */
 exports.getAllProducts = async (req, res) => {
   try {
     // Validate query parameters
@@ -60,212 +50,223 @@ exports.getAllProducts = async (req, res) => {
     }
 
     const { category, size, minPrice, maxPrice, sort, search, featured, limit, page } = value;
-    let query = { isActive: true };
+    
+    const filters = { category, size, minPrice, maxPrice, search, featured };
+    const options = { page, limit, sort };
 
-    // Öne çıkan ürünler filtresi
-    if (featured === 'true') {
-      query.featured = true;
-    }
+    const result = await ProductService.getProducts(filters, options);
 
-    // Kategori filtresi
-    if (category) {
-      query.category = category;
-    }
-
-    // Boyut filtresi
-    if (size) {
-      query.size = size;
-    }
-
-    // Fiyat filtresi
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = minPrice;
-      if (maxPrice) query.price.$lte = maxPrice;
-    }
-
-    // Arama filtresi
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
-      ];
-    }
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    const total = await Product.countDocuments(query);
-
-    // Execute query with pagination
-    const products = await Product.find(query)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
-
-    // Return paginated response
-    return ResponseHandler.paginated(res, products, {
-      page,
-      limit,
-      total
-    }, 'Ürünler başarıyla getirildi');
-
+    logger.logBusinessEvent('products_viewed', { 
+      filters,
+      options,
+      resultCount: result?.documents?.length || 0 
+    });
+    
+    ResponseHandler.success(res, 'Ürünler başarıyla getirildi', {
+      products: result?.documents || [],
+      pagination: result?.pagination || {}
+    });
   } catch (error) {
-    console.error('Get products error:', error);
-    return ResponseHandler.error(res, 'Ürünler getirilemedi', 500, error.message);
+    logger.error('Get products error:', { 
+      filters: req.query, 
+      error: error.message,
+      stack: error.stack,
+      fullError: JSON.stringify(error, Object.getOwnPropertyNames(error))
+    });
+    ResponseHandler.error(res, 'Ürünler getirilemedi', error);
   }
 };
 
-// Tek Ürün Getirme
+/**
+ * @desc Get single product by ID
+ * @route GET /api/products/:id
+ * @access Public
+ */
 exports.getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const productId = req.params.id;
+    const product = await ProductService.getProductById(productId);
     
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      });
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
 
-    res.status(200).json({
-      success: true,
-      product
-    });
+    logger.logBusinessEvent('product_viewed', { productId, productName: product.name });
+
+    ResponseHandler.success(res, 'Ürün başarıyla getirildi', { product });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Ürün getirilemedi',
-      error: error.message
-    });
+    logger.error('Get product error:', { productId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Ürün getirilemedi', error);
   }
 };
 
-// Slug ile Ürün Getirme
+/**
+ * @desc Get product by slug
+ * @route GET /api/products/slug/:slug
+ * @access Public
+ */
 exports.getProductBySlug = async (req, res) => {
   try {
-    const product = await Product.findOne({ slug: req.params.slug, isActive: true });
+    const slug = req.params.slug;
+    const product = await ProductService.getProductBySlug(slug);
     
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      });
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
 
-    res.status(200).json({
-      success: true,
-      product
-    });
+    logger.logBusinessEvent('product_viewed_by_slug', { slug, productId: product._id, productName: product.name });
+
+    ResponseHandler.success(res, 'Ürün başarıyla getirildi', { product });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Ürün getirilemedi',
-      error: error.message
-    });
+    logger.error('Get product by slug error:', { slug: req.params?.slug, error: error.message });
+    ResponseHandler.error(res, 'Ürün getirilemedi', error);
   }
 };
 
-// Ürün Güncelleme
+/**
+ * @desc Update product
+ * @route PUT /api/products/:id
+ * @access Private/Admin
+ */
 exports.updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true
-      }
-    );
+    const productId = req.params.id;
+    const updateData = req.body;
+
+    const product = await ProductService.updateProduct(productId, updateData);
 
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      });
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
 
-    res.status(200).json({
-      success: true,
-      product
+    logger.logBusinessEvent('product_updated', { 
+      adminId: req.user?.userId,
+      productId, 
+      productName: product.name,
+      updatedFields: Object.keys(updateData)
     });
+
+    ResponseHandler.success(res, 'Ürün başarıyla güncellendi', { product });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Ürün güncellenemedi',
-      error: error.message
-    });
+    logger.error('Product update error:', { adminId: req.user?.userId, productId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Ürün güncellenemedi', error);
   }
 };
 
-// Ürün Silme (Soft Delete)
+/**
+ * @desc Delete product (soft delete)
+ * @route DELETE /api/products/:id
+ * @access Private/Admin
+ */
 exports.deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { isActive: false },
-      { new: true }
-    );
+    const productId = req.params.id;
+    const deleted = await ProductService.deleteProduct(productId);
 
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      });
+    if (!deleted) {
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Ürün başarıyla silindi'
+    logger.logBusinessEvent('product_deleted', { 
+      adminId: req.user?.userId,
+      productId 
     });
+
+    ResponseHandler.success(res, 'Ürün başarıyla silindi');
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Ürün silinemedi',
-      error: error.message
-    });
+    logger.error('Product delete error:', { adminId: req.user?.userId, productId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Ürün silinemedi', error);
   }
 };
 
-// Admin: Tüm ürünleri (pasif olanlar dahil) getirme
+/**
+ * @desc Get all products for admin (including inactive)
+ * @route GET /api/admin/products
+ * @access Private/Admin
+ */
 exports.getAllProductsAdmin = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+    const { page = 1, limit = 10, sort = 'createdAt', order = 'desc', ...filters } = req.query;
+    
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: sort,
+      sortOrder: order,
+      includeInactive: true
+    };
+
+    const result = await ProductService.getProducts(filters, options);
+
+    logger.logBusinessEvent('admin_products_viewed', { 
+      adminId: req.user?.userId,
+      filters,
+      options,
+      resultCount: result.documents.length 
+    });
+
+    ResponseHandler.success(res, 'Ürünler başarıyla getirildi', {
+      products: result.documents,
+      pagination: result.pagination
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    logger.error('Admin get products error:', { adminId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Ürünler getirilemedi', error);
   }
 };
 
-// Admin: Ürün güncelleme
+/**
+ * @desc Update product (admin version)
+ * @route PUT /api/admin/products/:id
+ * @access Private/Admin
+ */
 exports.updateProductAdmin = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const productId = req.params.id;
+    const updateData = req.body;
+
+    const product = await ProductService.updateProduct(productId, updateData);
     
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
+
+    logger.logBusinessEvent('admin_product_updated', { 
+      adminId: req.user?.userId,
+      productId, 
+      productName: product.name,
+      updatedFields: Object.keys(updateData)
+    });
     
-    res.json(product);
+    ResponseHandler.success(res, 'Ürün başarıyla güncellendi', { product });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    logger.error('Admin product update error:', { adminId: req.user?.userId, productId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Ürün güncellenemedi', error);
   }
 };
 
-// Admin: Ürün silme
+/**
+ * @desc Delete product permanently (admin)
+ * @route DELETE /api/admin/products/:id/permanent
+ * @access Private/Admin
+ */
 exports.deleteProductAdmin = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const productId = req.params.id;
+    const deleted = await ProductService.permanentlyDeleteProduct(productId);
     
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    if (!deleted) {
+      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
     }
+
+    logger.logSecurityEvent('product_permanently_deleted', { 
+      adminId: req.user?.userId,
+      productId 
+    });
     
-    res.json({ message: 'Product deleted successfully' });
+    ResponseHandler.success(res, 'Ürün kalıcı olarak silindi');
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    logger.error('Admin product delete error:', { adminId: req.user?.userId, productId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Ürün silinemedi', error);
   }
 };

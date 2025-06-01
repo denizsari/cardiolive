@@ -1,402 +1,284 @@
-const Order = require('../models/orderModel');
-const Product = require('../models/productModel');
+const OrderService = require('../services/OrderService');
 const ResponseHandler = require('../utils/responseHandler');
+const { logger } = require('../utils/logger');
 
-// Create new order
+/**
+ * @desc Create new order
+ * @route POST /api/orders
+ * @access Private
+ */
 exports.createOrder = async (req, res) => {
   try {
     const { items, total, shippingAddress, paymentMethod, notes } = req.body;
     const userId = req.user.userId;
 
-    // Validate and process items
-    const processedItems = [];
-    let calculatedTotal = 0;
-
-    for (const item of items) {
-      const product = await Product.findById(item.product);
-      if (!product) {
-        return ResponseHandler.badRequest(res, `Ürün bulunamadı: ${item.product}`);
-      }
-
-      if (!product.isActive || product.stock < item.quantity) {
-        return ResponseHandler.badRequest(res, `Ürün stokta yok: ${product.name}`);
-      }
-
-      // Security check - verify price hasn't changed
-      if (Math.abs(product.price - item.price) > 0.01) {
-        return ResponseHandler.badRequest(res, `Ürün fiyatı değişmiş: ${product.name}`);
-      }
-
-      const itemTotal = item.price * item.quantity;
-      calculatedTotal += itemTotal;
-
-      processedItems.push({
-        product: item.product,
-        name: product.name,
-        price: item.price,
-        quantity: item.quantity,
-        image: product.images?.[0] || '/products/placeholder.jpg'
-      });
-    }
-
-    // Verify total amount
-    if (Math.abs(calculatedTotal - total) > 0.01) {
-      return ResponseHandler.badRequest(res, 'Toplam tutar hesaplaması uyuşmuyor');
-    }
-
-    // Generate order number
-    const orderNumber = `ORD${Date.now()}${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
-
-    // Process shipping address
-    const processedShippingAddress = {
-      ...shippingAddress,
-      district: shippingAddress.district || shippingAddress.city,
-      country: shippingAddress.country || 'Türkiye'
+    const orderData = {
+      items,
+      total,
+      shippingAddress,
+      paymentMethod,
+      notes
     };
 
-    // Create order
-    const order = new Order({
-      user: userId,
-      orderNumber,
-      items: processedItems,
-      total,
-      shippingAddress: processedShippingAddress,
-      paymentMethod,
-      notes: notes || '',
-      status: 'pending'
+    const order = await OrderService.createOrder(orderData, userId);
+
+    logger.logBusinessEvent('order_created', { 
+      userId, 
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      total: order.total,
+      itemCount: order.items.length
     });
 
-    await order.save();
-
-    // Update product stock
-    for (const item of processedItems) {
-      await Product.findByIdAndUpdate(
-        item.product,
-        { $inc: { stock: -item.quantity } }
-      );
-    }
-
-    // Populate product information
-    await order.populate('items.product', 'name price images');
-
-    const orderResponse = {
-      id: order._id,
-      orderNumber: order.orderNumber,
-      items: order.items,
-      total: order.total,
-      status: order.status,
-      shippingAddress: order.shippingAddress,
-      paymentMethod: order.paymentMethod,
-      notes: order.notes,
-      createdAt: order.createdAt
-    };
-
-    ResponseHandler.success(res, { order: orderResponse }, 'Sipariş başarıyla oluşturuldu', 201);
+    ResponseHandler.created(res, 'Sipariş başarıyla oluşturuldu', { order });
   } catch (error) {
-    ResponseHandler.error(res, 'Sipariş oluşturma hatası', 500, error);
+    logger.error('Order creation error:', { userId: req.user?.userId, error: error.message, stack: error.stack });
+    
+    if (error.message.includes('bulunamadı') || 
+        error.message.includes('stokta yok') ||
+        error.message.includes('fiyatı değişmiş') ||
+        error.message.includes('uyuşmuyor')) {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Sipariş oluşturma hatası', error);
   }
 };
 
-// Get user orders
+/**
+ * @desc Get user orders with filtering and pagination
+ * @route GET /api/orders
+ * @access Private
+ */
 exports.getUserOrders = async (req, res) => {
   try {
-    const { page, limit, status, startDate, endDate, sort, order } = req.query;
+    const { page = 1, limit = 10, status, startDate, endDate, sort = 'createdAt', order = 'desc' } = req.query;
     const userId = req.user.userId;
 
-    // Build filter
-    const filter = { user: userId };
-    if (status) filter.status = status;
-    if (startDate || endDate) {
-      filter.createdAt = {};
-      if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(endDate);
-    }
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const orders = await Order.find(filter)
-      .sort(sortObj)
-      .skip(skip)
-      .limit(limit)
-      .populate('items.product', 'name price images')
-      .select('-__v');
-
-    const total = await Order.countDocuments(filter);
-
-    const pagination = {
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalOrders: total,
-      hasNext: page < Math.ceil(total / limit),
-      hasPrev: page > 1
+    const filters = { status, startDate, endDate };
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: sort,
+      sortOrder: order
     };
 
+    const result = await OrderService.getUserOrders(userId, filters, options);
+
+    logger.logBusinessEvent('user_orders_viewed', { 
+      userId, 
+      orderCount: result.documents?.length || 0,
+      filters,
+      options 
+    });
+
     ResponseHandler.success(res, 'Siparişler başarıyla getirildi', {
-      orders,
-      pagination
+      orders: result.documents,
+      pagination: result.pagination
     });
   } catch (error) {
-    ResponseHandler.error(res, 'Siparişleri getirme hatası', 500, error);
+    logger.error('Get user orders error:', { userId: req.user?.userId, error: error.message, stack: error.stack });
+    ResponseHandler.error(res, 'Siparişleri getirme hatası', error);
   }
 };
 
-// Get single order
+/**
+ * @desc Get single order
+ * @route GET /api/orders/:id
+ * @access Private
+ */
 exports.getOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const userId = req.user.userId;
 
-    const order = await Order.findOne({
-      _id: orderId,
-      user: userId
-    }).populate('items.product', 'name price images').select('-__v');
+    const order = await OrderService.getOrderById(orderId, userId);
 
     if (!order) {
       return ResponseHandler.notFound(res, 'Sipariş bulunamadı');
     }
 
+    logger.logBusinessEvent('order_viewed', { userId, orderId, orderNumber: order.orderNumber });
+
     ResponseHandler.success(res, 'Sipariş başarıyla getirildi', { order });
   } catch (error) {
-    ResponseHandler.error(res, 'Sipariş getirme hatası', 500, error);
+    logger.error('Get order error:', { userId: req.user?.userId, orderId: req.params?.id, error: error.message });
+    ResponseHandler.error(res, 'Sipariş getirme hatası', error);
   }
 };
 
-// Cancel order (only if status is pending)
+/**
+ * @desc Cancel order
+ * @route PUT /api/orders/:id/cancel
+ * @access Private
+ */
 exports.cancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const userId = req.user.userId;
 
-    const order = await Order.findOne({
-      _id: orderId,
-      user: userId
-    });
+    const success = await OrderService.cancelOrder(orderId, userId);
 
-    if (!order) {
-      return ResponseHandler.notFound(res, 'Sipariş bulunamadı');
+    if (!success) {
+      return ResponseHandler.notFound(res, 'Sipariş bulunamadı veya iptal edilemez');
     }
 
-    if (!['pending', 'processing'].includes(order.status)) {
-      return ResponseHandler.badRequest(res, 'Bu sipariş artık iptal edilemez');
-    }
-
-    // Restore product stock
-    for (const item of order.items) {
-      await Product.findByIdAndUpdate(
-        item.product,
-        { $inc: { stock: item.quantity } }
-      );
-    }
-
-    order.status = 'cancelled';
-    order.cancelledAt = new Date();
-    await order.save();
+    logger.logBusinessEvent('order_cancelled', { userId, orderId });
 
     ResponseHandler.success(res, 'Sipariş başarıyla iptal edildi');
   } catch (error) {
-    ResponseHandler.error(res, 'Sipariş iptal etme hatası', 500, error);
+    logger.error('Cancel order error:', { userId: req.user?.userId, orderId: req.params?.id, error: error.message });
+    
+    if (error.message === 'Bu sipariş artık iptal edilemez') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Sipariş iptal etme hatası', error);
   }
 };
 
-// Admin: Get all orders
+/**
+ * @desc Get all orders (Admin)
+ * @route GET /api/admin/orders
+ * @access Private/Admin
+ */
 exports.getAllOrders = async (req, res) => {
   try {
-    const { page, limit, status, startDate, endDate, minTotal, maxTotal, sort, order } = req.query;
+    const { page = 1, limit = 10, status, startDate, endDate, minTotal, maxTotal, sort = 'createdAt', order = 'desc' } = req.query;
 
-    // Build filter
-    const filter = {};
-    if (status) filter.status = status;
-    if (startDate || endDate) {
-      filter.createdAt = {};
-      if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(endDate);
-    }
-    if (minTotal || maxTotal) {
-      filter.total = {};
-      if (minTotal) filter.total.$gte = parseFloat(minTotal);
-      if (maxTotal) filter.total.$lte = parseFloat(maxTotal);
-    }
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const orders = await Order.find(filter)
-      .populate('user', 'name email phoneNumber')
-      .populate('items.product', 'name price images')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(limit)
-      .select('-__v');
-
-    const total = await Order.countDocuments(filter);
-
-    // Calculate summary statistics
-    const stats = await Order.aggregate([
-      { $match: filter },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: '$total' },
-          averageOrderValue: { $avg: '$total' },
-          totalOrders: { $sum: 1 }
-        }
-      }
-    ]);
-
-    const pagination = {
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalOrders: total,
-      hasNext: page < Math.ceil(total / limit),
-      hasPrev: page > 1
+    const filters = { status, startDate, endDate, minTotal, maxTotal };
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: sort,
+      sortOrder: order
     };
 
+    const result = await OrderService.getAllOrders(filters, options);
+
+    logger.logBusinessEvent('admin_orders_viewed', { 
+      adminId: req.user.userId, 
+      orderCount: result.documents?.length || 0,
+      filters,
+      options 
+    });
+
     ResponseHandler.success(res, 'Siparişler başarıyla getirildi', {
-      orders,
-      pagination,
-      stats: stats[0] || { totalRevenue: 0, averageOrderValue: 0, totalOrders: 0 }
+      orders: result.documents,
+      pagination: result.pagination,
+      stats: result.stats
     });
   } catch (error) {
-    ResponseHandler.error(res, 'Siparişleri getirme hatası', 500, error);
+    logger.error('Admin get orders error:', { 
+      adminId: req.user?.userId, 
+      error: error.message, 
+      stack: error.stack,
+      name: error.name
+    });
+    ResponseHandler.error(res, 'Siparişleri getirme hatası', error);
   }
 };
 
-// Admin: Update order status
+/**
+ * @desc Update order status (Admin)
+ * @route PUT /api/admin/orders/:id/status
+ * @access Private/Admin
+ */
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status, trackingNumber, notes } = req.body;
     const orderId = req.params.id;
 
-    const order = await Order.findById(orderId);
+    const order = await OrderService.updateOrderStatus(orderId, status, { trackingNumber, notes });
+
     if (!order) {
       return ResponseHandler.notFound(res, 'Sipariş bulunamadı');
     }
 
-    // Validate status transition
-    const currentStatus = order.status;
-    const validTransitions = {
-      'pending': ['processing', 'cancelled'],
-      'processing': ['shipped', 'cancelled'],
-      'shipped': ['delivered'],
-      'delivered': [],
-      'cancelled': []
-    };
-
-    if (!validTransitions[currentStatus].includes(status) && currentStatus !== status) {
-      return ResponseHandler.badRequest(res, `${currentStatus} durumundan ${status} durumuna geçiş yapılamaz`);
-    }
-
-    // Update order
-    order.status = status;
-    if (trackingNumber) order.trackingNumber = trackingNumber;
-    if (notes) order.adminNotes = notes;
-    
-    // Set status timestamps
-    if (status === 'processing') order.processingAt = new Date();
-    if (status === 'shipped') order.shippedAt = new Date();
-    if (status === 'delivered') order.deliveredAt = new Date();
-    if (status === 'cancelled') order.cancelledAt = new Date();
-
-    await order.save();
-
-    // Populate for response
-    await order.populate('user', 'name email');
-    await order.populate('items.product', 'name price');
+    logger.logBusinessEvent('order_status_updated', { 
+      adminId: req.user.userId, 
+      orderId, 
+      orderNumber: order.orderNumber,
+      oldStatus: order.status,
+      newStatus: status 
+    });
 
     ResponseHandler.success(res, 'Sipariş durumu başarıyla güncellendi', { order });
   } catch (error) {
-    ResponseHandler.error(res, 'Sipariş durumu güncelleme hatası', 500, error);
+    logger.error('Update order status error:', { adminId: req.user?.userId, orderId: req.params?.id, error: error.message });
+    
+    if (error.message.includes('geçiş yapılamaz')) {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Sipariş durumu güncelleme hatası', error);
   }
 };
 
-// Track order by order number (public endpoint)
+/**
+ * @desc Track order by order number
+ * @route GET /api/orders/track/:orderNumber
+ * @access Public
+ */
 exports.trackOrder = async (req, res) => {
   try {
     const { orderNumber } = req.params;
     
-    const order = await Order.findOne({ orderNumber })
-      .select('-user -adminNotes -__v');
+    const trackingInfo = await OrderService.trackOrder(orderNumber);
+
+    if (!trackingInfo) {
+      return ResponseHandler.notFound(res, 'Sipariş bulunamadı');
+    }
+
+    logger.logBusinessEvent('order_tracked', { orderNumber, status: trackingInfo.status });
+
+    ResponseHandler.success(res, 'Sipariş takip bilgileri getirildi', { trackingInfo });
+  } catch (error) {
+    logger.error('Track order error:', { orderNumber: req.params?.orderNumber, error: error.message });
+    ResponseHandler.error(res, 'Sipariş takip hatası', error);
+  }
+};
+
+/**
+ * @desc Update order payment information
+ * @route PATCH /api/orders/:id/payment
+ * @access Private
+ */
+exports.updateOrderPayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { paymentMethod, paymentStatus, paymentReference, paidAt } = req.body;
+    const userId = req.user.userId;
+
+    const paymentData = {
+      paymentMethod,
+      paymentStatus,
+      paymentReference,
+      paidAt
+    };
+
+    const order = await OrderService.updateOrderPayment(id, paymentData, userId);
 
     if (!order) {
       return ResponseHandler.notFound(res, 'Sipariş bulunamadı');
     }
 
-    // Create tracking status history
-    const statusHistory = [
-      {
-        status: 'pending',
-        date: order.createdAt,
-        description: 'Sipariş alındı ve ödeme onaylandı',
-        completed: true
-      }
-    ];
-
-    // Add processing status if applicable
-    if (order.processingAt || ['processing', 'shipped', 'delivered'].includes(order.status)) {
-      statusHistory.push({
-        status: 'processing',
-        date: order.processingAt || new Date(order.createdAt.getTime() + 2 * 60 * 60 * 1000),
-        description: 'Sipariş kargoya hazırlanıyor',
-        completed: order.processingAt ? true : false
-      });
-    }
-
-    // Add shipped status if applicable
-    if (order.shippedAt || ['shipped', 'delivered'].includes(order.status)) {
-      statusHistory.push({
-        status: 'shipped',
-        date: order.shippedAt || new Date(order.createdAt.getTime() + 24 * 60 * 60 * 1000),
-        description: 'Paket kargoya verildi',
-        completed: order.shippedAt ? true : false
-      });
-    }
-
-    // Add delivered status if applicable
-    if (order.deliveredAt || order.status === 'delivered') {
-      statusHistory.push({
-        status: 'delivered',
-        date: order.deliveredAt || order.updatedAt,
-        description: 'Paket başarıyla teslim edildi',
-        completed: order.deliveredAt ? true : false
-      });
-    }
-
-    // Add cancelled status if applicable
-    if (order.status === 'cancelled') {
-      statusHistory.push({
-        status: 'cancelled',
-        date: order.cancelledAt || order.updatedAt,
-        description: 'Sipariş iptal edildi',
-        completed: true
-      });
-    }
-
-    // Calculate estimated delivery (7 days from order date)
-    const estimatedDelivery = order.status === 'delivered' ? order.deliveredAt : 
-      new Date(order.createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const trackingInfo = {
+    logger.logBusinessEvent('order_payment_updated', { 
+      userId, 
+      orderId: id, 
       orderNumber: order.orderNumber,
-      status: order.status,
-      estimatedDelivery,
-      trackingNumber: order.trackingNumber || `TRK${order._id.toString().slice(-8).toUpperCase()}`,
-      shippingAddress: order.shippingAddress,
-      items: order.items,
-      total: order.total,
-      statusHistory,
-      createdAt: order.createdAt,
-      lastUpdated: order.updatedAt
-    };
+      paymentMethod,
+      paymentStatus
+    });
 
-    ResponseHandler.success(res, 'Sipariş takip bilgileri getirildi', { trackingInfo });
+    ResponseHandler.success(res, 'Sipariş ödeme bilgileri güncellendi', { order });
   } catch (error) {
-    ResponseHandler.error(res, 'Sipariş takip hatası', 500, error);
+    logger.error('Update order payment error:', { 
+      userId: req.user?.userId, 
+      orderId: req.params?.id, 
+      error: error.message 
+    });
+    
+    if (error.message.includes('bulunamadı') || error.message.includes('yetkisiz')) {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Sipariş ödeme güncelleme hatası', error);
   }
 };

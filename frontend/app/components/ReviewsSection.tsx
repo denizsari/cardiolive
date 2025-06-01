@@ -95,7 +95,7 @@ export default function ReviewsSection({
       };
 
       await reviewAPI.createReview(createData);
-
+      
       // Refresh data
       const [reviewsResponse, statsResponse] = await Promise.all([
         reviewAPI.getProductReviews(resolvedProductId, { page: 1, limit: 10, sort: sortBy }),
@@ -103,7 +103,7 @@ export default function ReviewsSection({
       ]);
       
       setReviews(reviewsResponse.reviews);
-      setStats(statsResponse.stats);
+      setStats(statsResponse);
       setPage(2);
       setHasMore(reviewsResponse.reviews.length === 10);
       
@@ -111,7 +111,9 @@ export default function ReviewsSection({
     } finally {
       setSubmitting(false);
     }
-  };  // Vote helpful using centralized API
+  };
+
+  // Vote helpful using centralized API
   const handleVoteHelpful = async (reviewId: string) => {
     if (!userToken) return;
 
@@ -145,7 +147,7 @@ export default function ReviewsSection({
 
       try {
         const response = await reviewAPI.getReviewStats(resolvedProductId);
-        setStats(response.stats);
+        setStats(response);
         setError(null);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'İstatistikler yüklenemedi';
@@ -238,7 +240,8 @@ export default function ReviewsSection({
 
       {/* Review Form */}
       {showForm && isLoggedIn && (
-        <div className="p-6 border-b bg-gray-50">          <ReviewForm
+        <div className="p-6 border-b bg-gray-50">
+          <ReviewForm
             onSubmit={handleReviewSubmit}
             isSubmitting={submitting}
           />
@@ -250,7 +253,8 @@ export default function ReviewsSection({
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex flex-wrap gap-4">
             {/* Sort Dropdown */}
-            <div className="relative">              <select
+            <div className="relative">
+              <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -305,7 +309,8 @@ export default function ReviewsSection({
             )}
           </div>
         ) : (
-          <>            {reviews.map((review) => (
+          <>
+            {reviews.map((review) => (
               <div key={review._id} className="p-6">
                 <ReviewItem
                   review={review}

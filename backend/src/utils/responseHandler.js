@@ -2,15 +2,14 @@
  * Standardized API response handler
  */
 
-class ResponseHandler {
-  /**
+class ResponseHandler {  /**
    * Send success response
    * @param {Object} res - Express response object
-   * @param {*} data - Data to send
    * @param {string} message - Success message
+   * @param {*} data - Data to send (optional)
    * @param {number} statusCode - HTTP status code (default: 200)
    */
-  static success(res, data = null, message = 'İşlem başarılı', statusCode = 200) {
+  static success(res, message = 'İşlem başarılı', data = null, statusCode = 200) {
     const response = {
       success: true,
       message,
@@ -25,15 +24,26 @@ class ResponseHandler {
 
     return res.status(statusCode).json(response);
   }
-
   /**
    * Send error response
    * @param {Object} res - Express response object
    * @param {string} message - Error message
-   * @param {number} statusCode - HTTP status code (default: 400)
-   * @param {*} error - Additional error details (only in development)
+   * @param {number|Object} statusCodeOrError - HTTP status code or error object for backward compatibility
+   * @param {*} error - Additional error details (only when statusCode is provided)
    */
-  static error(res, message = 'Bir hata oluştu', statusCode = 400, error = null) {
+  static error(res, message = 'Bir hata oluştu', statusCodeOrError = 400, error = null) {
+    let statusCode;
+    let errorObj;
+
+    // Handle backward compatibility: if third param is an object, it's the error
+    if (typeof statusCodeOrError === 'object' && statusCodeOrError !== null) {
+      statusCode = 500; // Default to 500 for server errors
+      errorObj = statusCodeOrError;
+    } else {
+      statusCode = statusCodeOrError || 400;
+      errorObj = error;
+    }
+
     const response = {
       success: false,
       message,
@@ -41,8 +51,8 @@ class ResponseHandler {
     };
 
     // Include error details only in development
-    if (process.env.NODE_ENV === 'development' && error) {
-      response.error = error;
+    if (process.env.NODE_ENV === 'development' && errorObj) {
+      response.error = errorObj;
     }
 
     return res.status(statusCode).json(response);
@@ -162,6 +172,16 @@ class ResponseHandler {
    */
   static serverError(res, message = 'Sunucu hatası', error = null) {
     return this.error(res, message, 500, error);
+  }
+
+  /**
+   * Send created response
+   * @param {Object} res - Express response object
+   * @param {string} message - Success message
+   * @param {*} data - Data to send (optional)
+   */
+  static created(res, message = 'Kayıt başarıyla oluşturuldu', data = null) {
+    return this.success(res, message, data, 201);
   }
 }
 

@@ -1,256 +1,144 @@
-const Order = require('../models/orderModel');
+/**
+ * @fileoverview Payment Controller - Handles payment processing operations
+ * @description Manages payment processing, validation, and payment methods
+ * @author Cardiolive E-commerce Platform
+ * @version 1.0.0
+ */
 
-// Mock Payment Processing
+const PaymentService = require('../services/PaymentService');
+const ResponseHandler = require('../utils/responseHandler');
+const { logger } = require('../utils/logger');
+
+// Initialize service
+const paymentService = new PaymentService();
+
+/**
+ * Process payment for an order
+ * @route POST /api/payments/process
+ * @access Private (authenticated users)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with payment result
+ */
 exports.processPayment = async (req, res) => {
   try {
     const { orderId, paymentMethod, paymentDetails } = req.body;
     
-    // Find the order
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Order not found' 
-      });
-    }
-
-    // Mock payment simulation based on payment method
-    let paymentResult;
-    
-    switch (paymentMethod) {
-      case 'credit_card':
-        paymentResult = await mockCreditCardPayment(paymentDetails, order.total);
-        break;
-      case 'bank_transfer':
-        paymentResult = await mockBankTransferPayment(paymentDetails, order.total);
-        break;
-      case 'cash_on_delivery':
-        paymentResult = await mockCashOnDeliveryPayment(order.total);
-        break;
-      default:
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Invalid payment method' 
-        });
-    }
-
-    if (paymentResult.success) {
-      // Update order with payment info
-      order.paymentStatus = 'paid';
-      order.paymentMethod = paymentMethod;
-      order.paymentReference = paymentResult.reference;
-      order.status = 'confirmed';
-      order.paidAt = new Date();
-      
-      await order.save();
-
-      res.json({
-        success: true,
-        message: 'Payment processed successfully',
-        payment: {
-          reference: paymentResult.reference,
-          amount: order.total,
-          method: paymentMethod,
-          status: 'completed'
-        },
-        order: {
-          id: order._id,
-          orderNumber: order.orderNumber,
-          status: order.status,
-          paymentStatus: order.paymentStatus
-        }
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: 'Payment failed',
-        error: paymentResult.error
-      });
-    }
-
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Payment processing error', 
-      error: error.message 
+    logger.logEvent('business', 'payment_processing_initiated', {
+      orderId,
+      paymentMethod,
+      userId: req.user?.userId,
+      requestId: req.id
     });
+
+    const result = await paymentService.processPayment(orderId, paymentMethod, paymentDetails);
+
+    logger.logEvent('business', 'payment_completed', {
+      orderId,
+      paymentMethod,
+      amount: result.payment.amount,
+      reference: result.payment.reference,
+      userId: req.user?.userId,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Payment processed successfully', result);  } catch (error) {
+    logger.logEvent('error', 'payment_processing_failed', {
+      orderId: req.body.orderId,
+      paymentMethod: req.body.paymentMethod,
+      userId: req.user?.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
+    // Debug: Log the error details
+    console.log('🔍 PaymentController Error Debug:');
+    console.log('Error message:', error.message);
+    console.log('Error statusCode:', error.statusCode);
+    console.log('Error type:', typeof error);
+    console.log('Error keys:', Object.keys(error));
+
+    // Pass the status code and error message properly
+    const statusCode = error.statusCode || 500;
+    ResponseHandler.error(res, error.message || 'Payment processing error', statusCode);
   }
 };
 
-// Mock Credit Card Payment
-async function mockCreditCardPayment(paymentDetails, amount) {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const { cardNumber, expiryMonth, expiryYear, cvv, cardHolder } = paymentDetails;
-  
-  // Basic validation
-  if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !cardHolder) {
-    return { success: false, error: 'Missing card information' };
-  }
-  
-  // Mock card validation (simulate some failures)
-  if (cardNumber === '4000000000000002') {
-    return { success: false, error: 'Card declined' };
-  }
-  
-  if (cardNumber === '4000000000000069') {
-    return { success: false, error: 'Expired card' };
-  }
-  
-  // Simulate successful payment
-  return {
-    success: true,
-    reference: `CC_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    transactionId: `TXN_${Date.now()}`,
-    amount: amount
-  };
-}
 
-// Mock Bank Transfer Payment
-async function mockBankTransferPayment(paymentDetails, amount) {
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
-  const { bankAccount, routingNumber } = paymentDetails;
-  
-  if (!bankAccount || !routingNumber) {
-    return { success: false, error: 'Missing bank information' };
-  }
-  
-  return {
-    success: true,
-    reference: `BT_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    amount: amount,
-    estimatedClearance: '2-3 business days'
-  };
-}
 
-// Mock Cash on Delivery
-async function mockCashOnDeliveryPayment(amount) {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return {
-    success: true,
-    reference: `COD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    amount: amount,
-    note: 'Payment will be collected upon delivery'
-  };
-}
-
-// Get Payment Methods
+/**
+ * Get available payment methods
+ * @route GET /api/payments/methods
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with payment methods
+ */
 exports.getPaymentMethods = async (req, res) => {
   try {
-    const paymentMethods = [
-      {
-        id: 'credit_card',
-        name: 'Kredi Kartı',
-        description: 'Visa, Mastercard, American Express kabul edilir',
-        icon: 'credit-card',
-        enabled: true,
-        fees: 0
-      },
-      {
-        id: 'bank_transfer',
-        name: 'Banka Havalesi',
-        description: 'Banka hesabından direkt transfer',
-        icon: 'bank',
-        enabled: true,
-        fees: 0
-      },
-      {
-        id: 'cash_on_delivery',
-        name: 'Kapıda Ödeme',
-        description: 'Ürün teslim edilirken nakit ödeme',
-        icon: 'cash',
-        enabled: true,
-        fees: 5.00 // Kapıda ödeme ücreti
-      }
-    ];
+    logger.logEvent('business', 'payment_methods_fetch_initiated', {
+      requestId: req.id
+    });
 
-    res.json({
-      success: true,
+    const paymentMethods = await paymentService.getPaymentMethods();
+
+    logger.logEvent('business', 'payment_methods_fetched', {
+      methodCount: paymentMethods.length,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Payment methods retrieved successfully', {
       paymentMethods
     });
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Error fetching payment methods', 
-      error: error.message 
+    logger.logEvent('error', 'payment_methods_fetch_failed', {
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
     });
+
+    ResponseHandler.error(res, 'Error fetching payment methods', error);
   }
 };
 
-// Validate Payment Details
+/**
+ * Validate payment details
+ * @route POST /api/payments/validate
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with validation result
+ */
 exports.validatePaymentDetails = async (req, res) => {
   try {
     const { paymentMethod, paymentDetails } = req.body;
     
-    let validation = { valid: true, errors: [] };
-    
-    switch (paymentMethod) {
-      case 'credit_card':
-        validation = validateCreditCard(paymentDetails);
-        break;
-      case 'bank_transfer':
-        validation = validateBankTransfer(paymentDetails);
-        break;
-      case 'cash_on_delivery':
-        validation = { valid: true, errors: [] };
-        break;
-      default:
-        validation = { valid: false, errors: ['Invalid payment method'] };
-    }
-    
-    res.json({
-      success: true,
+    logger.logEvent('business', 'payment_validation_initiated', {
+      paymentMethod,
+      requestId: req.id
+    });
+
+    const validation = await paymentService.validatePaymentDetails(paymentMethod, paymentDetails);
+
+    logger.logEvent('business', 'payment_validated', {
+      paymentMethod,
       valid: validation.valid,
-      errors: validation.errors
+      errorCount: validation.errors.length,
+      requestId: req.id
     });
+
+    ResponseHandler.success(res, 'Payment details validated', validation);
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Validation error', 
-      error: error.message 
+    logger.logEvent('error', 'payment_validation_failed', {
+      paymentMethod: req.body.paymentMethod,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
     });
+
+    ResponseHandler.error(res, 'Validation error', error);
   }
 };
 
-function validateCreditCard(details) {
-  const errors = [];
-  
-  if (!details.cardNumber || details.cardNumber.length < 13) {
-    errors.push('Invalid card number');
-  }
-  
-  if (!details.expiryMonth || details.expiryMonth < 1 || details.expiryMonth > 12) {
-    errors.push('Invalid expiry month');
-  }
-  
-  if (!details.expiryYear || details.expiryYear < new Date().getFullYear()) {
-    errors.push('Invalid expiry year');
-  }
-  
-  if (!details.cvv || details.cvv.length < 3) {
-    errors.push('Invalid CVV');
-  }
-  
-  if (!details.cardHolder || details.cardHolder.length < 2) {
-    errors.push('Invalid card holder name');
-  }
-  
-  return { valid: errors.length === 0, errors };
-}
 
-function validateBankTransfer(details) {
-  const errors = [];
-  
-  if (!details.bankAccount || details.bankAccount.length < 10) {
-    errors.push('Invalid bank account number');
-  }
-  
-  if (!details.routingNumber || details.routingNumber.length < 8) {
-    errors.push('Invalid routing number');
-  }
-  
-  return { valid: errors.length === 0, errors };
-}

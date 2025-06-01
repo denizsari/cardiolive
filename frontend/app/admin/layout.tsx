@@ -32,19 +32,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
   useEffect(() => {
     // Check if user is admin
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     
-    if (!token || !userData) {
+    if (!token || !userData || userData === 'undefined') {
       router.push('/login');
       return;
     }
 
     try {
       const parsedUser = JSON.parse(userData);
+      if (!parsedUser || typeof parsedUser !== 'object' || !parsedUser._id) {
+        console.warn('Invalid user data structure, redirecting to login');
+        router.push('/login');
+        return;
+      }
       if (parsedUser.role !== 'admin') {
         router.push('/');
         return;

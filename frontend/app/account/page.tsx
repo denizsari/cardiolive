@@ -38,15 +38,32 @@ export default function AccountPage() {
       router.push('/login');
       return;
     }    const userData = localStorage.getItem('user');
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-      setFormData({
-        name: parsedUser.name,
-        email: parsedUser.email,
-        phoneNumber: parsedUser.phoneNumber || '',
-        address: parsedUser.address || ''
-      });
+    if (userData && userData !== 'undefined') {
+      try {
+        const parsedUser = JSON.parse(userData);
+        // Validate that parsed user has required properties
+        if (parsedUser && typeof parsedUser === 'object' && parsedUser._id) {
+          setUser(parsedUser);
+          setFormData({
+            name: parsedUser.name,
+            email: parsedUser.email,
+            phoneNumber: parsedUser.phoneNumber || '',
+            address: parsedUser.address || ''
+          });
+        } else {
+          console.warn('Invalid user data structure, clearing localStorage');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          router.push('/login');
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        router.push('/login');
+        return;
+      }
     }
     setLoading(false);
   }, [router]);

@@ -1,315 +1,381 @@
-const Blog = require('../models/blogModel');
+/**
+ * @fileoverview Blog Controller - Handles blog management operations
+ * @description Manages blog posts, categories, and content management
+ * @author Cardiolive E-commerce Platform
+ * @version 1.0.0
+ */
+
+const BlogService = require('../services/BlogService');
 const ResponseHandler = require('../utils/responseHandler');
-const mongoose = require('mongoose');
+const { logger } = require('../utils/logger');
 
-// Utility function to check valid ObjectId
-const isValidObjectId = (id) => {
-  return mongoose.Types.ObjectId.isValid(id);
-};
-
-// Get all blogs with filtering, sorting and pagination
+/**
+ * Get all blogs with filtering, sorting and pagination
+ * @route GET /api/blogs
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with blogs and pagination
+ */
 exports.getAllBlogs = async (req, res) => {
-  try {
-    const { 
-      page = 1, 
-      limit = 10, 
-      category, 
-      author, 
-      status = 'published',
-      search,
-      sort = 'createdAt', 
-      order = 'desc',
-      startDate,
-      endDate
-    } = req.query;
+  try {    const filterOptions = {
+      page: req.query.page || 1,
+      limit: req.query.limit || 10,
+      category: req.query.category,
+      search: req.query.search,
+      sort: req.query.sort || 'createdAt',
+      order: req.query.order || 'desc',
+      startDate: req.query.startDate,
+      endDate: req.query.endDate
+    };
 
-    // Build filter
-    const filter = {};
-    
-    if (status && status !== 'all') filter.status = status;
-    if (category) filter.category = category;
-    if (author) filter.author = new RegExp(author, 'i');
-    if (search) {
-      filter.$or = [
-        { title: new RegExp(search, 'i') },
-        { content: new RegExp(search, 'i') },
-        { excerpt: new RegExp(search, 'i') }
-      ];
-    }
-    
-    if (startDate || endDate) {
-      filter.createdAt = {};
-      if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(endDate);
-    }
+    logger.logEvent('business', 'blogs_fetch_initiated', {
+      filters: filterOptions,
+      requestId: req.id
+    });    const result = await BlogService.getBlogs(filterOptions);
 
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
+    logger.logEvent('business', 'blogs_fetched', {
+      blogCount: result.blogs.length,
+      totalBlogs: result.pagination.totalBlogs,
+      category: filterOptions.category,
+      requestId: req.id
+    });
 
-    const blogs = await Blog.find(filter)
-      .sort(sortObj)
-      .skip(skip)
-      .limit(Number(limit))
-      .select('-__v');
-
-    const totalBlogs = await Blog.countDocuments(filter);
-
-    const pagination = {
-      currentPage: Number(page),
-      totalPages: Math.ceil(totalBlogs / limit),
-      totalBlogs,
-      hasNext: page < Math.ceil(totalBlogs / limit),
-      hasPrev: page > 1
-    };    ResponseHandler.success(res, {
-      blogs,
-      pagination,
-      count: blogs.length
-    }, 'Bloglar başarıyla getirildi');
+    ResponseHandler.success(res, 'Bloglar başarıyla getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'blogs_fetch_failed', {
+      filters: req.query,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blogları getirme hatası', error);
   }
 };
 
-// Get single blog by ID
+/**
+ * Get single blog by ID
+ * @route GET /api/blogs/:id
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with blog details
+ */
 exports.getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate ObjectId
-    if (!isValidObjectId(id)) {
-      return ResponseHandler.badRequest(res, 'Geçersiz blog ID');
-    }
+    logger.logEvent('business', 'blog_fetch_by_id_initiated', {
+      blogId: id,
+      requestId: req.id
+    });
 
-    const blog = await Blog.findById(id).select('-__v');
-    
-    if (!blog) {
-      return ResponseHandler.notFound(res, 'Blog bulunamadı');
-    }
+    const blog = await BlogService.getBlogById(id);
 
-    // Increment view count
-    blog.viewCount = (blog.viewCount || 0) + 1;
-    await blog.save();    ResponseHandler.success(res, { blog }, 'Blog başarıyla getirildi');
+    logger.logEvent('business', 'blog_viewed', {
+      blogId: id,
+      title: blog.title,
+      category: blog.category,
+      newViewCount: blog.viewCount,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Blog başarıyla getirildi', { blog });
   } catch (error) {
+    logger.logEvent('error', 'blog_fetch_by_id_failed', {
+      blogId: req.params.id,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog getirme hatası', error);
   }
 };
 
-// Get blog by slug (SEO friendly)
+/**
+ * Get blog by slug (SEO friendly)
+ * @route GET /api/blogs/slug/:slug
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with blog details
+ */
 exports.getBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const blog = await Blog.findOne({ slug, status: 'published' }).select('-__v');
-    
-    if (!blog) {
-      return ResponseHandler.notFound(res, 'Blog bulunamadı');
-    }
+    logger.logEvent('business', 'blog_fetch_by_slug_initiated', {
+      slug,
+      requestId: req.id
+    });
 
-    // Increment view count
-    blog.viewCount = (blog.viewCount || 0) + 1;
-    await blog.save();    ResponseHandler.success(res, { blog }, 'Blog başarıyla getirildi');
+    const blog = await BlogService.getBlogBySlug(slug);
+
+    logger.logEvent('business', 'blog_viewed_by_slug', {
+      blogId: blog._id,
+      slug,
+      title: blog.title,
+      category: blog.category,
+      newViewCount: blog.viewCount,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Blog başarıyla getirildi', { blog });
   } catch (error) {
+    logger.logEvent('error', 'blog_fetch_by_slug_failed', {
+      slug: req.params.slug,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog getirme hatası', error);
   }
 };
 
-// Create new blog (Admin only)
-exports.createBlog = async (req, res) => {
-  try {
-    const { title, content, excerpt, category, tags, featured, status = 'draft' } = req.body;
-    const authorId = req.user.userId;
+/**
+ * Create new blog (Admin only)
+ * @route POST /api/blogs
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with created blog
+ */
+exports.createBlog = async (req, res) => {  try {
+    const blogData = {
+      ...req.body
+    };
 
-    // Generate slug from title
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim('-');
-
-    // Check if slug exists
-    const existingBlog = await Blog.findOne({ slug });
-    if (existingBlog) {
-      return ResponseHandler.badRequest(res, 'Bu başlıkla bir blog zaten mevcut');
-    }
-
-    const blog = new Blog({
-      title,
-      slug,
-      content,
-      excerpt,
-      category,
-      tags: tags || [],
-      featured: featured || false,
-      status,
-      author: authorId,
-      publishedAt: status === 'published' ? new Date() : null
+    logger.logEvent('business', 'blog_creation_initiated', {
+      adminId: req.user?.userId || 'test-admin',
+      title: blogData.title,
+      category: blogData.category,
+      status: blogData.status,
+      requestId: req.id
     });
 
-    await blog.save();
-    await blog.populate('author', 'name email');
+    const blog = await BlogService.createBlog(blogData);
 
-    ResponseHandler.created(res, 'Blog başarıyla oluşturuldu', { blog });
-  } catch (error) {
+    logger.logEvent('business', 'blog_created', {
+      blogId: blog._id,
+      adminId: req.user?.userId || 'test-admin',
+      title: blog.title,
+      slug: blog.slug,
+      category: blog.category,
+      status: blog.status,
+      featured: blog.featured,
+      requestId: req.id
+    });
+
+    ResponseHandler.created(res, 'Blog başarıyla oluşturuldu', { blog });  } catch (error) {
+    logger.logEvent('error', 'blog_creation_failed', {
+      adminId: req.user?.userId || 'test-admin',
+      title: req.body.title,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog oluşturma hatası', error);
   }
 };
 
-// Update blog (Admin only)
+/**
+ * Update blog (Admin only)
+ * @route PUT /api/blogs/:id
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with updated blog
+ */
 exports.updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, excerpt, category, tags, featured, status } = req.body;
+    const updateData = req.body;
+    const adminId = req.user.userId;
 
-    // Validate ObjectId
-    if (!isValidObjectId(id)) {
-      return ResponseHandler.badRequest(res, 'Geçersiz blog ID');
-    }
+    logger.logEvent('business', 'blog_update_initiated', {
+      blogId: id,
+      adminId,
+      updateFields: Object.keys(updateData),
+      requestId: req.id
+    });
 
-    const blog = await Blog.findById(id);
-    if (!blog) {
-      return ResponseHandler.notFound(res, 'Blog bulunamadı');
-    }
+    const blog = await BlogService.updateBlog(id, updateData);
 
-    // Update fields
-    if (title && title !== blog.title) {
-      // Generate new slug if title changed
-      const slug = title
-        .toLowerCase()
-        .replace(/[^a-z0-9 -]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim('-');
+    logger.logEvent('business', 'blog_updated', {
+      blogId: id,
+      adminId,
+      title: blog.title,
+      slug: blog.slug,
+      category: blog.category,
+      status: blog.status,
+      featured: blog.featured,
+      requestId: req.id
+    });
 
-      // Check if new slug exists
-      const existingBlog = await Blog.findOne({ slug, _id: { $ne: id } });
-      if (existingBlog) {
-        return ResponseHandler.badRequest(res, 'Bu başlıkla bir blog zaten mevcut');
-      }
-
-      blog.title = title;
-      blog.slug = slug;
-    }
-
-    if (content !== undefined) blog.content = content;
-    if (excerpt !== undefined) blog.excerpt = excerpt;
-    if (category !== undefined) blog.category = category;
-    if (tags !== undefined) blog.tags = tags;
-    if (featured !== undefined) blog.featured = featured;
-    
-    // Handle status change
-    if (status !== undefined && status !== blog.status) {
-      blog.status = status;
-      if (status === 'published' && !blog.publishedAt) {
-        blog.publishedAt = new Date();
-      }
-    }
-
-    blog.updatedAt = new Date();
-    await blog.save();
-    await blog.populate('author', 'name email');    ResponseHandler.success(res, { blog }, 'Blog başarıyla güncellendi');
+    ResponseHandler.success(res, 'Blog başarıyla güncellendi', { blog });
   } catch (error) {
+    logger.logEvent('error', 'blog_update_failed', {
+      blogId: req.params.id,
+      adminId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog güncelleme hatası', error);
   }
 };
 
-// Delete blog (Admin only)
+/**
+ * Delete blog (Admin only)
+ * @route DELETE /api/blogs/:id
+ * @access Private (admin only)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response confirmation
+ */
 exports.deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
+    const adminId = req.user.userId;
 
-    // Validate ObjectId
-    if (!isValidObjectId(id)) {
-      return ResponseHandler.badRequest(res, 'Geçersiz blog ID');
-    }
+    logger.logEvent('security', 'blog_deletion_initiated', {
+      blogId: id,
+      adminId,
+      requestId: req.id
+    });
 
-    const blog = await Blog.findById(id);
-    if (!blog) {
-      return ResponseHandler.notFound(res, 'Blog bulunamadı');
-    }
+    await BlogService.deleteBlog(id);
 
-    await Blog.findByIdAndDelete(id);
+    logger.logEvent('security', 'blog_deleted', {
+      blogId: id,
+      adminId,
+      requestId: req.id
+    });
 
     ResponseHandler.success(res, 'Blog başarıyla silindi');
   } catch (error) {
+    logger.logEvent('error', 'blog_deletion_failed', {
+      blogId: req.params.id,
+      adminId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog silme hatası', error);
   }
 };
 
-// Get featured blogs
+/**
+ * Get featured blogs
+ * @route GET /api/blogs/featured
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with featured blogs
+ */
 exports.getFeaturedBlogs = async (req, res) => {
   try {
     const { limit = 5 } = req.query;
 
-    const blogs = await Blog.find({ 
-      featured: true, 
-      status: 'published' 
-    })
-      .sort({ createdAt: -1 })
-      .limit(Number(limit))
-      .select('title slug excerpt category createdAt author viewCount')
-      .populate('author', 'name');    ResponseHandler.success(res, {
-      blogs,
-      count: blogs.length
-    }, 'Öne çıkan bloglar getirildi');
+    logger.logEvent('business', 'featured_blogs_fetch_initiated', {
+      limit,
+      requestId: req.id
+    });
+
+    const result = await BlogService.getFeaturedBlogs(Number(limit));
+
+    logger.logEvent('business', 'featured_blogs_fetched', {
+      blogCount: result.blogs.length,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Öne çıkan bloglar getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'featured_blogs_fetch_failed', {
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Öne çıkan blogları getirme hatası', error);
   }
 };
 
-// Get blog categories
+/**
+ * Get blog categories
+ * @route GET /api/blogs/categories
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with blog categories
+ */
 exports.getBlogCategories = async (req, res) => {
   try {
-    const categories = await Blog.aggregate([
-      { $match: { status: 'published' } },
-      { $group: { _id: '$category', count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
-    ]);    ResponseHandler.success(res, {
-      categories: categories.map(cat => ({
-        name: cat._id,
-        count: cat.count
-      }))
-    }, 'Blog kategorileri getirildi');
+    logger.logEvent('business', 'blog_categories_fetch_initiated', {
+      requestId: req.id
+    });
+
+    const result = await BlogService.getBlogCategories();
+
+    logger.logEvent('business', 'blog_categories_fetched', {
+      categoryCount: result.categories.length,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Blog kategorileri getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'blog_categories_fetch_failed', {
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'Blog kategorilerini getirme hatası', error);
   }
 };
 
-// Get related blogs
+/**
+ * Get related blogs
+ * @route GET /api/blogs/:id/related
+ * @access Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with related blogs
+ */
 exports.getRelatedBlogs = async (req, res) => {
   try {
     const { id } = req.params;
     const { limit = 4 } = req.query;
 
-    // Validate ObjectId
-    if (!isValidObjectId(id)) {
-      return ResponseHandler.badRequest(res, 'Geçersiz blog ID');
-    }
+    logger.logEvent('business', 'related_blogs_fetch_initiated', {
+      blogId: id,
+      limit,
+      requestId: req.id
+    });
 
-    const currentBlog = await Blog.findById(id);
-    if (!currentBlog) {
-      return ResponseHandler.notFound(res, 'Blog bulunamadı');
-    }
+    const result = await BlogService.getRelatedBlogs(id, Number(limit));
 
-    const relatedBlogs = await Blog.find({
-      _id: { $ne: id },
-      status: 'published',
-      $or: [
-        { category: currentBlog.category },
-        { tags: { $in: currentBlog.tags } }
-      ]
-    })
-      .sort({ createdAt: -1 })
-      .limit(Number(limit))
-      .select('title slug excerpt category createdAt viewCount')
-      .populate('author', 'name');    ResponseHandler.success(res, {
-      blogs: relatedBlogs,
-      count: relatedBlogs.length
-    }, 'İlgili bloglar getirildi');
+    logger.logEvent('business', 'related_blogs_fetched', {
+      blogId: id,
+      relatedCount: result.blogs.length,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'İlgili bloglar getirildi', result);
   } catch (error) {
+    logger.logEvent('error', 'related_blogs_fetch_failed', {
+      blogId: req.params.id,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
     ResponseHandler.error(res, 'İlgili blogları getirme hatası', error);
   }
 };

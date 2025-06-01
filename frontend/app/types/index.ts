@@ -73,7 +73,6 @@ export interface Blog {
   summary: string;
   content: string;
   image: string;
-  author: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

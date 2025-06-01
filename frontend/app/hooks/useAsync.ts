@@ -1,21 +1,21 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
-interface AsyncState<T = any> {
+interface AsyncState<T = unknown> {
   data: T | null;
   loading: boolean;
   error: string | null;
 }
 
-interface UseAsyncOptions {
-  onSuccess?: (data: any) => void;
+interface UseAsyncOptions<T = unknown> {
+  onSuccess?: (data: T) => void;
   onError?: (error: string) => void;
   showSuccessToast?: boolean;
   showErrorToast?: boolean;
   successMessage?: string;
 }
 
-export const useAsync = <T = any>(options: UseAsyncOptions = {}) => {
+export const useAsync = <T = unknown>(options: UseAsyncOptions<T> = {}) => {
   const {
     onSuccess,
     onError,
@@ -46,8 +46,7 @@ export const useAsync = <T = any>(options: UseAsyncOptions = {}) => {
           onSuccess(data);
         }
         
-        return data;
-      } catch (error: any) {
+        return data;      } catch (error: unknown) {
         const errorMessage = getErrorMessage(error);
         setState(prev => ({ ...prev, loading: false, error: errorMessage }));
         
@@ -81,21 +80,31 @@ export const useAsync = <T = any>(options: UseAsyncOptions = {}) => {
 };
 
 // Error message extraction utility
-export const getErrorMessage = (error: any): string => {
+export const getErrorMessage = (error: unknown): string => {
   if (typeof error === 'string') {
     return error;
   }
 
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
+  if (error && typeof error === 'object') {
+    const errorObj = error as Record<string, unknown>;
+    
+    if (errorObj.response && typeof errorObj.response === 'object') {
+      const response = errorObj.response as Record<string, unknown>;
+      if (response.data && typeof response.data === 'object') {
+        const data = response.data as Record<string, unknown>;
+        if (typeof data.message === 'string') {
+          return data.message;
+        }
+      }
+    }
 
-  if (error?.message) {
-    return error.message;
-  }
+    if (typeof errorObj.message === 'string') {
+      return errorObj.message;
+    }
 
-  if (error?.errors && Array.isArray(error.errors)) {
-    return error.errors.join(', ');
+    if (errorObj.errors && Array.isArray(errorObj.errors)) {
+      return errorObj.errors.join(', ');
+    }
   }
 
   return 'Bir hata oluştu. Lütfen tekrar deneyin.';
@@ -126,11 +135,11 @@ export const useLoadingState = (initialStates: Record<string, boolean> = {}) => 
 };
 
 // Form submission with loading and error handling
-export const useFormSubmission = <T = any>(options: UseAsyncOptions = {}) => {
+export const useFormSubmission = <T = unknown, F = Record<string, unknown>>(options: UseAsyncOptions<T> = {}) => {
   const { execute, loading, error, reset } = useAsync<T>(options);
 
   const submitForm = useCallback(
-    async (formData: any, submitFunction: (data: any) => Promise<T>) => {
+    async (formData: F, submitFunction: (data: F) => Promise<T>) => {
       return execute(() => submitFunction(formData));
     },
     [execute]
@@ -146,21 +155,28 @@ export const useFormSubmission = <T = any>(options: UseAsyncOptions = {}) => {
 
 // HTTP request wrapper with better error handling
 export const useApiRequest = () => {
-  const handleApiError = useCallback((error: any) => {
+  const handleApiError = useCallback((error: unknown) => {
     console.error('API Error:', error);
 
     // Handle network errors
-    if (!error.response) {
+    if (!error || typeof error !== 'object') {
+      return 'Bağlantı hatası. İnternet bağlantınızı kontrol edin.';
+    }
+
+    const errorObj = error as Record<string, unknown>;
+    
+    if (!errorObj.response) {
       return 'Bağlantı hatası. İnternet bağlantınızı kontrol edin.';
     }
 
     // Handle HTTP errors
-    const status = error.response.status;
-    const data = error.response.data;
+    const response = errorObj.response as Record<string, unknown>;
+    const status = response.status as number;
+    const data = response.data as Record<string, unknown>;
 
     switch (status) {
       case 400:
-        return data?.message || 'Geçersiz istek. Lütfen bilgilerinizi kontrol edin.';
+        return (typeof data?.message === 'string' ? data.message : null) || 'Geçersiz istek. Lütfen bilgilerinizi kontrol edin.';
       case 401:
         return 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
       case 403:
@@ -168,18 +184,18 @@ export const useApiRequest = () => {
       case 404:
         return 'İstenen kaynak bulunamadı.';
       case 409:
-        return data?.message || 'Bu kayıt zaten mevcut.';
+        return (typeof data?.message === 'string' ? data.message : null) || 'Bu kayıt zaten mevcut.';
       case 422:
         if (data?.errors && Array.isArray(data.errors)) {
           return data.errors.join(', ');
         }
-        return data?.message || 'Doğrulama hatası.';
+        return (typeof data?.message === 'string' ? data.message : null) || 'Doğrulama hatası.';
       case 429:
         return 'Çok fazla istek. Lütfen biraz bekleyin.';
       case 500:
         return 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
       default:
-        return data?.message || 'Beklenmeyen bir hata oluştu.';
+        return (typeof data?.message === 'string' ? data.message : null) || 'Beklenmeyen bir hata oluştu.';
     }
   }, []);
 

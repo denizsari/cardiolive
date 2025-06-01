@@ -1,0 +1,2131 @@
+{
+  "endpoints": {
+    "backend": {
+      "/api/users": {
+        "POST /register": {
+          "auth": false,
+          "validation": "userValidation.register"
+        },
+        "POST /login": {
+          "auth": false,
+          "validation": "userValidation.login"
+        },
+        "POST /forgot-password": {
+          "auth": false,
+          "validation": "userValidation.forgotPassword"
+        },
+        "POST /reset-password": {
+          "auth": false,
+          "validation": "userValidation.resetPassword"
+        },
+        "POST /refresh-token": {
+          "auth": false,
+          "validation": null
+        },
+        "GET /me": {
+          "auth": true,
+          "roles": [
+            "user",
+            "admin"
+          ]
+        },
+        "PUT /profile": {
+          "auth": true,
+          "validation": "userValidation.updateProfile"
+        },
+        "PUT /change-password": {
+          "auth": true,
+          "validation": "userValidation.changePassword"
+        },
+        "POST /logout": {
+          "auth": true
+        },
+        "GET /count": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "GET /all": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "GET /admin/users": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PUT /admin/users/:userId/role": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "userValidation.updateUserRole"
+        },
+        "PUT /admin/users/:userId/status": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "userValidation.updateUserStatus"
+        },
+        "DELETE /admin/users/:userId": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      "/api/products": {
+        "GET /": {
+          "auth": false,
+          "pagination": true
+        },
+        "GET /:id": {
+          "auth": false
+        },
+        "GET /slug/:slug": {
+          "auth": false
+        },
+        "POST /": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PUT /:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "DELETE /:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "GET /admin/all": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PUT /admin/:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "DELETE /admin/:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      "/api/orders": {
+        "POST /": {
+          "auth": true,
+          "validation": "orderValidation.create"
+        },
+        "GET /": {
+          "auth": true
+        },
+        "GET /user": {
+          "auth": true
+        },
+        "GET /:id": {
+          "auth": true
+        },
+        "PATCH /:id/cancel": {
+          "auth": true
+        },
+        "PATCH /:id/payment": {
+          "auth": true
+        },
+        "GET /track/:orderNumber": {
+          "auth": false
+        },
+        "GET /admin": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PATCH /admin/:id/status": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "orderValidation.updateStatus"
+        }
+      },
+      "/api/blogs": {
+        "GET /": {
+          "auth": false,
+          "pagination": true
+        },
+        "GET /featured": {
+          "auth": false
+        },
+        "GET /categories": {
+          "auth": false
+        },
+        "GET /slug/:slug": {
+          "auth": false
+        },
+        "GET /:id": {
+          "auth": false
+        },
+        "GET /:id/related": {
+          "auth": false
+        },
+        "POST /": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateCreateBlog"
+        },
+        "PUT /:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateUpdateBlog"
+        },
+        "DELETE /:id": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      "/api/reviews": {
+        "GET /product/:productId": {
+          "auth": false,
+          "pagination": true
+        },
+        "GET /stats/:productId": {
+          "auth": false
+        },
+        "POST /": {
+          "auth": true,
+          "validation": "validateCreateReview"
+        },
+        "GET /user": {
+          "auth": true
+        },
+        "PUT /:reviewId": {
+          "auth": true,
+          "validation": "validateUpdateReview"
+        },
+        "DELETE /:reviewId": {
+          "auth": true
+        },
+        "PATCH /:reviewId/helpful": {
+          "auth": true,
+          "validation": "validateHelpfulVote"
+        },
+        "GET /admin/all": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "DELETE /admin/:reviewId": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PATCH /admin/:reviewId/status": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateReviewAction"
+        }
+      },
+      "/api/wishlist": {
+        "GET /": {
+          "auth": true
+        },
+        "GET /count": {
+          "auth": true
+        },
+        "GET /check/:productId": {
+          "auth": true
+        },
+        "POST /": {
+          "auth": true,
+          "validation": "validateAddToWishlist"
+        },
+        "DELETE /:productId": {
+          "auth": true
+        },
+        "DELETE /": {
+          "auth": true
+        },
+        "POST /bulk-add": {
+          "auth": true,
+          "validation": "validateBulkWishlist"
+        },
+        "POST /bulk-remove": {
+          "auth": true,
+          "validation": "validateBulkWishlist"
+        },
+        "PATCH /:productId/notes": {
+          "auth": true,
+          "validation": "validateWishlistNotes"
+        }
+      },
+      "/api/payments": {
+        "GET /methods": {
+          "auth": false
+        },
+        "POST /validate": {
+          "auth": true
+        },
+        "POST /process": {
+          "auth": true
+        }
+      },
+      "/api/settings": {
+        "GET /public": {
+          "auth": false
+        },
+        "GET /": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "GET /category": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        },
+        "PUT /": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateUpdateSettings"
+        }
+      }
+    },
+    "frontend": {
+      "authAPI": {
+        "POST /api/users/login": {
+          "params": [
+            "email",
+            "password"
+          ]
+        },
+        "POST /api/users/register": {
+          "params": [
+            "name",
+            "email",
+            "password"
+          ]
+        },
+        "POST /api/users/forgot-password": {
+          "params": [
+            "email"
+          ]
+        }
+      },
+      "productAPI": {
+        "GET /api/products": {
+          "wrapper": "safeCollectionCall",
+          "extractsProducts": true
+        },
+        "GET /api/products/:id": {
+          "wrapper": "safeApiCall"
+        },
+        "GET /api/products/slug/:slug": {
+          "wrapper": "safeApiCall"
+        },
+        "POST /api/products": {
+          "auth": true
+        },
+        "PUT /api/products/:id": {
+          "auth": true
+        },
+        "DELETE /api/products/:id": {
+          "auth": true
+        }
+      },
+      "orderAPI": {
+        "POST /api/orders": {
+          "auth": true
+        },
+        "GET /api/orders": {
+          "wrapper": "safeCollectionCall",
+          "auth": true
+        },
+        "GET /api/orders/track/:orderNumber": {
+          "wrapper": "safeApiCall"
+        },
+        "GET /api/orders/:id": {
+          "wrapper": "safeApiCall",
+          "auth": true
+        },
+        "PATCH /api/orders/:id/cancel": {
+          "auth": true
+        },
+        "GET /api/orders/admin": {
+          "wrapper": "safeCollectionCall",
+          "auth": true
+        },
+        "PATCH /api/orders/admin/:id/status": {
+          "auth": true
+        },
+        "PATCH /api/orders/:orderId/payment": {
+          "auth": true
+        }
+      },
+      "blogAPI": {
+        "GET /api/blogs": {
+          "wrapper": "safeCollectionCall",
+          "extractsBlogs": true
+        },
+        "GET /api/blogs/:id": {
+          "wrapper": "safeApiCall",
+          "customExtraction": true
+        },
+        "GET /api/blogs/slug/:slug": {
+          "wrapper": "safeApiCall"
+        },
+        "POST /api/blogs": {
+          "auth": true
+        },
+        "PUT /api/blogs/:id": {
+          "auth": true
+        },
+        "DELETE /api/blogs/:id": {
+          "auth": true
+        }
+      },
+      "userAPI": {
+        "GET /api/users/profile": {
+          "wrapper": "safeApiCall",
+          "auth": true
+        },
+        "PUT /api/users/profile": {
+          "auth": true
+        },
+        "PUT /api/users/change-password": {
+          "auth": true
+        },
+        "GET /api/users/admin/all": {
+          "wrapper": "safeCollectionCall",
+          "auth": true
+        },
+        "PUT /api/users/admin/users/:userId/role": {
+          "auth": true
+        },
+        "PUT /api/users/admin/users/:userId/status": {
+          "auth": true
+        },
+        "DELETE /api/users/admin/users/:userId": {
+          "auth": true
+        },
+        "GET /api/users/count": {
+          "wrapper": "safeCountCall",
+          "auth": true
+        }
+      },
+      "reviewAPI": {
+        "GET /api/reviews/product/:productId": {
+          "customParams": true
+        },
+        "GET /api/reviews/stats/:productId": {
+          "wrapper": "safeApiCall"
+        },
+        "POST /api/reviews": {
+          "auth": true
+        },
+        "PUT /api/reviews/:reviewId": {
+          "auth": true
+        },
+        "DELETE /api/reviews/:reviewId": {
+          "auth": true
+        },
+        "PATCH /api/reviews/:reviewId/helpful": {
+          "auth": true
+        },
+        "DELETE /api/reviews/admin/:reviewId": {
+          "auth": true
+        },
+        "PATCH /api/reviews/admin/:reviewId/status": {
+          "auth": true
+        }
+      },
+      "wishlistAPI": {
+        "GET /api/wishlist": {
+          "customExtraction": true,
+          "auth": true
+        },
+        "GET /api/wishlist/count": {
+          "auth": true
+        },
+        "GET /api/wishlist/check/:productId": {
+          "auth": true
+        },
+        "POST /api/wishlist": {
+          "auth": true
+        },
+        "DELETE /api/wishlist/:productId": {
+          "auth": true
+        },
+        "DELETE /api/wishlist": {
+          "auth": true
+        },
+        "POST /api/wishlist/bulk-add": {
+          "auth": true
+        },
+        "POST /api/wishlist/bulk-remove": {
+          "auth": true
+        },
+        "PATCH /api/wishlist/:productId/notes": {
+          "auth": true
+        }
+      },
+      "paymentAPI": {
+        "GET /api/payments/methods": {},
+        "POST /api/payments/validate": {
+          "auth": true
+        },
+        "POST /api/payments/process": {
+          "auth": true
+        }
+      }
+    },
+    "matches": [
+      {
+        "endpoint": "POST /api/users/login",
+        "frontend": {
+          "original": "POST /api/users/login",
+          "normalized": "post /api/users/login",
+          "group": "authAPI",
+          "config": {
+            "params": [
+              "email",
+              "password"
+            ]
+          }
+        },
+        "backend": {
+          "original": "POST /api/users/login",
+          "normalized": "post /api/users/login",
+          "config": {
+            "auth": false,
+            "validation": "userValidation.login"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/users/register",
+        "frontend": {
+          "original": "POST /api/users/register",
+          "normalized": "post /api/users/register",
+          "group": "authAPI",
+          "config": {
+            "params": [
+              "name",
+              "email",
+              "password"
+            ]
+          }
+        },
+        "backend": {
+          "original": "POST /api/users/register",
+          "normalized": "post /api/users/register",
+          "config": {
+            "auth": false,
+            "validation": "userValidation.register"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/users/forgot-password",
+        "frontend": {
+          "original": "POST /api/users/forgot-password",
+          "normalized": "post /api/users/forgot-password",
+          "group": "authAPI",
+          "config": {
+            "params": [
+              "email"
+            ]
+          }
+        },
+        "backend": {
+          "original": "POST /api/users/forgot-password",
+          "normalized": "post /api/users/forgot-password",
+          "config": {
+            "auth": false,
+            "validation": "userValidation.forgotPassword"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/products/:id",
+        "frontend": {
+          "original": "GET /api/products/:id",
+          "normalized": "get /api/products/:param",
+          "group": "productAPI",
+          "config": {
+            "wrapper": "safeApiCall"
+          }
+        },
+        "backend": {
+          "original": "GET /api/products/:id",
+          "normalized": "get /api/products/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/products/slug/:slug",
+        "frontend": {
+          "original": "GET /api/products/slug/:slug",
+          "normalized": "get /api/products/slug/:param",
+          "group": "productAPI",
+          "config": {
+            "wrapper": "safeApiCall"
+          }
+        },
+        "backend": {
+          "original": "GET /api/products/slug/:slug",
+          "normalized": "get /api/products/slug/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/products/:id",
+        "frontend": {
+          "original": "PUT /api/products/:id",
+          "normalized": "put /api/products/:param",
+          "group": "productAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/products/:id",
+          "normalized": "put /api/products/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/products/:id",
+        "frontend": {
+          "original": "DELETE /api/products/:id",
+          "normalized": "delete /api/products/:param",
+          "group": "productAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/products/:id",
+          "normalized": "delete /api/products/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/orders/track/:orderNumber",
+        "frontend": {
+          "original": "GET /api/orders/track/:orderNumber",
+          "normalized": "get /api/orders/track/:param",
+          "group": "orderAPI",
+          "config": {
+            "wrapper": "safeApiCall"
+          }
+        },
+        "backend": {
+          "original": "GET /api/orders/track/:orderNumber",
+          "normalized": "get /api/orders/track/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/orders/:id",
+        "frontend": {
+          "original": "GET /api/orders/:id",
+          "normalized": "get /api/orders/:param",
+          "group": "orderAPI",
+          "config": {
+            "wrapper": "safeApiCall",
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/orders/:id",
+          "normalized": "get /api/orders/:param",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/orders/:id/cancel",
+        "frontend": {
+          "original": "PATCH /api/orders/:id/cancel",
+          "normalized": "patch /api/orders/:param/cancel",
+          "group": "orderAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/orders/:id/cancel",
+          "normalized": "patch /api/orders/:param/cancel",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/orders/admin",
+        "frontend": {
+          "original": "GET /api/orders/admin",
+          "normalized": "get /api/orders/admin",
+          "group": "orderAPI",
+          "config": {
+            "wrapper": "safeCollectionCall",
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/orders/admin",
+          "normalized": "get /api/orders/admin",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/orders/admin/:id/status",
+        "frontend": {
+          "original": "PATCH /api/orders/admin/:id/status",
+          "normalized": "patch /api/orders/admin/:param/status",
+          "group": "orderAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/orders/admin/:id/status",
+          "normalized": "patch /api/orders/admin/:param/status",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ],
+            "validation": "orderValidation.updateStatus"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/orders/:orderId/payment",
+        "frontend": {
+          "original": "PATCH /api/orders/:orderId/payment",
+          "normalized": "patch /api/orders/:param/payment",
+          "group": "orderAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/orders/:id/payment",
+          "normalized": "patch /api/orders/:param/payment",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/blogs/:id",
+        "frontend": {
+          "original": "GET /api/blogs/:id",
+          "normalized": "get /api/blogs/:param",
+          "group": "blogAPI",
+          "config": {
+            "wrapper": "safeApiCall",
+            "customExtraction": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/blogs/:id",
+          "normalized": "get /api/blogs/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/blogs/slug/:slug",
+        "frontend": {
+          "original": "GET /api/blogs/slug/:slug",
+          "normalized": "get /api/blogs/slug/:param",
+          "group": "blogAPI",
+          "config": {
+            "wrapper": "safeApiCall"
+          }
+        },
+        "backend": {
+          "original": "GET /api/blogs/slug/:slug",
+          "normalized": "get /api/blogs/slug/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/blogs/:id",
+        "frontend": {
+          "original": "PUT /api/blogs/:id",
+          "normalized": "put /api/blogs/:param",
+          "group": "blogAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/blogs/:id",
+          "normalized": "put /api/blogs/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ],
+            "validation": "validateUpdateBlog"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/blogs/:id",
+        "frontend": {
+          "original": "DELETE /api/blogs/:id",
+          "normalized": "delete /api/blogs/:param",
+          "group": "blogAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/blogs/:id",
+          "normalized": "delete /api/blogs/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/users/profile",
+        "frontend": {
+          "original": "PUT /api/users/profile",
+          "normalized": "put /api/users/profile",
+          "group": "userAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/users/profile",
+          "normalized": "put /api/users/profile",
+          "config": {
+            "auth": true,
+            "validation": "userValidation.updateProfile"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/users/change-password",
+        "frontend": {
+          "original": "PUT /api/users/change-password",
+          "normalized": "put /api/users/change-password",
+          "group": "userAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/users/change-password",
+          "normalized": "put /api/users/change-password",
+          "config": {
+            "auth": true,
+            "validation": "userValidation.changePassword"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/users/admin/users/:userId/role",
+        "frontend": {
+          "original": "PUT /api/users/admin/users/:userId/role",
+          "normalized": "put /api/users/admin/users/:param/role",
+          "group": "userAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/users/admin/users/:userId/role",
+          "normalized": "put /api/users/admin/users/:param/role",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ],
+            "validation": "userValidation.updateUserRole"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/users/admin/users/:userId/status",
+        "frontend": {
+          "original": "PUT /api/users/admin/users/:userId/status",
+          "normalized": "put /api/users/admin/users/:param/status",
+          "group": "userAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/users/admin/users/:userId/status",
+          "normalized": "put /api/users/admin/users/:param/status",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ],
+            "validation": "userValidation.updateUserStatus"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/users/admin/users/:userId",
+        "frontend": {
+          "original": "DELETE /api/users/admin/users/:userId",
+          "normalized": "delete /api/users/admin/users/:param",
+          "group": "userAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/users/admin/users/:userId",
+          "normalized": "delete /api/users/admin/users/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/users/count",
+        "frontend": {
+          "original": "GET /api/users/count",
+          "normalized": "get /api/users/count",
+          "group": "userAPI",
+          "config": {
+            "wrapper": "safeCountCall",
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/users/count",
+          "normalized": "get /api/users/count",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/reviews/product/:productId",
+        "frontend": {
+          "original": "GET /api/reviews/product/:productId",
+          "normalized": "get /api/reviews/product/:param",
+          "group": "reviewAPI",
+          "config": {
+            "customParams": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/reviews/product/:productId",
+          "normalized": "get /api/reviews/product/:param",
+          "config": {
+            "auth": false,
+            "pagination": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/reviews/stats/:productId",
+        "frontend": {
+          "original": "GET /api/reviews/stats/:productId",
+          "normalized": "get /api/reviews/stats/:param",
+          "group": "reviewAPI",
+          "config": {
+            "wrapper": "safeApiCall"
+          }
+        },
+        "backend": {
+          "original": "GET /api/reviews/stats/:productId",
+          "normalized": "get /api/reviews/stats/:param",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PUT /api/reviews/:reviewId",
+        "frontend": {
+          "original": "PUT /api/reviews/:reviewId",
+          "normalized": "put /api/reviews/:param",
+          "group": "reviewAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PUT /api/reviews/:reviewId",
+          "normalized": "put /api/reviews/:param",
+          "config": {
+            "auth": true,
+            "validation": "validateUpdateReview"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/reviews/:reviewId",
+        "frontend": {
+          "original": "DELETE /api/reviews/:reviewId",
+          "normalized": "delete /api/reviews/:param",
+          "group": "reviewAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/reviews/:reviewId",
+          "normalized": "delete /api/reviews/:param",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/reviews/:reviewId/helpful",
+        "frontend": {
+          "original": "PATCH /api/reviews/:reviewId/helpful",
+          "normalized": "patch /api/reviews/:param/helpful",
+          "group": "reviewAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/reviews/:reviewId/helpful",
+          "normalized": "patch /api/reviews/:param/helpful",
+          "config": {
+            "auth": true,
+            "validation": "validateHelpfulVote"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/reviews/admin/:reviewId",
+        "frontend": {
+          "original": "DELETE /api/reviews/admin/:reviewId",
+          "normalized": "delete /api/reviews/admin/:param",
+          "group": "reviewAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/reviews/admin/:reviewId",
+          "normalized": "delete /api/reviews/admin/:param",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ]
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/reviews/admin/:reviewId/status",
+        "frontend": {
+          "original": "PATCH /api/reviews/admin/:reviewId/status",
+          "normalized": "patch /api/reviews/admin/:param/status",
+          "group": "reviewAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/reviews/admin/:reviewId/status",
+          "normalized": "patch /api/reviews/admin/:param/status",
+          "config": {
+            "auth": true,
+            "roles": [
+              "admin"
+            ],
+            "validation": "validateReviewAction"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/wishlist/count",
+        "frontend": {
+          "original": "GET /api/wishlist/count",
+          "normalized": "get /api/wishlist/count",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/wishlist/count",
+          "normalized": "get /api/wishlist/count",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/wishlist/check/:productId",
+        "frontend": {
+          "original": "GET /api/wishlist/check/:productId",
+          "normalized": "get /api/wishlist/check/:param",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "GET /api/wishlist/check/:productId",
+          "normalized": "get /api/wishlist/check/:param",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "DELETE /api/wishlist/:productId",
+        "frontend": {
+          "original": "DELETE /api/wishlist/:productId",
+          "normalized": "delete /api/wishlist/:param",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "DELETE /api/wishlist/:productId",
+          "normalized": "delete /api/wishlist/:param",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/wishlist/bulk-add",
+        "frontend": {
+          "original": "POST /api/wishlist/bulk-add",
+          "normalized": "post /api/wishlist/bulk-add",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "POST /api/wishlist/bulk-add",
+          "normalized": "post /api/wishlist/bulk-add",
+          "config": {
+            "auth": true,
+            "validation": "validateBulkWishlist"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/wishlist/bulk-remove",
+        "frontend": {
+          "original": "POST /api/wishlist/bulk-remove",
+          "normalized": "post /api/wishlist/bulk-remove",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "POST /api/wishlist/bulk-remove",
+          "normalized": "post /api/wishlist/bulk-remove",
+          "config": {
+            "auth": true,
+            "validation": "validateBulkWishlist"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "PATCH /api/wishlist/:productId/notes",
+        "frontend": {
+          "original": "PATCH /api/wishlist/:productId/notes",
+          "normalized": "patch /api/wishlist/:param/notes",
+          "group": "wishlistAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "PATCH /api/wishlist/:productId/notes",
+          "normalized": "patch /api/wishlist/:param/notes",
+          "config": {
+            "auth": true,
+            "validation": "validateWishlistNotes"
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "GET /api/payments/methods",
+        "frontend": {
+          "original": "GET /api/payments/methods",
+          "normalized": "get /api/payments/methods",
+          "group": "paymentAPI",
+          "config": {}
+        },
+        "backend": {
+          "original": "GET /api/payments/methods",
+          "normalized": "get /api/payments/methods",
+          "config": {
+            "auth": false
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/payments/validate",
+        "frontend": {
+          "original": "POST /api/payments/validate",
+          "normalized": "post /api/payments/validate",
+          "group": "paymentAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "POST /api/payments/validate",
+          "normalized": "post /api/payments/validate",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      },
+      {
+        "endpoint": "POST /api/payments/process",
+        "frontend": {
+          "original": "POST /api/payments/process",
+          "normalized": "post /api/payments/process",
+          "group": "paymentAPI",
+          "config": {
+            "auth": true
+          }
+        },
+        "backend": {
+          "original": "POST /api/payments/process",
+          "normalized": "post /api/payments/process",
+          "config": {
+            "auth": true
+          }
+        },
+        "authConsistent": true
+      }
+    ],
+    "mismatches": [
+      {
+        "original": "GET /api/products",
+        "normalized": "get /api/products",
+        "group": "productAPI",
+        "config": {
+          "wrapper": "safeCollectionCall",
+          "extractsProducts": true
+        }
+      },
+      {
+        "original": "POST /api/products",
+        "normalized": "post /api/products",
+        "group": "productAPI",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "POST /api/orders",
+        "normalized": "post /api/orders",
+        "group": "orderAPI",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/orders",
+        "normalized": "get /api/orders",
+        "group": "orderAPI",
+        "config": {
+          "wrapper": "safeCollectionCall",
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/blogs",
+        "normalized": "get /api/blogs",
+        "group": "blogAPI",
+        "config": {
+          "wrapper": "safeCollectionCall",
+          "extractsBlogs": true
+        }
+      },
+      {
+        "original": "POST /api/blogs",
+        "normalized": "post /api/blogs",
+        "group": "blogAPI",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/users/profile",
+        "normalized": "get /api/users/profile",
+        "group": "userAPI",
+        "config": {
+          "wrapper": "safeApiCall",
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/users/admin/all",
+        "normalized": "get /api/users/admin/all",
+        "group": "userAPI",
+        "config": {
+          "wrapper": "safeCollectionCall",
+          "auth": true
+        }
+      },
+      {
+        "original": "POST /api/reviews",
+        "normalized": "post /api/reviews",
+        "group": "reviewAPI",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/wishlist",
+        "normalized": "get /api/wishlist",
+        "group": "wishlistAPI",
+        "config": {
+          "customExtraction": true,
+          "auth": true
+        }
+      },
+      {
+        "original": "POST /api/wishlist",
+        "normalized": "post /api/wishlist",
+        "group": "wishlistAPI",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "DELETE /api/wishlist",
+        "normalized": "delete /api/wishlist",
+        "group": "wishlistAPI",
+        "config": {
+          "auth": true
+        }
+      }
+    ],
+    "missing": [
+      {
+        "original": "POST /api/users/reset-password",
+        "normalized": "post /api/users/reset-password",
+        "config": {
+          "auth": false,
+          "validation": "userValidation.resetPassword"
+        }
+      },
+      {
+        "original": "POST /api/users/refresh-token",
+        "normalized": "post /api/users/refresh-token",
+        "config": {
+          "auth": false,
+          "validation": null
+        }
+      },
+      {
+        "original": "GET /api/users/me",
+        "normalized": "get /api/users/me",
+        "config": {
+          "auth": true,
+          "roles": [
+            "user",
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "POST /api/users/logout",
+        "normalized": "post /api/users/logout",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/users/all",
+        "normalized": "get /api/users/all",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "GET /api/users/admin/users",
+        "normalized": "get /api/users/admin/users",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "GET /api/products/",
+        "normalized": "get /api/products/",
+        "config": {
+          "auth": false,
+          "pagination": true
+        }
+      },
+      {
+        "original": "POST /api/products/",
+        "normalized": "post /api/products/",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "GET /api/products/admin/all",
+        "normalized": "get /api/products/admin/all",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "PUT /api/products/admin/:id",
+        "normalized": "put /api/products/admin/:param",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "DELETE /api/products/admin/:id",
+        "normalized": "delete /api/products/admin/:param",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "POST /api/orders/",
+        "normalized": "post /api/orders/",
+        "config": {
+          "auth": true,
+          "validation": "orderValidation.create"
+        }
+      },
+      {
+        "original": "GET /api/orders/",
+        "normalized": "get /api/orders/",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/orders/user",
+        "normalized": "get /api/orders/user",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/blogs/",
+        "normalized": "get /api/blogs/",
+        "config": {
+          "auth": false,
+          "pagination": true
+        }
+      },
+      {
+        "original": "GET /api/blogs/featured",
+        "normalized": "get /api/blogs/featured",
+        "config": {
+          "auth": false
+        }
+      },
+      {
+        "original": "GET /api/blogs/categories",
+        "normalized": "get /api/blogs/categories",
+        "config": {
+          "auth": false
+        }
+      },
+      {
+        "original": "GET /api/blogs/:id/related",
+        "normalized": "get /api/blogs/:param/related",
+        "config": {
+          "auth": false
+        }
+      },
+      {
+        "original": "POST /api/blogs/",
+        "normalized": "post /api/blogs/",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateCreateBlog"
+        }
+      },
+      {
+        "original": "POST /api/reviews/",
+        "normalized": "post /api/reviews/",
+        "config": {
+          "auth": true,
+          "validation": "validateCreateReview"
+        }
+      },
+      {
+        "original": "GET /api/reviews/user",
+        "normalized": "get /api/reviews/user",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/reviews/admin/all",
+        "normalized": "get /api/reviews/admin/all",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "GET /api/wishlist/",
+        "normalized": "get /api/wishlist/",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "POST /api/wishlist/",
+        "normalized": "post /api/wishlist/",
+        "config": {
+          "auth": true,
+          "validation": "validateAddToWishlist"
+        }
+      },
+      {
+        "original": "DELETE /api/wishlist/",
+        "normalized": "delete /api/wishlist/",
+        "config": {
+          "auth": true
+        }
+      },
+      {
+        "original": "GET /api/settings/public",
+        "normalized": "get /api/settings/public",
+        "config": {
+          "auth": false
+        }
+      },
+      {
+        "original": "GET /api/settings/",
+        "normalized": "get /api/settings/",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "GET /api/settings/category",
+        "normalized": "get /api/settings/category",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      {
+        "original": "PUT /api/settings/",
+        "normalized": "put /api/settings/",
+        "config": {
+          "auth": true,
+          "roles": [
+            "admin"
+          ],
+          "validation": "validateUpdateSettings"
+        }
+      }
+    ]
+  },
+  "dataStructures": {
+    "consistent": [
+      "ResponseHandler format",
+      "ApiClient error handling",
+      "Response extraction utilities"
+    ],
+    "inconsistent": []
+  },
+  "authentication": {
+    "consistent": true,
+    "issues": []
+  },
+  "testCases": {
+    "backend": [
+      {
+        "category": "Authentication",
+        "tests": [
+          {
+            "name": "POST /api/users/register - Valid registration",
+            "endpoint": "POST /api/users/register",
+            "payload": {
+              "name": "Test User",
+              "email": "test@example.com",
+              "password": "password123"
+            },
+            "expected": {
+              "success": true,
+              "token": "string",
+              "user": "object"
+            },
+            "auth": false
+          },
+          {
+            "name": "POST /api/users/login - Valid login",
+            "endpoint": "POST /api/users/login",
+            "payload": {
+              "email": "test@example.com",
+              "password": "password123"
+            },
+            "expected": {
+              "success": true,
+              "token": "string",
+              "user": "object"
+            },
+            "auth": false
+          },
+          {
+            "name": "POST /api/users/login - Invalid credentials",
+            "endpoint": "POST /api/users/login",
+            "payload": {
+              "email": "test@example.com",
+              "password": "wrong"
+            },
+            "expected": {
+              "success": false,
+              "message": "string"
+            },
+            "auth": false,
+            "expectError": true
+          }
+        ]
+      },
+      {
+        "category": "Products",
+        "tests": [
+          {
+            "name": "GET /api/products - List all products",
+            "endpoint": "GET /api/products",
+            "expected": {
+              "success": true,
+              "data": {
+                "products": "array",
+                "pagination": "object"
+              }
+            },
+            "auth": false
+          },
+          {
+            "name": "GET /api/products/:id - Get product by ID",
+            "endpoint": "GET /api/products/676b32b1db6b5f5cfb5c33e5",
+            "expected": {
+              "success": true,
+              "data": "object"
+            },
+            "auth": false
+          },
+          {
+            "name": "POST /api/products - Create product (admin)",
+            "endpoint": "POST /api/products",
+            "payload": {
+              "name": "Test Product",
+              "price": 99.99,
+              "description": "Test description",
+              "category": "Test Category",
+              "images": [
+                "/test.jpg"
+              ],
+              "stock": 10
+            },
+            "expected": {
+              "success": true,
+              "data": "object"
+            },
+            "auth": true,
+            "adminRequired": true
+          }
+        ]
+      },
+      {
+        "category": "Orders",
+        "tests": [
+          {
+            "name": "POST /api/orders - Create order",
+            "endpoint": "POST /api/orders",
+            "payload": {
+              "items": [
+                {
+                  "product": "676b32b1db6b5f5cfb5c33e5",
+                  "quantity": 1,
+                  "price": 50,
+                  "name": "Test"
+                }
+              ],
+              "total": 50,
+              "shippingAddress": {
+                "fullName": "Test User",
+                "email": "test@example.com",
+                "phone": "+90 555 123 4567",
+                "address": "Test Address",
+                "city": "Istanbul",
+                "district": "Kadikoy",
+                "postalCode": "34710"
+              },
+              "paymentMethod": "cash_on_delivery"
+            },
+            "expected": {
+              "success": true,
+              "data": "object"
+            },
+            "auth": true
+          },
+          {
+            "name": "GET /api/orders - Get user orders",
+            "endpoint": "GET /api/orders",
+            "expected": {
+              "success": true,
+              "data": "array"
+            },
+            "auth": true
+          }
+        ]
+      },
+      {
+        "category": "Reviews",
+        "tests": [
+          {
+            "name": "GET /api/reviews/product/:productId - Get product reviews",
+            "endpoint": "GET /api/reviews/product/676b32b1db6b5f5cfb5c33e5",
+            "expected": {
+              "success": true,
+              "data": {
+                "reviews": "array",
+                "pagination": "object",
+                "stats": "object"
+              }
+            },
+            "auth": false
+          },
+          {
+            "name": "POST /api/reviews - Create review",
+            "endpoint": "POST /api/reviews",
+            "payload": {
+              "product": "676b32b1db6b5f5cfb5c33e5",
+              "rating": 5,
+              "title": "Great product",
+              "comment": "Really satisfied with this product"
+            },
+            "expected": {
+              "success": true,
+              "data": "object"
+            },
+            "auth": true
+          }
+        ]
+      },
+      {
+        "category": "Wishlist",
+        "tests": [
+          {
+            "name": "GET /api/wishlist - Get user wishlist",
+            "endpoint": "GET /api/wishlist",
+            "expected": {
+              "success": true,
+              "data": "array"
+            },
+            "auth": true
+          },
+          {
+            "name": "POST /api/wishlist - Add to wishlist",
+            "endpoint": "POST /api/wishlist",
+            "payload": {
+              "productId": "676b32b1db6b5f5cfb5c33e5"
+            },
+            "expected": {
+              "success": true,
+              "message": "string"
+            },
+            "auth": true
+          }
+        ]
+      }
+    ],
+    "frontend": [
+      {
+        "category": "Authentication Components",
+        "tests": [
+          {
+            "name": "useAuth hook - Login flow",
+            "component": "useAuth",
+            "scenario": "User login with valid credentials",
+            "mockApiResponse": {
+              "success": true,
+              "token": "mock-token",
+              "user": {
+                "id": "1",
+                "email": "test@example.com"
+              }
+            },
+            "expectedState": {
+              "isLoggedIn": true,
+              "user": "object",
+              "token": "string"
+            }
+          },
+          {
+            "name": "Login form - Submit with validation",
+            "component": "LoginForm",
+            "scenario": "Form submission with email/password",
+            "userActions": [
+              "enter email",
+              "enter password",
+              "click submit"
+            ],
+            "expectedApiCall": "authAPI.login"
+          }
+        ]
+      },
+      {
+        "category": "Product Components",
+        "tests": [
+          {
+            "name": "ProductList - Fetch and display products",
+            "component": "ProductsContent",
+            "scenario": "Load products on page mount",
+            "mockApiResponse": {
+              "success": true,
+              "data": {
+                "products": [
+                  {
+                    "id": "1",
+                    "name": "Test Product"
+                  }
+                ]
+              }
+            },
+            "expectedRender": [
+              "product cards",
+              "loading state",
+              "error handling"
+            ]
+          },
+          {
+            "name": "ProductDetail - Single product view",
+            "component": "ProductDetail",
+            "scenario": "Load product by ID",
+            "mockApiResponse": {
+              "success": true,
+              "data": {
+                "id": "1",
+                "name": "Test Product",
+                "price": 99.99
+              }
+            },
+            "expectedRender": [
+              "product details",
+              "add to cart button",
+              "wishlist button"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "Admin Components",
+        "tests": [
+          {
+            "name": "AdminDashboard - Load statistics",
+            "component": "AdminDashboard",
+            "scenario": "Dashboard data loading",
+            "mockApiResponses": {
+              "userCount": {
+                "success": true,
+                "data": {
+                  "count": 150
+                }
+              },
+              "products": {
+                "success": true,
+                "data": {
+                  "products": []
+                }
+              },
+              "orders": {
+                "success": true,
+                "data": {
+                  "orders": []
+                }
+              }
+            },
+            "expectedRender": [
+              "user count",
+              "product count",
+              "order count",
+              "recent orders"
+            ]
+          }
+        ]
+      }
+    ],
+    "integration": [
+      {
+        "category": "User Journey Tests",
+        "tests": [
+          {
+            "name": "Complete Purchase Flow",
+            "steps": [
+              "Register new user",
+              "Login with credentials",
+              "Browse products",
+              "Add product to cart",
+              "Proceed to checkout",
+              "Create order",
+              "Verify order created"
+            ],
+            "endpoints": [
+              "POST /api/users/register",
+              "POST /api/users/login",
+              "GET /api/products",
+              "POST /api/orders"
+            ]
+          },
+          {
+            "name": "Admin Product Management",
+            "steps": [
+              "Login as admin",
+              "Navigate to admin panel",
+              "Create new product",
+              "Update product details",
+              "Verify product in public listing"
+            ],
+            "endpoints": [
+              "POST /api/users/login",
+              "POST /api/products",
+              "PUT /api/products/:id",
+              "GET /api/products"
+            ]
+          },
+          {
+            "name": "Review and Rating System",
+            "steps": [
+              "Login as user",
+              "View product details",
+              "Submit product review",
+              "View reviews list",
+              "Rate review as helpful"
+            ],
+            "endpoints": [
+              "POST /api/users/login",
+              "GET /api/products/:id",
+              "POST /api/reviews",
+              "GET /api/reviews/product/:id",
+              "PATCH /api/reviews/:id/helpful"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Missing Frontend Integration",
+      "description": "29 backend endpoints lack frontend integration",
+      "action": "Implement missing API calls in frontend",
+      "endpoints": [
+        "POST /api/users/reset-password",
+        "POST /api/users/refresh-token",
+        "GET /api/users/me",
+        "POST /api/users/logout",
+        "GET /api/users/all",
+        "GET /api/users/admin/users",
+        "GET /api/products/",
+        "POST /api/products/",
+        "GET /api/products/admin/all",
+        "PUT /api/products/admin/:id",
+        "DELETE /api/products/admin/:id",
+        "POST /api/orders/",
+        "GET /api/orders/",
+        "GET /api/orders/user",
+        "GET /api/blogs/",
+        "GET /api/blogs/featured",
+        "GET /api/blogs/categories",
+        "GET /api/blogs/:id/related",
+        "POST /api/blogs/",
+        "POST /api/reviews/",
+        "GET /api/reviews/user",
+        "GET /api/reviews/admin/all",
+        "GET /api/wishlist/",
+        "POST /api/wishlist/",
+        "DELETE /api/wishlist/",
+        "GET /api/settings/public",
+        "GET /api/settings/",
+        "GET /api/settings/category",
+        "PUT /api/settings/"
+      ]
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Unused Frontend Calls",
+      "description": "12 frontend API calls have no backend endpoint",
+      "action": "Review and remove unused calls or implement missing backend endpoints",
+      "endpoints": [
+        "GET /api/products",
+        "POST /api/products",
+        "POST /api/orders",
+        "GET /api/orders",
+        "GET /api/blogs",
+        "POST /api/blogs",
+        "GET /api/users/profile",
+        "GET /api/users/admin/all",
+        "POST /api/reviews",
+        "GET /api/wishlist",
+        "POST /api/wishlist",
+        "DELETE /api/wishlist"
+      ]
+    },
+    {
+      "priority": "LOW",
+      "category": "Testing Coverage",
+      "description": "Comprehensive test suite generation completed",
+      "action": "Implement generated test cases for robust quality assurance"
+    },
+    {
+      "priority": "LOW",
+      "category": "Performance Optimization",
+      "description": "Consider implementing React Query for enhanced caching",
+      "action": "Review current React Query usage and expand to all API calls"
+    }
+  ]
+}

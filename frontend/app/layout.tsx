@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { CartProvider } from "./contexts/CartContext";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 import { Toaster } from 'react-hot-toast';
+import { EnhancedErrorBoundary } from "./components/ErrorBoundary";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,34 +35,36 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="tr" className={`${inter.variable} ${playfair.variable} ${abril.variable}`}>
       <body className={`${inter.variable} font-sans`}>
-        <ReactQueryProvider>
-          <CartProvider>
-            <Header />
-            <main>{children}</main>
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#fff',
-                  color: '#333',
-                },
-                success: {
+        <EnhancedErrorBoundary>
+          <ReactQueryProvider>
+            <CartProvider>
+              <Header />
+              <main>{children}</main>
+              <Toaster 
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
                   style: {
-                    background: '#10b981',
-                    color: '#fff',
+                    background: '#fff',
+                    color: '#333',
                   },
-                },
-                error: {
-                  style: {
-                    background: '#ef4444',
-                    color: '#fff',
+                  success: {
+                    style: {
+                      background: '#10b981',
+                      color: '#fff',
+                    },
                   },
-                },
-              }}
-            />
-          </CartProvider>
-        </ReactQueryProvider>
+                  error: {
+                    style: {
+                      background: '#ef4444',
+                      color: '#fff',
+                    },
+                  },
+                }}
+              />
+            </CartProvider>
+          </ReactQueryProvider>
+        </EnhancedErrorBoundary>
       </body>
     </html>
   )

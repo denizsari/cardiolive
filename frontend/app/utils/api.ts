@@ -12,14 +12,20 @@ import {
   TrackingInfo
 } from '@/types';
 
+import {
+  safeApiCall,
+  safeCollectionCall,
+  safeCountCall
+} from '@/utils/responseUtils';
+
 // Define proper types for API responses
 interface BlogPost {
   _id: string;
   title: string;
   content: string;
-  summary: string;
+  excerpt: string;
+  category: string;
   image: string;
-  author: string;
   date: string;
 }
 
@@ -66,7 +72,8 @@ interface CreateOrderData {
 interface CreateBlogData {
   title: string;
   content: string;
-  summary: string;
+  excerpt: string;
+  category: string;
   image: string;
 }
 
@@ -178,88 +185,138 @@ export const authAPI = {
     apiClient.post<APIResponse<string>>('/api/users/forgot-password', { email }),
 };
 
-// Product API functions
+// Product API functions with improved response handling
 export const productAPI = {
-  getAll: async () => {
-    const response = await apiClient.get<{ success: boolean; data: Product[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } }>('/api/products');
-    return response.data || [];
+  getAll: async (): Promise<Product[]> => {
+    return safeCollectionCall<Product>(
+      () => apiClient.get<{ success: boolean; data: { products: Product[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } } }>('/api/products'),
+      'Failed to fetch products'
+    );
   },
-  getById: async (id: string) => {
-    const response = await apiClient.get<{ success: boolean; data: Product }>(`/api/products/${id}`);
-    return response.data;
+  
+  getById: async (id: string): Promise<Product> => {
+    return safeApiCall<Product>(
+      () => apiClient.get<{ success: boolean; data: Product }>(`/api/products/${id}`),
+      'Failed to fetch product'
+    );
   },
-  getBySlug: async (slug: string) => {
-    const response = await apiClient.get<{ success: boolean; data: Product }>(`/api/products/slug/${slug}`);
-    return response.data;
+  
+  getBySlug: async (slug: string): Promise<Product> => {
+    return safeApiCall<Product>(
+      () => apiClient.get<{ success: boolean; data: Product }>(`/api/products/slug/${slug}`),
+      'Failed to fetch product by slug'
+    );
   },
+  
   create: (data: CreateProductData) => apiClient.post<Product>('/api/products', data),
   update: (id: string, data: Partial<CreateProductData>) => apiClient.put<Product>(`/api/products/${id}`, data),
   delete: (id: string) => apiClient.delete<APIResponse<string>>(`/api/products/${id}`),
 };
 
-// Order API functions
+// Order API functions with improved response handling
 export const orderAPI = {
   create: (data: CreateOrderData) => apiClient.post<Order>('/api/orders', data),
-  getMyOrders: async () => {
-    const response = await apiClient.get<{ success: boolean; data: Order[] }>('/api/orders');
-    return response.data;
+  
+  getMyOrders: async (): Promise<Order[]> => {
+    return safeCollectionCall<Order>(
+      () => apiClient.get<{ success: boolean; data: Order[] }>('/api/orders'),
+      'Failed to fetch user orders'
+    );
   },
+  
   track: async (orderNumber: string): Promise<TrackingInfo> => {
-    const response = await apiClient.get<{ success: boolean; data: TrackingInfo }>(`/api/orders/track/${orderNumber}`);
-    return response.data;
+    return safeApiCall<TrackingInfo>(
+      () => apiClient.get<{ success: boolean; data: TrackingInfo }>(`/api/orders/track/${orderNumber}`),
+      'Failed to track order'
+    );
   },
-  getById: async (id: string) => {
-    const response = await apiClient.get<{ success: boolean; data: Order }>(`/api/orders/${id}`);
-    return response.data;
+  
+  getById: async (id: string): Promise<Order> => {
+    return safeApiCall<Order>(
+      () => apiClient.get<{ success: boolean; data: Order }>(`/api/orders/${id}`),
+      'Failed to fetch order'
+    );
   },
+  
   cancel: (id: string) => apiClient.patch<Order>(`/api/orders/${id}/cancel`, {}),
+  
   // Admin functions
-  getAll: async () => {
-    const response = await apiClient.get<{ success: boolean; data: Order[] }>('/api/orders/admin');
-    return response.data;
-  },
-  updateStatus: (id: string, status: string) => 
+  getAll: async (): Promise<Order[]> => {
+    return safeCollectionCall<Order>(
+      () => apiClient.get<{ success: boolean; data: Order[] }>('/api/orders/admin'),
+      'Failed to fetch all orders'
+    );
+  },updateStatus: (id: string, status: string) => 
     apiClient.patch<Order>(`/api/orders/admin/${id}/status`, { status }),
+  // Payment update method for checkout process
+  updatePayment: (orderId: string, paymentData: {
+    paymentMethod: string;
+    paymentStatus: string;
+    paymentReference?: string;
+    paidAt: string;
+  }) => apiClient.patch<Order>(`/api/orders/${orderId}/payment`, paymentData),
 };
 
-// Blog API functions
+// Blog API functions with improved response handling
 export const blogAPI = {
-  getAll: async () => {
-    const response = await apiClient.get<{ success: boolean; data: { blogs: BlogPost[]; pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNext: boolean; hasPrev: boolean }; count: number } }>('/api/blogs');
-    return response.data?.blogs || [];
+  getAll: async (): Promise<BlogPost[]> => {
+    return safeCollectionCall<BlogPost>(
+      () => apiClient.get<{ success: boolean; data: { blogs: BlogPost[]; pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNext: boolean; hasPrev: boolean }; count: number } }>('/api/blogs'),
+      'Failed to fetch blogs'
+    );
+  },    getById: async (id: string): Promise<BlogPost> => {
+    try {
+      const response = await apiClient.get<{ success: boolean; data: { blog: BlogPost } }>(`/api/blogs/${id}`);
+      if (response.success && response.data && response.data.blog) {
+        return response.data.blog;
+      }
+      throw new Error('Blog post not found');
+    } catch (err) {
+      console.error('Error fetching blog:', err);
+      throw new Error('Failed to fetch blog post');
+    }
   },
-  getById: async (id: string) => {
-    const response = await apiClient.get<{ success: boolean; data: BlogPost }>(`/api/blogs/${id}`);
-    return response.data;
-  },
-  getBySlug: async (slug: string) => {
-    const response = await apiClient.get<{ success: boolean; data: BlogPost }>(`/api/blogs/slug/${slug}`);
-    return response.data;
+  
+  getBySlug: async (slug: string): Promise<BlogPost> => {
+    return safeApiCall<BlogPost>(
+      () => apiClient.get<{ success: boolean; data: BlogPost }>(`/api/blogs/slug/${slug}`),
+      'Failed to fetch blog post by slug'
+    );
   },
   create: (data: CreateBlogData) => apiClient.post<BlogPost>('/api/blogs', data),
   update: (id: string, data: Partial<CreateBlogData>) => apiClient.put<BlogPost>(`/api/blogs/${id}`, data),
   delete: (id: string) => apiClient.delete<APIResponse<string>>(`/api/blogs/${id}`),
 };
 
-// User API functions
+// User API functions with improved response handling
 export const userAPI = {
-  getProfile: async () => {
-    const response = await apiClient.get<{ success: boolean; data: User }>('/api/users/profile');
-    return response.data;
+  getProfile: async (): Promise<User> => {
+    return safeApiCall<User>(
+      () => apiClient.get<{ success: boolean; data: User }>('/api/users/profile'),
+      'Failed to fetch user profile'
+    );
   },
+  
   updateProfile: (data: UpdateProfileData) => apiClient.put<UpdateProfileResponse>('/api/users/profile', data),
   changePassword: (currentPassword: string, newPassword: string) => 
     apiClient.put<{ message: string }>('/api/users/change-password', { currentPassword, newPassword }),
+  
   // Admin functions
-  getAllUsers: async () => {
-    const response = await apiClient.get<{ success: boolean; data: User[] }>('/api/users/admin/all');
-    return response.data || [];
+  getAllUsers: async (): Promise<User[]> => {
+    return safeCollectionCall<User>(
+      () => apiClient.get<{ success: boolean; data: User[] }>('/api/users/admin/all'),
+      'Failed to fetch all users'
+    );
   },
   updateUserRole: (userId: string, role: string) => 
     apiClient.put<User>(`/api/users/admin/users/${userId}/role`, { role }),
   updateUserStatus: (userId: string, isActive: boolean) => 
-    apiClient.put<User>(`/api/users/admin/users/${userId}/status`, { isActive }),
-  deleteUser: (userId: string) => apiClient.delete<APIResponse<string>>(`/api/users/admin/users/${userId}`),
+    apiClient.put<User>(`/api/users/admin/users/${userId}/status`, { isActive }),  deleteUser: (userId: string) => apiClient.delete<APIResponse<string>>(`/api/users/admin/users/${userId}`),  // Get user count for admin dashboard
+  getUserCount: async (): Promise<number> => {
+    return safeCountCall(
+      () => apiClient.get<{ success: boolean; data: { count: number } }>('/api/users/count')
+    );
+  },
 };
 
 // Payment API functions
@@ -274,7 +331,7 @@ export const paymentAPI = {
 // Review API functions
 export const reviewAPI = {
   getProductReviews: async (productId: string, params?: { page?: number; limit?: number; sort?: string }) => {
-    const response = await apiClient.get<{ success: boolean; data: Review[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } }>(`/api/reviews/product/${productId}${params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : ''}`);
+    const response = await apiClient.get<{ success: boolean; data: { reviews: Review[]; pagination: { currentPage: number; totalPages: number; totalItems: number; limit: number; hasNext: boolean; hasPrev: boolean } } }>(`/api/reviews/product/${productId}${params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : ''}`);
     return response.data;
   },
   getReviewStats: async (productId: string) => {
@@ -305,10 +362,9 @@ export const wishlistAPI = {
   getWishlistCount: async () => {
     const response = await apiClient.get<{ success: boolean; data: { count: number } }>('/api/wishlist/count');
     return response.data.count;
-  },
-  checkWishlistStatus: async (productId: string) => {
-    const response = await apiClient.get<{ success: boolean; data: { inWishlist: boolean } }>(`/api/wishlist/check/${productId}`);
-    return response.data.inWishlist;
+  },  checkWishlistStatus: async (productId: string) => {
+    const response = await apiClient.get<{ success: boolean; data: { inWishlist: boolean; addedAt: string | null } }>(`/api/wishlist/check/${productId}`);
+    return response.data;
   },
   addToWishlist: (productId: string) => 
     apiClient.post<{ message: string }>('/api/wishlist', { productId }),

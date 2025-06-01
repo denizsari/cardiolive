@@ -55,4 +55,10 @@ router.patch('/:id/cancel',
   orderController.cancelOrder
 );
 
+router.patch('/:id/payment', 
+  applyRateLimit('api'),
+  authenticateToken, 
+  orderController.updateOrderPayment
+);
+
 module.exports = router;

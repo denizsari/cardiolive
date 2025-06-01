@@ -1,410 +1,333 @@
-const User = require('../models/userModel');
+const UserService = require('../services/UserService');
 const ResponseHandler = require('../utils/responseHandler');
-const { generateTokenPair, hashPassword, comparePassword, generateSecureToken } = require('../middlewares/auth');
-const rateLimiter = require('../middlewares/rateLimiter');
+const { logger } = require('../utils/logger');
 
-// Kullanıcı Kaydı
-exports.register = async (req, res) => {
-  try {
+/**
+ * @desc Register a new user
+ * @route POST /api/auth/register
+ * @access Public
+ */
+exports.register = async (req, res) => {  try {
     const { name, email, password, phone } = req.body;
 
-    // Email kontrolü
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return ResponseHandler.badRequest(res, 'Bu email adresi zaten kayıtlı');
+    const result = await UserService.registerUser({ name, email, password, phoneNumber: phone });
+
+    logger.logAuthEvent('user_registered', { userId: result?._id, email, userAgent: req.headers['user-agent'] });
+
+    ResponseHandler.created(res, 'Kullanıcı başarıyla kaydedildi', { user: result });  } catch (error) {
+    logger.error('User registration error:', { 
+      email: req.body?.email, 
+      error: error.message, 
+      stack: error.stack 
+    });
+    
+    if (error.message === 'Bu e-posta adresi zaten kullanımda') {
+      return ResponseHandler.badRequest(res, error.message);
     }
-
-    // Şifreyi hash'le
-    const hashedPassword = await hashPassword(password);
-
-    // Yeni kullanıcı oluşturma
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      phoneNumber: phone,
-      tokenVersion: 1
-    });
-
-    // Token çifti oluştur
-    const tokens = generateTokenPair(user);
-
-    // Kullanıcı bilgilerini temizle
-    const userResponse = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phoneNumber: user.phoneNumber,
-      isActive: user.isActive,
-      createdAt: user.createdAt
-    };
-
-    ResponseHandler.created(res, 'Kullanıcı başarıyla kaydedildi', {
-      user: userResponse,
-      ...tokens
-    });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcı kayıt hatası', error);
+    ResponseHandler.error(res, 'Kullanıcı kayıt hatası', 500, error);
   }
 };
 
-// Kullanıcı Girişi
+/**
+ * @desc Login user
+ * @route POST /api/auth/login
+ * @access Public
+ */
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Kullanıcı kontrolü (şifre ile birlikte)
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return ResponseHandler.unauthorized(res, 'Geçersiz email veya şifre');
-    }
-
-    // Kullanıcı aktif mi kontrolü
-    if (!user.isActive) {
-      return ResponseHandler.forbidden(res, 'Hesabınız deaktive edilmiştir');
-    }
-
-    // Şifre kontrolü
-    const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
-      return ResponseHandler.unauthorized(res, 'Geçersiz email veya şifre');
-    }
-
-    // Token çifti oluştur
-    const tokens = generateTokenPair(user);
-
-    // Kullanıcı bilgilerini temizle
-    const userResponse = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phoneNumber: user.phoneNumber,
-      isActive: user.isActive
-    };
-
-    ResponseHandler.success(res, 'Giriş başarılı', {
-      user: userResponse,
-      ...tokens
+    const result = await UserService.authenticateUser(email, password);    logger.logAuthEvent('user_login', { 
+      userId: result.user._id, 
+      email, 
+      userAgent: req.headers['user-agent'],
+      ip: req.ip 
     });
+
+    ResponseHandler.success(res, 'Giriş başarılı', result);
   } catch (error) {
+    logger.logAuthEvent('login_failed', { 
+      email: req.body?.email, 
+      reason: error.message,
+      userAgent: req.headers['user-agent'],
+      ip: req.ip 
+    });
+      if (error.message === 'Geçersiz e-posta veya şifre' || 
+        error.message === 'Hesabınız deaktif durumda') {
+      return ResponseHandler.unauthorized(res, error.message);
+    }
     ResponseHandler.error(res, 'Giriş hatası', error);
   }
 };
 
-// Kullanıcı Bilgileri
+/**
+ * @desc Get current user profile
+ * @route GET /api/users/me
+ * @access Private
+ */
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const userId = req.user.userId;
+    const user = await UserService.findById(userId);
+
     if (!user) {
       return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
     }
 
-    const userResponse = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phoneNumber: user.phoneNumber,
-      address: user.address,
-      isActive: user.isActive,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
-
-    ResponseHandler.success(res, 'Kullanıcı bilgileri getirildi', { user: userResponse });
+    ResponseHandler.success(res, 'Kullanıcı bilgileri getirildi', { user });
   } catch (error) {
+    logger.error('Error getting user profile:', { userId: req.user?.userId, error: error.message });
     ResponseHandler.error(res, 'Kullanıcı bilgisi getirme hatası', error);
   }
 };
 
-// Profil Güncelleme
+/**
+ * @desc Update user profile
+ * @route PUT /api/users/profile
+ * @access Private
+ */
 exports.updateProfile = async (req, res) => {
   try {
     const { name, email, phoneNumber, address } = req.body;
     const userId = req.user.userId;
 
-    // Email unique kontrolü (eğer email değiştiriliyorsa)
-    if (email) {
-      const existingUser = await User.findOne({
-        email,
-        _id: { $ne: userId }
-      });
+    const updatedUser = await UserService.updateProfile(userId, { name, email, phoneNumber, address });
 
-      if (existingUser) {
-        return ResponseHandler.badRequest(res, 'Bu email adresi başka bir kullanıcı tarafından kullanılıyor');
-      }
-    }
+    logger.logBusinessEvent('profile_updated', { userId, updatedFields: Object.keys(req.body) });
 
-    // Kullanıcı bilgilerini güncelle
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(phoneNumber !== undefined && { phoneNumber }),
-        ...(address !== undefined && { address })
-      },
-      {
-        new: true,
-        runValidators: true
-      }
-    ).select('-password');
-
-    if (!updatedUser) {
-      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
-    }
-
-    const userResponse = {
-      id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      role: updatedUser.role,
-      phoneNumber: updatedUser.phoneNumber,
-      address: updatedUser.address,
-      isActive: updatedUser.isActive,
-      updatedAt: updatedUser.updatedAt
-    };
-
-    ResponseHandler.success(res, 'Profil başarıyla güncellendi', { user: userResponse });
+    ResponseHandler.success(res, 'Profil başarıyla güncellendi', { user: updatedUser });
   } catch (error) {
+    logger.error('Profile update error:', { userId: req.user?.userId, error: error.message });
+    
+    if (error.message === 'Bu email adresi başka bir kullanıcı tarafından kullanılıyor') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
     ResponseHandler.error(res, 'Profil güncelleme hatası', error);
   }
 };
 
-// Kullanıcı Sayısı (Admin)
-exports.getUserCount = async (req, res) => {
-  try {
-    const count = await User.countDocuments();
-    ResponseHandler.success(res, 'Kullanıcı sayısı getirildi', { count });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcı sayısı getirme hatası', error);
-  }
-};
-
-// Tüm Kullanıcıları Getir (Admin)
-exports.getAllUsers = async (req, res) => {
-  try {
-    const { page, limit, sort, order, role, isActive, search } = req.query;
-    
-    // Build filter object
-    const filter = {};
-    if (role) filter.role = role;
-    if (isActive !== undefined) filter.isActive = isActive;
-    if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
-      ];
-    }
-
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort object
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    // Get users with pagination
-    const users = await User.find(filter)
-      .select('-password')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(limit);
-
-    // Get total count for pagination
-    const total = await User.countDocuments(filter);
-
-    const pagination = {
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalUsers: total,
-      hasNext: page < Math.ceil(total / limit),
-      hasPrev: page > 1
-    };
-
-    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', {
-      users,
-      pagination
-    });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);
-  }
-};
-
-// Admin endpoint to get all users
-exports.getAllUsersAdmin = async (req, res) => {
-  try {
-    const users = await User.find()
-      .select('-password')
-      .sort({ createdAt: -1 });
-    
-    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', { users });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);
-  }
-};
-
-// Admin endpoint to update user role
-exports.updateUserRole = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { role } = req.body;
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { role, tokenVersion: (await User.findById(userId)).tokenVersion + 1 }, // Invalidate tokens
-      { new: true }
-    ).select('-password');
-
-    if (!user) {
-      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
-    }
-
-    ResponseHandler.success(res, 'Kullanıcı rolü başarıyla güncellendi', { user });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcı rolü güncelleme hatası', error);
-  }
-};
-
-// Admin endpoint to update user status
-exports.updateUserStatus = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { isActive } = req.body;
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { 
-        isActive,
-        tokenVersion: isActive ? (await User.findById(userId)).tokenVersion : 
-                      (await User.findById(userId)).tokenVersion + 1 // Invalidate tokens if deactivating
-      },
-      { new: true }
-    ).select('-password');
-
-    if (!user) {
-      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
-    }
-
-    ResponseHandler.success(res, 'Kullanıcı durumu başarıyla güncellendi', { user });
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcı durumu güncelleme hatası', error);
-  }
-};
-
-// Admin endpoint to delete user
-exports.deleteUser = async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    // Prevent admin from deleting themselves
-    if (userId === req.user.userId) {
-      return ResponseHandler.badRequest(res, 'Kendi hesabınızı silemezsiniz');
-    }
-
-    const user = await User.findByIdAndDelete(userId);
-
-    if (!user) {
-      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
-    }
-
-    ResponseHandler.success(res, 'Kullanıcı başarıyla silindi');
-  } catch (error) {
-    ResponseHandler.error(res, 'Kullanıcı silme hatası', error);
-  }
-};
-
-// Forgot Password
-exports.forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      // Don't reveal if email exists or not for security
-      return ResponseHandler.success(res, 'Eğer email kayıtlı ise, şifre sıfırlama linki gönderilmiştir');
-    }
-
-    // Generate reset token
-    const resetToken = generateSecureToken();
-    const resetTokenExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
-
-    // Save reset token to user
-    user.passwordResetToken = resetToken;
-    user.passwordResetExpiry = resetTokenExpiry;
-    await user.save();
-
-    // In production, send email with reset link
-    // For now, just return success message
-    console.log(`Password reset token for ${email}: ${resetToken}`);
-
-    ResponseHandler.success(res, 'Şifre sıfırlama linki email adresinize gönderilmiştir');
-  } catch (error) {
-    ResponseHandler.error(res, 'Şifre sıfırlama hatası', error);
-  }
-};
-
-// Reset Password
-exports.resetPassword = async (req, res) => {
-  try {
-    const { token, password } = req.body;
-
-    const user = await User.findOne({
-      passwordResetToken: token,
-      passwordResetExpiry: { $gt: Date.now() }
-    });
-
-    if (!user) {
-      return ResponseHandler.badRequest(res, 'Geçersiz veya süresi dolmuş token');
-    }
-
-    // Update password and clear reset token
-    const hashedPassword = await hashPassword(password);
-    user.password = hashedPassword;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpiry = undefined;
-    user.tokenVersion = (user.tokenVersion || 1) + 1; // Invalidate existing tokens
-    await user.save();
-
-    ResponseHandler.success(res, 'Şifre başarıyla sıfırlandı');
-  } catch (error) {
-    ResponseHandler.error(res, 'Şifre sıfırlama hatası', error);
-  }
-};
-
-// Şifre Değiştirme
+/**
+ * @desc Change user password
+ * @route PUT /api/users/change-password
+ * @access Private
+ */
 exports.changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.userId;
 
-    // Get user with password
-    const user = await User.findById(userId).select('+password');
-    if (!user) {
-      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
-    }
+    await UserService.changePassword(userId, currentPassword, newPassword);
 
-    // Check current password
-    const isCurrentPasswordValid = await comparePassword(currentPassword, user.password);
-    if (!isCurrentPasswordValid) {
-      return ResponseHandler.badRequest(res, 'Mevcut şifre yanlış');
-    }
-
-    // Check if new password is different from current
-    const isSamePassword = await comparePassword(newPassword, user.password);
-    if (isSamePassword) {
-      return ResponseHandler.badRequest(res, 'Yeni şifre mevcut şifreden farklı olmalıdır');
-    }
-
-    // Hash and update password
-    const hashedNewPassword = await hashPassword(newPassword);
-    user.password = hashedNewPassword;
-    user.tokenVersion = (user.tokenVersion || 1) + 1; // Invalidate existing tokens
-    await user.save();
+    logger.logSecurityEvent('password_changed', { userId });
 
     ResponseHandler.success(res, 'Şifre başarıyla değiştirildi');
   } catch (error) {
+    logger.error('Password change error:', { userId: req.user?.userId, error: error.message });
+    
+    if (error.message === 'Mevcut şifre yanlış' || 
+        error.message === 'Yeni şifre mevcut şifreden farklı olmalıdır') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
     ResponseHandler.error(res, 'Şifre değiştirme hatası', error);
+  }
+};
+
+/**
+ * @desc Forgot password
+ * @route POST /api/auth/forgot-password
+ * @access Public
+ */
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    await UserService.forgotPassword(email);
+
+    logger.logSecurityEvent('password_reset_requested', { email });
+
+    ResponseHandler.success(res, 'Şifre sıfırlama linki email adresinize gönderilmiştir');
+  } catch (error) {
+    logger.error('Forgot password error:', { email: req.body?.email, error: error.message });
+    ResponseHandler.error(res, 'Şifre sıfırlama hatası', error);
+  }
+};
+
+/**
+ * @desc Reset password
+ * @route POST /api/auth/reset-password
+ * @access Public
+ */
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    await UserService.resetPassword(token, password);
+
+    logger.logSecurityEvent('password_reset_completed', { token: token.substring(0, 8) + '...' });
+
+    ResponseHandler.success(res, 'Şifre başarıyla sıfırlandı');
+  } catch (error) {
+    logger.error('Reset password error:', { error: error.message });
+    
+    if (error.message === 'Geçersiz veya süresi dolmuş token') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
+    ResponseHandler.error(res, 'Şifre sıfırlama hatası', error);
+  }
+};
+
+/**
+ * @desc Get user count (Admin)
+ * @route GET /api/admin/users/count
+ * @access Private/Admin
+ */
+exports.getUserCount = async (req, res) => {
+  try {
+    const stats = await UserService.getUserStats();
+    const count = stats.totalUsers || 0;
+    ResponseHandler.success(res, 'Kullanıcı sayısı getirildi', { count });
+  } catch (error) {
+    logger.error('Error getting user count:', { adminId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Kullanıcı sayısı getirme hatası', error);
+  }
+};
+
+/**
+ * @desc Get all users with pagination (Admin)
+ * @route GET /api/admin/users
+ * @access Private/Admin
+ */
+exports.getAllUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = 'createdAt', order = 'desc', role, isActive, search } = req.query;
+    
+    const filters = { role, isActive, search };
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: sort,
+      sortOrder: order
+    };
+
+    const result = await UserService.getUsers(filters, options);
+
+    logger.logBusinessEvent('admin_users_list_viewed', { 
+      adminId: req.user.userId, 
+      userCount: result.data.length,
+      filters,
+      options 
+    });
+
+    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', {
+      users: result.data,
+      pagination: result.pagination
+    });
+  } catch (error) {
+    logger.error('Error getting all users:', { adminId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);
+  }
+};
+
+/**
+ * @desc Get all users without pagination (Admin)
+ * @route GET /api/admin/users/all
+ * @access Private/Admin
+ */
+exports.getAllUsersAdmin = async (req, res) => {
+  try {
+    const result = await UserService.getUsers({}, { limit: 0 }); // No pagination
+    
+    ResponseHandler.success(res, 'Kullanıcılar başarıyla getirildi', { users: result.data });
+  } catch (error) {
+    logger.error('Error getting all users admin:', { adminId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Kullanıcıları getirme hatası', error);
+  }
+};
+
+/**
+ * @desc Update user role (Admin)
+ * @route PUT /api/admin/users/:userId/role
+ * @access Private/Admin
+ */
+exports.updateUserRole = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { role } = req.body;
+
+    const user = await UserService.updateUserRole(userId, role);
+
+    logger.logSecurityEvent('user_role_updated', { 
+      adminId: req.user.userId, 
+      targetUserId: userId, 
+      newRole: role 
+    });
+
+    ResponseHandler.success(res, 'Kullanıcı rolü başarıyla güncellendi', { user });
+  } catch (error) {
+    logger.error('Error updating user role:', { adminId: req.user?.userId, targetUserId: req.params?.userId, error: error.message });
+    
+    if (error.message === 'Kullanıcı bulunamadı') {
+      return ResponseHandler.notFound(res, error.message);
+    }
+    ResponseHandler.error(res, 'Kullanıcı rolü güncelleme hatası', error);
+  }
+};
+
+/**
+ * @desc Update user status (Admin)
+ * @route PUT /api/admin/users/:userId/status
+ * @access Private/Admin
+ */
+exports.updateUserStatus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { isActive } = req.body;
+
+    const user = await UserService.updateUserStatus(userId, isActive);
+
+    logger.logSecurityEvent('user_status_updated', { 
+      adminId: req.user.userId, 
+      targetUserId: userId, 
+      newStatus: isActive 
+    });
+
+    ResponseHandler.success(res, 'Kullanıcı durumu başarıyla güncellendi', { user });
+  } catch (error) {
+    logger.error('Error updating user status:', { adminId: req.user?.userId, targetUserId: req.params?.userId, error: error.message });
+    
+    if (error.message === 'Kullanıcı bulunamadı') {
+      return ResponseHandler.notFound(res, error.message);
+    }
+    ResponseHandler.error(res, 'Kullanıcı durumu güncelleme hatası', error);
+  }
+};
+
+/**
+ * @desc Delete user (Admin)
+ * @route DELETE /api/admin/users/:userId
+ * @access Private/Admin
+ */
+exports.deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const adminId = req.user.userId;
+
+    // Prevent admin from deleting themselves
+    if (userId === adminId) {
+      return ResponseHandler.badRequest(res, 'Kendi hesabınızı silemezsiniz');
+    }
+
+    const deleted = await UserService.deleteUser(userId);
+
+    if (!deleted) {
+      return ResponseHandler.notFound(res, 'Kullanıcı bulunamadı');
+    }
+
+    logger.logSecurityEvent('user_deleted', { adminId, deletedUserId: userId });
+
+    ResponseHandler.success(res, 'Kullanıcı başarıyla silindi');
+  } catch (error) {
+    logger.error('Error deleting user:', { adminId: req.user?.userId, targetUserId: req.params?.userId, error: error.message });
+    ResponseHandler.error(res, 'Kullanıcı silme hatası', error);
   }
 };

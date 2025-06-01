@@ -1,60 +1,51 @@
-const WishlistItem = require('../models/wishlistModel');
-const Product = require('../models/productModel');
+const WishlistService = require('../services/WishlistService');
 const ResponseHandler = require('../utils/responseHandler');
 const mongoose = require('mongoose');
+const { logger } = require('../utils/logger');
 
-// Get user's wishlist
+/**
+ * @desc Get user's wishlist with filtering and pagination
+ * @route GET /api/wishlist
+ * @access Private
+ */
 exports.getUserWishlist = async (req, res) => {
   try {
-    const { page = 1, limit = 10, sort = 'addedAt', order = 'desc' } = req.query;
+    const { page = 1, limit = 10, sort = 'addedAt', order = 'desc', category, minPrice, maxPrice, inStock } = req.query;
     const userId = req.user.userId;
 
-    // Calculate pagination
-    const skip = (page - 1) * limit;
-    
-    // Build sort
-    const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
-
-    const wishlistItems = await WishlistItem.find({ user: userId })
-      .populate({
-        path: 'product',
-        select: 'name slug price discountedPrice images category brand inStock averageRating totalReviews'
-      })
-      .sort(sortObj)
-      .skip(skip)
-      .limit(Number(limit));
-
-    const totalItems = await WishlistItem.countDocuments({ user: userId });
-
-    // Filter out items with deleted products
-    const wishlist = wishlistItems
-      .filter(item => item.product)
-      .map(item => ({
-        id: item._id,
-        product: item.product,
-        addedAt: item.addedAt,
-        notes: item.notes
-      }));
-
-    const pagination = {
-      currentPage: Number(page),
-      totalPages: Math.ceil(totalItems / limit),
-      totalItems,
-      hasNext: page < Math.ceil(totalItems / limit),
-      hasPrev: page > 1
+    const filters = { category, minPrice, maxPrice, inStock };
+    const options = { 
+      page: Number(page), 
+      limit: Number(limit), 
+      sortBy: sort, 
+      sortOrder: order 
     };
 
+    const result = await WishlistService.getUserWishlist(userId, filters, options);
+
+    logger.logBusinessEvent('wishlist_viewed', { 
+      userId, 
+      itemCount: result.data.length,
+      filters,
+      options 
+    });
+
     ResponseHandler.success(res, 'Favori listesi başarıyla getirildi', {
-      wishlist,
-      pagination,
-      count: wishlist.length
+      wishlist: result.data,
+      pagination: result.pagination,
+      count: result.data.length
     });
   } catch (error) {
+    logger.error('Error getting user wishlist:', { userId: req.user?.userId, error: error.message, stack: error.stack });
     ResponseHandler.error(res, 'Favori listesi getirme hatası', error);
   }
 };
 
-// Add product to wishlist
+/**
+ * @desc Add product to wishlist
+ * @route POST /api/wishlist
+ * @access Private
+ */
 exports.addToWishlist = async (req, res) => {
   try {
     const { productId, notes } = req.body;
@@ -65,66 +56,56 @@ exports.addToWishlist = async (req, res) => {
       return ResponseHandler.badRequest(res, 'Geçersiz ürün ID');
     }
 
-    // Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-      return ResponseHandler.notFound(res, 'Ürün bulunamadı');
-    }
+    const wishlistItem = await WishlistService.addToWishlist(userId, productId, notes);
 
-    // Check if already in wishlist
-    const existingItem = await WishlistItem.findOne({
-      user: userId,
-      product: productId
-    });
-
-    if (existingItem) {
-      return ResponseHandler.badRequest(res, 'Ürün zaten favori listenizde');
-    }
-
-    // Add to wishlist
-    const wishlistItem = new WishlistItem({
-      user: userId,
-      product: productId,
-      notes: notes || ''
-    });
-
-    await wishlistItem.save();
-    await wishlistItem.populate('product', 'name slug price discountedPrice images');
+    logger.logBusinessEvent('product_added_to_wishlist', { userId, productId, notes: !!notes });
 
     ResponseHandler.created(res, 'Ürün favori listesine eklendi', { wishlistItem });
   } catch (error) {
+    logger.error('Error adding to wishlist:', { userId: req.user?.userId, productId: req.body?.productId, error: error.message });
+    
+    if (error.message === 'Ürün bulunamadı' || error.message === 'Ürün zaten favori listenizde') {
+      return ResponseHandler.badRequest(res, error.message);
+    }
     ResponseHandler.error(res, 'Favori listesine ekleme hatası', error);
   }
 };
 
-// Remove product from wishlist
+/**
+ * @desc Remove product from wishlist
+ * @route DELETE /api/wishlist/:productId
+ * @access Private
+ */
 exports.removeFromWishlist = async (req, res) => {
   try {
-    const { productId } = req.params;
     const userId = req.user.userId;
+    const { productId } = req.params;
 
     // Validate product ID
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return ResponseHandler.badRequest(res, 'Geçersiz ürün ID');
     }
 
-    // Find and remove the wishlist item
-    const wishlistItem = await WishlistItem.findOneAndDelete({
-      user: userId,
-      product: productId
-    });
+    const removed = await WishlistService.removeFromWishlist(userId, productId);
 
-    if (!wishlistItem) {
+    if (!removed) {
       return ResponseHandler.notFound(res, 'Ürün favori listenizde bulunamadı');
     }
 
+    logger.logBusinessEvent('product_removed_from_wishlist', { userId, productId });
+
     ResponseHandler.success(res, 'Ürün favori listesinden kaldırıldı');
   } catch (error) {
+    logger.error('Error removing from wishlist:', { userId: req.user?.userId, productId: req.params?.productId, error: error.message });
     ResponseHandler.error(res, 'Favori listesinden kaldırma hatası', error);
   }
 };
 
-// Check if product is in wishlist
+/**
+ * @desc Check if product is in wishlist
+ * @route GET /api/wishlist/check/:productId
+ * @access Private
+ */
 exports.checkWishlistStatus = async (req, res) => {
   try {
     const { productId } = req.params;
@@ -135,47 +116,56 @@ exports.checkWishlistStatus = async (req, res) => {
       return ResponseHandler.badRequest(res, 'Geçersiz ürün ID');
     }
 
-    const wishlistItem = await WishlistItem.findOne({
-      user: userId,
-      product: productId
-    });
+    const status = await WishlistService.checkWishlistStatus(userId, productId);
 
-    ResponseHandler.success(res, 'Favori listesi durumu getirildi', {
-      inWishlist: !!wishlistItem,
-      addedAt: wishlistItem?.addedAt || null
-    });
+    ResponseHandler.success(res, 'Favori listesi durumu getirildi', status);
   } catch (error) {
+    logger.error('Error checking wishlist status:', { userId: req.user?.userId, productId: req.params?.productId, error: error.message });
     ResponseHandler.error(res, 'Favori listesi kontrolü hatası', error);
   }
 };
 
-// Get wishlist count for user
+/**
+ * @desc Get wishlist count for user
+ * @route GET /api/wishlist/count
+ * @access Private
+ */
 exports.getWishlistCount = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const count = await WishlistItem.countDocuments({ user: userId });
+    const count = await WishlistService.getWishlistCount(userId);
 
     ResponseHandler.success(res, 'Favori listesi sayısı getirildi', { count });
   } catch (error) {
+    logger.error('Error getting wishlist count:', { userId: req.user?.userId, error: error.message });
     ResponseHandler.error(res, 'Favori listesi sayısı alma hatası', error);
   }
 };
 
-// Clear entire wishlist
+/**
+ * @desc Clear entire wishlist
+ * @route DELETE /api/wishlist/clear
+ * @access Private
+ */
 exports.clearWishlist = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const result = await WishlistItem.deleteMany({ user: userId });
+    const deletedCount = await WishlistService.clearWishlist(userId);
 
-    ResponseHandler.success(res, 'Favori listesi temizlendi', { 
-      deletedCount: result.deletedCount 
-    });
+    logger.logBusinessEvent('wishlist_cleared', { userId, deletedCount });
+
+    ResponseHandler.success(res, 'Favori listesi temizlendi', { deletedCount });
   } catch (error) {
+    logger.error('Error clearing wishlist:', { userId: req.user?.userId, error: error.message });
     ResponseHandler.error(res, 'Favori listesi temizleme hatası', error);
   }
 };
 
-// Add multiple products to wishlist (bulk operation)
+/**
+ * @desc Add multiple products to wishlist (bulk operation)
+ * @route POST /api/wishlist/bulk
+ * @access Private
+ */
 exports.addMultipleToWishlist = async (req, res) => {
   try {
     const { productIds } = req.body;
@@ -185,56 +175,37 @@ exports.addMultipleToWishlist = async (req, res) => {
       return ResponseHandler.badRequest(res, 'Geçerli ürün ID listesi gerekli');
     }
 
-    // Validate all product IDs
-    for (const productId of productIds) {
-      if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return ResponseHandler.badRequest(res, `Geçersiz ürün ID: ${productId}`);
-      }
-    }
+    const result = await WishlistService.addMultipleToWishlist(userId, productIds);
 
-    // Check which products exist
-    const existingProducts = await Product.find({
-      _id: { $in: productIds }
-    }).select('_id');
+    logger.logBusinessEvent('bulk_add_to_wishlist', { 
+      userId, 
+      productCount: productIds.length,
+      addedCount: result.addedCount,
+      skippedCount: result.skippedCount 
+    });
 
-    const existingProductIds = existingProducts.map(p => p._id.toString());
-    const nonExistentProducts = productIds.filter(id => !existingProductIds.includes(id));
-
-    if (nonExistentProducts.length > 0) {
-      return ResponseHandler.badRequest(res, `Şu ürünler bulunamadı: ${nonExistentProducts.join(', ')}`);
-    }
-
-    // Check which items are already in wishlist
-    const existingWishlistItems = await WishlistItem.find({
-      user: userId,
-      product: { $in: productIds }
-    }).select('product');
-
-    const existingWishlistProductIds = existingWishlistItems.map(item => item.product.toString());
-    const newProductIds = productIds.filter(id => !existingWishlistProductIds.includes(id));
-
-    if (newProductIds.length === 0) {
-      return ResponseHandler.badRequest(res, 'Tüm ürünler zaten favori listenizde');
-    }
-
-    // Add new items to wishlist
-    const wishlistItems = newProductIds.map(productId => ({
-      user: userId,
-      product: productId
-    }));
-
-    const result = await WishlistItem.insertMany(wishlistItems);
-
-    ResponseHandler.success(res, `${result.length} ürün favori listesine eklendi`, {
-      addedCount: result.length,
-      skippedCount: existingWishlistProductIds.length
+    ResponseHandler.success(res, result.message, {
+      addedCount: result.addedCount,
+      skippedCount: result.skippedCount,
+      addedItems: result.addedItems
     });
   } catch (error) {
+    logger.error('Error bulk adding to wishlist:', { userId: req.user?.userId, productIds: req.body?.productIds, error: error.message });
+    
+    if (error.message.includes('Geçersiz ürün ID') || 
+        error.message.includes('bulunamadı') || 
+        error.message.includes('zaten favori listenizde')) {
+      return ResponseHandler.badRequest(res, error.message);
+    }
     ResponseHandler.error(res, 'Toplu favori listesine ekleme hatası', error);
   }
 };
 
-// Remove multiple products from wishlist (bulk operation)
+/**
+ * @desc Remove multiple products from wishlist (bulk operation)
+ * @route DELETE /api/wishlist/bulk
+ * @access Private
+ */
 exports.removeMultipleFromWishlist = async (req, res) => {
   try {
     const { productIds } = req.body;
@@ -244,27 +215,32 @@ exports.removeMultipleFromWishlist = async (req, res) => {
       return ResponseHandler.badRequest(res, 'Geçerli ürün ID listesi gerekli');
     }
 
-    // Validate all product IDs
-    for (const productId of productIds) {
-      if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return ResponseHandler.badRequest(res, `Geçersiz ürün ID: ${productId}`);
-      }
-    }
+    const result = await WishlistService.removeMultipleFromWishlist(userId, productIds);
 
-    const result = await WishlistItem.deleteMany({
-      user: userId,
-      product: { $in: productIds }
+    logger.logBusinessEvent('bulk_remove_from_wishlist', { 
+      userId, 
+      productCount: productIds.length,
+      deletedCount: result.deletedCount 
     });
 
-    ResponseHandler.success(res, `${result.deletedCount} ürün favori listesinden kaldırıldı`, {
+    ResponseHandler.success(res, result.message, {
       deletedCount: result.deletedCount
     });
   } catch (error) {
+    logger.error('Error bulk removing from wishlist:', { userId: req.user?.userId, productIds: req.body?.productIds, error: error.message });
+    
+    if (error.message.includes('Geçersiz ürün ID')) {
+      return ResponseHandler.badRequest(res, error.message);
+    }
     ResponseHandler.error(res, 'Toplu favori listesinden kaldırma hatası', error);
   }
 };
 
-// Update wishlist item notes
+/**
+ * @desc Update wishlist item notes
+ * @route PUT /api/wishlist/:productId/notes
+ * @access Private
+ */
 exports.updateWishlistItemNotes = async (req, res) => {
   try {
     const { productId } = req.params;
@@ -276,18 +252,56 @@ exports.updateWishlistItemNotes = async (req, res) => {
       return ResponseHandler.badRequest(res, 'Geçersiz ürün ID');
     }
 
-    const wishlistItem = await WishlistItem.findOneAndUpdate(
-      { user: userId, product: productId },
-      { notes: notes || '' },
-      { new: true }
-    ).populate('product', 'name slug price discountedPrice images');
+    const wishlistItem = await WishlistService.updateWishlistItemNotes(userId, productId, notes);
 
     if (!wishlistItem) {
       return ResponseHandler.notFound(res, 'Ürün favori listenizde bulunamadı');
     }
 
+    logger.logBusinessEvent('wishlist_notes_updated', { userId, productId, hasNotes: !!notes });
+
     ResponseHandler.success(res, 'Favori listesi notu güncellendi', { wishlistItem });
   } catch (error) {
+    logger.error('Error updating wishlist notes:', { userId: req.user?.userId, productId: req.params?.productId, error: error.message });
     ResponseHandler.error(res, 'Favori listesi notu güncelleme hatası', error);
+  }
+};
+
+/**
+ * @desc Get wishlist recommendations
+ * @route GET /api/wishlist/recommendations
+ * @access Private
+ */
+exports.getWishlistRecommendations = async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    const userId = req.user.userId;
+
+    const recommendations = await WishlistService.getWishlistRecommendations(userId, Number(limit));
+
+    ResponseHandler.success(res, 'Favori listesi önerileri getirildi', { 
+      recommendations,
+      count: recommendations.length 
+    });
+  } catch (error) {
+    logger.error('Error getting wishlist recommendations:', { userId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Favori listesi önerileri alma hatası', error);
+  }
+};
+
+/**
+ * @desc Get wishlist statistics
+ * @route GET /api/wishlist/stats
+ * @access Private
+ */
+exports.getWishlistStats = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const stats = await WishlistService.getWishlistStats(userId);
+
+    ResponseHandler.success(res, 'Favori listesi istatistikleri getirildi', stats);
+  } catch (error) {
+    logger.error('Error getting wishlist stats:', { userId: req.user?.userId, error: error.message });
+    ResponseHandler.error(res, 'Favori listesi istatistikleri alma hatası', error);
   }
 };

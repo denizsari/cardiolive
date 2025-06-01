@@ -16,12 +16,11 @@ export default function WishlistPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<{ [key: string]: boolean }>({});
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
   const fetchWishlist = useCallback(async () => {
     try {
       setLoading(true);
       const result = await wishlistAPI.getWishlist();
-      setWishlistItems(result.data || []);
+      setWishlistItems(result || []);
     } catch (error) {
       console.error('Error fetching wishlist:', error);
     } finally {
@@ -91,7 +90,6 @@ export default function WishlistPage() {
       setActionLoading(prev => ({ ...prev, removeSelected: false }));
     }
   };
-
   const moveToCart = async () => {
     if (selectedItems.length === 0) {
       alert('Lütfen sepete taşımak istediğiniz ürünleri seçin.');
@@ -100,13 +98,15 @@ export default function WishlistPage() {
 
     setActionLoading(prev => ({ ...prev, moveToCart: true }));
     try {
-      const result = await wishlistAPI.moveToCart(selectedItems);
+      // First add items to cart (this would require cart API integration)
+      // For now, just remove from wishlist as moveToCart API doesn't exist
+      await Promise.all(selectedItems.map(productId => wishlistAPI.removeFromWishlist(productId)));
       setWishlistItems(prev => prev.filter(item => !selectedItems.includes(item.product._id)));
       setSelectedItems([]);
-      alert(`${result.addedCount} ürün sepete taşındı.`);
+      alert(`${selectedItems.length} ürün favorilerden kaldırıldı. Manuel olarak sepete ekleyebilirsiniz.`);
     } catch (error) {
-      console.error('Error moving items to cart:', error);
-      alert('Ürünler sepete taşınırken bir hata oluştu.');
+      console.error('Error processing selected items:', error);
+      alert('Ürünler işlenirken bir hata oluştu.');
     } finally {
       setActionLoading(prev => ({ ...prev, moveToCart: false }));
     }
