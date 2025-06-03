@@ -6,6 +6,7 @@ import {
   User, 
   Review,
   ReviewStats,
+  ReviewEligibility,
   WishlistItem,
   CreateReviewData,
   UpdateReviewData,
@@ -438,7 +439,14 @@ export const reviewAPI = {
   deleteReviewAdmin: (reviewId: string) => 
     apiClient.delete<APIResponse<string>>(`/api/reviews/admin/${reviewId}`),
   updateReviewStatus: (reviewId: string, status: string) => 
-    apiClient.patch<Review>(`/api/reviews/admin/${reviewId}/status`, { status }),
+    apiClient.patch<Review>(`/api/reviews/admin/${reviewId}/status`, { status }),  // Check if user can review a product (purchase verification)
+  checkCanReview: async (productId: string): Promise<ReviewEligibility> => {
+    const response = await apiClient.get<{ success: boolean; message: string; data: ReviewEligibility; timestamp: string }>(`/api/reviews/can-review/${productId}`);
+    if (response.success && response.data) {
+      return response.data;
+    }
+    throw new Error(response.message || 'Failed to check review eligibility');
+  },
 };
 
 // Wishlist API functions

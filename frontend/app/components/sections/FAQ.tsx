@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
+import Button from '../ui/Button';
 
 const faqs = [
   {
@@ -49,11 +50,11 @@ export default function FAQ() {
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               En Çok Sorulanlar
             </h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
+            <div className="space-y-4">              {faqs.map((faq, index) => (
                 <div key={index} className="border-b border-gray-200 pb-4">
-                  <button
-                    className="w-full flex items-center justify-between text-left"
+                  <Button
+                    variant="ghost"
+                    className="w-full flex items-center justify-between text-left p-0"
                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   >
                     <span className="text-gray-900 font-medium">{faq.question}</span>
@@ -64,7 +65,7 @@ export default function FAQ() {
                         <Plus className="h-5 w-5 text-[#70BB1B]" />
                       )}
                     </span>
-                  </button>
+                  </Button>
                   {openIndex === index && (
                     <div className="mt-4 text-gray-600 leading-relaxed">
                       {faq.answer}

@@ -10,6 +10,7 @@ import { useCart } from '../contexts/CartContext';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { productAPI } from '../utils/api';
 import { Product } from '../types';
+import Button from '../components/ui/Button';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,26 +100,94 @@ function ProductsContent() {
               {products.length} ürün bulundu
             </p>
           )}
-        </div>
-
-        {/* Kategori Filtreleme */}
+        </div>        {/* Kategori Filtreleme */}
         <div className="mb-8 flex flex-wrap gap-2">
           {categories.map((cat) => (
-            <button
+            <Button
               key={cat}
-              className={`px-4 py-2 rounded-full border-2 ${selectedCategory === cat ? 'border-[#70BB1B] text-[#70BB1B]' : 'border-gray-300 text-gray-600 hover:border-[#70BB1B] hover:text-[#70BB1B]'}`}
+              variant={selectedCategory === cat ? 'primary' : 'outline'}
+              size="sm"
               onClick={() => setSelectedCategory(cat)}
             >
               {cat}
-            </button>
+            </Button>
           ))}
-        </div>
-
-        {/* Yükleniyor/Hata */}
-        {loading && <div>Yükleniyor...</div>}
-        {error && <div className="text-red-500">{error}</div>}
+        </div>        {/* Loading State */}
+        {loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse">
+                <div className="w-full h-64 bg-gray-300"></div>
+                <div className="p-4">
+                  <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                  <div className="h-6 bg-gray-300 rounded w-1/2 mb-4"></div>
+                  <div className="h-10 bg-gray-300 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-16">
+            <div className="bg-red-50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <div className="text-red-400 text-4xl">⚠️</div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Ürünler Yüklenemedi
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {error}
+            </p>
+            <Button 
+              onClick={() => window.location.reload()}
+              variant="primary"
+              size="md"
+            >
+              Tekrar Dene
+            </Button>
+          </div>        )}
+        
+        {/* Empty Results State */}
+        {!loading && !error && filteredProducts.length === 0 && (
+          <div className="text-center py-16">
+            <div className="bg-gray-50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+              <div className="text-gray-400 text-4xl">🔍</div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              {searchQuery ? 'Arama sonucu bulunamadı' : 'Bu kategoride ürün bulunamadı'}
+            </h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              {searchQuery 
+                ? `"${searchQuery}" aramanız için ürün bulunamadı. Farklı bir arama terimi deneyin.`
+                : `${selectedCategory} kategorisinde henüz ürün bulunmamaktadır.`
+              }
+            </p>
+            <div className="space-y-4">
+              <Button 
+                onClick={() => {
+                  setSelectedCategory('Hepsi');
+                  if (searchQuery) {
+                    window.location.href = '/products';
+                  }
+                }}
+                variant="primary"
+                size="md"
+              >
+                {searchQuery ? 'Tüm Ürünleri Görüntüle' : 'Tüm Kategorileri Görüntüle'}
+              </Button>
+              <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
+                <span>✨ Yeni ürünler ekleniyor</span>
+                <span>🔔 Bildirim almak için bizi takip edin</span>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Ürün Listesi */}
+        {!loading && !error && filteredProducts.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">          {filteredProducts.map(product => (
             <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
               <div className="relative aspect-square overflow-hidden">
@@ -135,29 +204,30 @@ function ProductsContent() {
                       className="bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
                     >
                       <Eye size={20} className="text-gray-700" />
-                    </Link>
-                    <button
+                    </Link>                    <Button
+                      variant="primary"
                       onClick={() => handleAddToCart(product)}
                       className="bg-[#70BB1B] p-2 rounded-full shadow-lg hover:bg-[#5ea516] transition-colors"
                     >
                       <ShoppingCart size={20} className="text-white" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h3>
+              <div className="p-4">                <h3 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h3>
                 <p className="text-[#70BB1B] font-bold text-xl mb-3">{product.price} TL</p>
-                <button
+                <Button
                   onClick={() => handleAddToCart(product)}
-                  className="w-full bg-[#70BB1B] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5ea516] transition-colors flex items-center justify-center gap-2"
+                  className="w-full"
+                  size="md"
                 >
-                  <ShoppingCart size={18} />
+                  <ShoppingCart size={18} className="mr-2" />
                   Sepete Ekle
-                </button>
+                </Button>
               </div>
             </div>
           ))}        </div>
+        )}
       </main>
       <Footer />
     </div>

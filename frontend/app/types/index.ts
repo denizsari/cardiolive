@@ -22,6 +22,7 @@ export interface Product {
   stock: number;
   size: '250ml' | '500ml' | '1L' | '2L' | '5L';
   isActive: boolean;
+  featured: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -233,4 +234,11 @@ export interface UpdateReviewData {
   rating?: number;
   comment?: string;
   title?: string;
+}
+
+export interface ReviewEligibility {
+  canReview: boolean;
+  hasPurchased: boolean;
+  hasExistingReview: boolean;
+  reason?: string;
 }

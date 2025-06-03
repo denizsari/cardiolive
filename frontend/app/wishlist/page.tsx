@@ -7,11 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { wishlistAPI } from '../utils/api';
 import { WishlistItem } from '@/types';
+import Button, { LinkButton } from '../components/ui/Button';
+import { WishlistItemSkeleton } from '../components/ui/Skeleton';
+import { useToast } from '../components/ui/Toast';
 
 export const dynamic = 'force-dynamic';
 
 export default function WishlistPage() {
   const { isLoggedIn } = useAuth();
+  const { addToast } = useToast();
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<{ [key: string]: boolean }>({});
@@ -37,40 +41,41 @@ export default function WishlistPage() {
   }, [isLoggedIn, fetchWishlist]);
 
   const removeFromWishlist = async (productId: string) => {
-    setActionLoading(prev => ({ ...prev, [productId]: true }));
-    try {
+    setActionLoading(prev => ({ ...prev, [productId]: true }));    try {
       await wishlistAPI.removeFromWishlist(productId);
       setWishlistItems(prev => prev.filter(item => item.product._id !== productId));
       setSelectedItems(prev => prev.filter(id => id !== productId));
+      addToast({ type: 'success', title: 'Ürün favorilerden çıkarıldı' });
     } catch (error) {
       console.error('Error removing from wishlist:', error);
-      alert('Ürün favorilerden çıkarılırken bir hata oluştu.');
+      addToast({ type: 'error', title: 'Ürün favorilerden çıkarılırken bir hata oluştu' });
     } finally {
       setActionLoading(prev => ({ ...prev, [productId]: false }));
     }
   };
 
   const clearWishlist = async () => {
-    if (!confirm('Tüm favori ürünleri silmek istediğinizden emin misiniz?')) {
+    const userConfirmed = window.confirm('Tüm favori ürünleri silmek istediğinizden emin misiniz?');
+
+    if (!userConfirmed) {
       return;
     }
 
-    setLoading(true);
-    try {
+    setLoading(true);    try {
       await wishlistAPI.clearWishlist();
       setWishlistItems([]);
       setSelectedItems([]);
+      addToast({ type: 'success', title: 'Tüm favoriler temizlendi' });
     } catch (error) {
       console.error('Error clearing wishlist:', error);
-      alert('Favoriler temizlenirken bir hata oluştu.');
+      addToast({ type: 'error', title: 'Favoriler temizlenirken bir hata oluştu' });
     } finally {
       setLoading(false);
     }
   };
-
   const removeSelected = async () => {
     if (selectedItems.length === 0) {
-      alert('Lütfen silmek istediğiniz ürünleri seçin.');
+      addToast({ type: 'warning', title: 'Lütfen silmek istediğiniz ürünleri seçin' });
       return;
     }
 
@@ -83,16 +88,16 @@ export default function WishlistPage() {
       await Promise.all(selectedItems.map(productId => wishlistAPI.removeFromWishlist(productId)));
       setWishlistItems(prev => prev.filter(item => !selectedItems.includes(item.product._id)));
       setSelectedItems([]);
+      addToast({ type: 'success', title: `${selectedItems.length} ürün favorilerden çıkarıldı` });
     } catch (error) {
       console.error('Error removing selected items:', error);
-      alert('Seçili ürünler çıkarılırken bir hata oluştu.');
+      addToast({ type: 'error', title: 'Seçili ürünler çıkarılırken bir hata oluştu' });
     } finally {
       setActionLoading(prev => ({ ...prev, removeSelected: false }));
     }
-  };
-  const moveToCart = async () => {
+  };  const moveToCart = async () => {
     if (selectedItems.length === 0) {
-      alert('Lütfen sepete taşımak istediğiniz ürünleri seçin.');
+      addToast({ type: 'warning', title: 'Lütfen sepete taşımak istediğiniz ürünleri seçin' });
       return;
     }
 
@@ -103,10 +108,14 @@ export default function WishlistPage() {
       await Promise.all(selectedItems.map(productId => wishlistAPI.removeFromWishlist(productId)));
       setWishlistItems(prev => prev.filter(item => !selectedItems.includes(item.product._id)));
       setSelectedItems([]);
-      alert(`${selectedItems.length} ürün favorilerden kaldırıldı. Manuel olarak sepete ekleyebilirsiniz.`);
+      addToast({ 
+        type: 'info', 
+        title: `${selectedItems.length} ürün favorilerden kaldırıldı`, 
+        description: 'Manuel olarak sepete ekleyebilirsiniz' 
+      });
     } catch (error) {
       console.error('Error processing selected items:', error);
-      alert('Ürünler işlenirken bir hata oluştu.');
+      addToast({ type: 'error', title: 'Ürünler işlenirken bir hata oluştu' });
     } finally {
       setActionLoading(prev => ({ ...prev, moveToCart: false }));
     }
@@ -162,13 +171,34 @@ export default function WishlistPage() {
       </div>
     );
   }
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <LoaderIcon className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-gray-600">Favoriler yükleniyor...</p>
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-sm">
+            {/* Header Skeleton */}
+            <div className="border-b border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="flex space-x-2">
+                  <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Content Skeleton */}
+            <div className="p-6">
+              <div className="grid gap-4">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <WishlistItemSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -188,73 +218,85 @@ export default function WishlistPage() {
                 </h1>
               </div>
               
-              {wishlistItems.length > 0 && (
-                <div className="flex items-center space-x-3">
-                  <button
+              {wishlistItems.length > 0 && (                <div className="flex items-center space-x-3">
+                  <Button
                     onClick={selectAllItems}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    variant="ghost"
+                    size="sm"
+                    className="text-blue-600 hover:text-blue-800"
                   >
                     {selectedItems.length === wishlistItems.length ? 'Tümünü Kaldır' : 'Tümünü Seç'}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={clearWishlist}
-                    className="text-sm text-red-600 hover:text-red-800"
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-600 hover:text-red-800"
                   >
                     Tümünü Sil
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
 
             {/* Action Buttons */}
             {selectedItems.length > 0 && (
-              <div className="mt-4 flex items-center space-x-3">
-                <button
+              <div className="mt-4 flex items-center space-x-3">                <Button
                   onClick={moveToCart}
                   disabled={actionLoading.moveToCart}
-                  className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                  loading={actionLoading.moveToCart}
+                  variant="primary"
+                  size="md"
+                  className="flex items-center space-x-2"
                 >
-                  {actionLoading.moveToCart ? (
-                    <LoaderIcon className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <ShoppingCart className="w-4 h-4" />
-                  )}
+                  <ShoppingCart className="w-4 h-4" />
                   <span>Sepete Taşı ({selectedItems.length})</span>
-                </button>
+                </Button>
                 
-                <button
+                <Button
                   onClick={removeSelected}
                   disabled={actionLoading.removeSelected}
-                  className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
+                  loading={actionLoading.removeSelected}
+                  variant="danger"
+                  size="md"
+                  className="flex items-center space-x-2"
                 >
-                  {actionLoading.removeSelected ? (
-                    <LoaderIcon className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="w-4 h-4" />
-                  )}
+                  <Trash2 className="w-4 h-4" />
                   <span>Seçilenleri Sil</span>
-                </button>
+                </Button>
               </div>
             )}
           </div>
 
           {/* Content */}
-          <div className="p-6">
-            {wishlistItems.length === 0 ? (
-              <div className="text-center py-12">
-                <Heart className="w-24 h-24 mx-auto mb-6 text-gray-300" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-3">
+          <div className="p-6">            {wishlistItems.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="bg-red-50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                  <Heart className="w-12 h-12 text-red-300" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   Henüz favori ürününüz yok
                 </h3>
-                <p className="text-gray-500 mb-6">
-                  Beğendiğiniz ürünleri favorilere ekleyerek buradan kolayca ulaşabilirsiniz.
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                  Beğendiğiniz ürünleri favorilere ekleyerek buradan kolayca ulaşabilir ve takip edebilirsiniz.
                 </p>
-                <Link 
-                  href="/products"
-                  className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-block"
-                >
-                  Ürünleri Keşfet
-                </Link>
+                <div className="space-y-4">
+                  <LinkButton 
+                    href="/products"
+                    variant="primary"
+                    size="lg"
+                  >
+                    Ürünleri Keşfet
+                  </LinkButton>
+                  <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
+                    <span className="flex items-center gap-2">
+                      ❤️ Kalp ikonuyla favori ekle
+                    </span>
+                    <span className="flex items-center gap-2">
+                      🔔 Fiyat değişikliklerini takip et
+                    </span>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -268,12 +310,12 @@ export default function WishlistPage() {
                         onChange={() => toggleSelectItem(item.product._id)}
                         className="w-4 h-4 text-primary bg-white border-2 border-gray-300 rounded focus:ring-primary focus:ring-2"
                       />
-                    </div>
-
-                    {/* Remove Button */}
-                    <button
+                    </div>                    {/* Remove Button */}
+                    <Button
                       onClick={() => removeFromWishlist(item.product._id)}
                       disabled={actionLoading[item.product._id]}
+                      variant="ghost"
+                      size="sm"
                       className="absolute top-3 right-3 z-10 p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow"
                     >
                       {actionLoading[item.product._id] ? (
@@ -281,7 +323,7 @@ export default function WishlistPage() {
                       ) : (
                         <X className="w-4 h-4 text-gray-600 hover:text-red-500" />
                       )}
-                    </button>
+                    </Button>
 
                     {/* Product Image */}
                     <div className="relative aspect-square">

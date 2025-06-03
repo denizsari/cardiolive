@@ -6,6 +6,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, ArrowLeft } from 'lucide-react';
 import Header from '../components/Header';
+import Button from '../components/ui/Button';
+import { FormInput } from '../components/forms/FormComponents';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -76,37 +78,30 @@ export default function ForgotPasswordPage() {
               </div>
             )}
 
-            {!sent ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    E-posta Adresi
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                      placeholder="ornek@email.com"
-                    />
-                  </div>
-                </div>
+            {!sent ? (              <form onSubmit={handleSubmit} className="space-y-6">
+                <FormInput
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="E-posta Adresi"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ornek@email.com"
+                  leftIcon={<Mail className="h-5 w-5 text-gray-400" />}
+                  className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                  required
+                />
 
                 <div>
-                  <button
+                  <Button
                     type="submit"
-                    disabled={loading}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#70BB1B] hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#70BB1B] disabled:opacity-50 disabled:cursor-not-allowed"
+                    loading={loading}
+                    loadingText="Gönderiliyor..."
+                    className="w-full"
+                    size="lg"
                   >
-                    {loading ? 'Gönderiliyor...' : 'Şifre Sıfırlama Bağlantısı Gönder'}
-                  </button>
+                    Şifre Sıfırlama Bağlantısı Gönder
+                  </Button>
                 </div>
               </form>
             ) : (

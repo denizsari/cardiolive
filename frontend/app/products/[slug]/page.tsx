@@ -5,11 +5,13 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Minus, Plus } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import Header from '../../components/Header';
 import ReviewsSection from '../../components/ReviewsSection';
 import WishlistButton from '../../components/WishlistButton';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../contexts/CartContext';
+import Button from '../../components/ui/Button';
 
 // Bu veriyi normalde API'den alacağız
 const product = {
@@ -67,7 +69,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
     }, quantity);
     
     // User feedback için bir toast notification eklenebilir
-    alert(`${product.name} (${selectedSize.value}) sepete eklendi!`);
+    toast.success(`${product.name} (${selectedSize.value}) sepete eklendi!`);
   };
 
   return (
@@ -86,11 +88,11 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                 className="object-cover"
               />
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              {product.images.map((image, index) => (
-                <button
+            <div className="grid grid-cols-3 gap-4">              {product.images.map((image, index) => (
+                <Button
                   key={index}
-                  className={`relative aspect-square rounded-lg overflow-hidden ${
+                  variant="ghost"
+                  className={`relative aspect-square rounded-lg overflow-hidden p-0 ${
                     selectedImage === index ? 'ring-2 ring-[#70BB1B]' : ''
                   }`}
                   onClick={() => setSelectedImage(index)}
@@ -101,7 +103,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                     fill
                     className="object-cover"
                   />
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -124,11 +126,11 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
 
             {/* Boyut Seçimi */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Boyut Seçimi</h3>
-              <div className="flex flex-wrap gap-3">
+              <h3 className="font-semibold text-gray-900">Boyut Seçimi</h3>              <div className="flex flex-wrap gap-3">
                 {product.sizes.map((size) => (
-                  <button
+                  <Button
                     key={size.value}
+                    variant="outline"
                     className={`px-4 py-2 rounded-full border-2 ${
                       selectedSize.value === size.value
                         ? 'border-[#70BB1B] text-[#70BB1B]'
@@ -137,34 +139,36 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                     onClick={() => setSelectedSize(size)}
                   >
                     {size.value}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
 
             {/* Miktar ve Sepete Ekle */}
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center border-2 border-[#70BB1B] rounded-full">
-                  <button
+              <div className="flex items-center space-x-4">                <div className="flex items-center border-2 border-[#70BB1B] rounded-full">
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="p-2 text-[#70BB1B]"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   >
                     <Minus size={20} />
-                  </button>
-                  <span className="w-12 text-center text-[#70BB1B]">{quantity}</span>
-                  <button
+                  </Button>                  <span className="w-12 text-center text-[#70BB1B]">{quantity}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="p-2 text-[#70BB1B]"
                     onClick={() => setQuantity(quantity + 1)}
                   >
                     <Plus size={20} />
-                  </button>
-                </div>                <button 
+                  </Button>                </div>                
+                <Button 
                   className="flex-1 bg-[#70BB1B] text-white py-3 px-8 rounded-full hover:bg-opacity-90 transition-colors"
                   onClick={handleAddToCart}
                 >
                   Sepete Ekle
-                </button><WishlistButton 
+                </Button><WishlistButton 
                   productId={resolvedParams?.slug || 'default'}
                   className="p-3 border-2 border-gray-300 rounded-full hover:border-[#70BB1B] transition-colors"
                   size={24}

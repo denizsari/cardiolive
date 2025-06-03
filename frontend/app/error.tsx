@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
+import Button from './components/ui/Button';
 
 export default function Error({
   error,
@@ -45,17 +46,16 @@ export default function Error({
               </p>
             )}
           </div>
-        )}
-
-        {/* Action Buttons */}
+        )}        {/* Action Buttons */}
         <div className="space-y-4 mb-8">
-          <button
+          <Button
             onClick={reset}
-            className="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto"
+            variant="primary"
+            className="inline-flex items-center w-full sm:w-auto bg-red-600 hover:bg-red-700"
           >
             <RefreshCw className="h-5 w-5 mr-2" />
             Tekrar Dene
-          </button>
+          </Button>
           
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

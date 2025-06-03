@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Heart } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { wishlistAPI } from '../utils/api';
+import Button from './ui/Button';
 
 interface WishlistButtonProps {
   productId: string;
@@ -69,11 +70,12 @@ export default function WishlistButton({
       setLoading(false);
     }
   };
-
   return (
-    <button
+    <Button
       onClick={toggleWishlist}
       disabled={loading}
+      variant="ghost"
+      size="sm"
       className={`transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
         isInWishlist
           ? 'text-red-500 hover:text-red-600'
@@ -85,6 +87,6 @@ export default function WishlistButton({
         size={size}
         className={isInWishlist ? 'fill-current' : ''}
       />
-    </button>
+    </Button>
   );
 }

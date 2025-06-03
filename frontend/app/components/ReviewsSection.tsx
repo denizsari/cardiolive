@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronDown, Filter } from 'lucide-react';
 import { reviewAPI, productAPI } from '@/utils/api';
-import { Review, ReviewStats, CreateReviewData } from '@/types';
+import { Review, ReviewStats, CreateReviewData, ReviewEligibility } from '@/types';
 import ReviewsSummary from './ReviewsSummary';
 import ReviewItem from './ReviewItem';
 import ReviewForm from './ReviewForm';
@@ -30,10 +30,11 @@ export default function ReviewsSection({
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'rating_high' | 'rating_low' | 'helpful'>('newest');
-  const [filterRating, setFilterRating] = useState<number | null>(null);
-  const [page, setPage] = useState(1);
+  const [filterRating, setFilterRating] = useState<number | null>(null);  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [resolvedProductId, setResolvedProductId] = useState<string | null>(null);
+  const [reviewEligibility, setReviewEligibility] = useState<ReviewEligibility | null>(null);
+  const [checkingEligibility, setCheckingEligibility] = useState(false);
 
   // Helper function to check if productId is MongoDB ObjectId or slug
   const isObjectId = (id: string) => {
@@ -70,7 +71,6 @@ export default function ReviewsSection({
 
     resolveProductId();
   }, [productId]);
-
   // Submit review using centralized API
   const handleReviewSubmit = async (reviewData: {
     rating: number;
@@ -95,6 +95,9 @@ export default function ReviewsSection({
       };
 
       await reviewAPI.createReview(createData);
+      
+      // Reset eligibility state after successful review submission
+      setReviewEligibility(null);
       
       // Refresh data
       const [reviewsResponse, statsResponse] = await Promise.all([
@@ -185,7 +188,37 @@ export default function ReviewsSection({
     };
 
     fetchReviews();
-  }, [resolvedProductId, sortBy, filterRating]);
+  }, [resolvedProductId, sortBy, filterRating]);  // Check if user can review this product
+  const checkReviewEligibility = async () => {
+    if (!resolvedProductId || !isLoggedIn || !userToken) return;
+
+    try {
+      setCheckingEligibility(true);
+      const eligibilityData = await reviewAPI.checkCanReview(resolvedProductId);
+      setReviewEligibility(eligibilityData);
+    } catch (err) {
+      console.error('Error checking review eligibility:', err);
+      setReviewEligibility({
+        canReview: false,
+        hasPurchased: false,
+        hasExistingReview: false,
+        reason: 'Kontrol sırasında bir hata oluştu'
+      });
+    } finally {
+      setCheckingEligibility(false);
+    }
+  };
+
+  // Check eligibility when user wants to write a review
+  const handleWriteReviewClick = async () => {
+    if (reviewEligibility === null) {
+      await checkReviewEligibility();
+    }
+    
+    if (reviewEligibility?.canReview) {
+      setShowForm(!showForm);
+    }
+  };
 
   // Load more reviews
   const loadMoreReviews = async () => {
@@ -227,14 +260,35 @@ export default function ReviewsSection({
       {/* Reviews Summary */}
       <div className="p-6 border-b">
         <ReviewsSummary stats={stats} />
-        
-        {isLoggedIn && (
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            {showForm ? 'İptal Et' : 'Yorum Yaz'}
-          </button>
+          {isLoggedIn && (
+          <div className="mt-4">
+            <button
+              onClick={handleWriteReviewClick}
+              disabled={checkingEligibility}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {checkingEligibility ? 'Kontrol ediliyor...' : (showForm ? 'İptal Et' : 'Yorum Yaz')}
+            </button>
+
+            {/* Show eligibility message if user cannot review */}
+            {reviewEligibility && !reviewEligibility.canReview && (
+              <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-yellow-800 text-sm">
+                  {reviewEligibility.reason || 'Bu ürüne yorum yapabilmek için önce satın almanız gerekiyor.'}
+                </p>
+                {!reviewEligibility.hasPurchased && (
+                  <p className="text-yellow-600 text-xs mt-1">
+                    Sadece ürünü satın alan müşteriler yorum yapabilir.
+                  </p>
+                )}
+                {reviewEligibility.hasExistingReview && (
+                  <p className="text-yellow-600 text-xs mt-1">
+                    Bu ürün için zaten yorum yapmışsınız.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </div>
 

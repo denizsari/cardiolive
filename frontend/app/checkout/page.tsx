@@ -8,8 +8,10 @@ import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
-import { ArrowLeft, ArrowRight, Package, Truck, Shield } from 'lucide-react';
+import { FormInput, FormTextarea } from '../components/forms/FormComponents';
+import { ArrowLeft, ArrowRight, Package, Truck, Shield, User, Mail, Phone, MapPin, Building, FileText } from 'lucide-react';
 import PaymentComponent from '../components/PaymentComponent';
+import Button from '../components/ui/Button';
 import { PaymentResult } from '../types';
 import { orderAPI } from '../utils/api';
 
@@ -24,15 +26,30 @@ interface ShippingForm {
   notes: string;
 }
 
+interface FormErrors {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  district?: string;
+  postalCode?: string;
+}
+
+interface FormTouched {
+  [key: string]: boolean;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotalPrice, clearCart } = useCart();
-
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [createdOrderId, setCreatedOrderId] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formTouched, setFormTouched] = useState<FormTouched>({});
 
   const [shippingForm, setShippingForm] = useState<ShippingForm>({
     fullName: '',
@@ -63,12 +80,108 @@ export default function CheckoutPage() {
       }));
     }
   }, [items, router]);
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'fullName':
+        if (!value.trim()) return 'Ad soyad zorunludur';
+        if (value.trim().length < 2) return 'Ad soyad en az 2 karakter olmalıdır';
+        if (!/^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$/.test(value)) return 'Ad soyad sadece harf içermelidir';
+        return '';
+      
+      case 'email':
+        if (!value.trim()) return 'E-posta zorunludur';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return 'Geçerli bir e-posta adresi girin';
+        return '';
+      
+      case 'phone':
+        if (!value.trim()) return 'Telefon numarası zorunludur';
+        const phoneClean = value.replace(/[^\d]/g, '');
+        if (phoneClean.length < 10) return 'Telefon numarası en az 10 haneli olmalıdır';
+        if (phoneClean.length > 11) return 'Telefon numarası 11 haneden fazla olamaz';
+        return '';
+      
+      case 'address':
+        if (!value.trim()) return 'Adres zorunludur';
+        if (value.trim().length < 10) return 'Adres detayı en az 10 karakter olmalıdır';
+        return '';
+      
+      case 'city':
+        if (!value.trim()) return 'İl zorunludur';
+        if (!/^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$/.test(value)) return 'İl adı sadece harf içermelidir';
+        return '';
+      
+      case 'district':
+        if (!value.trim()) return 'İlçe zorunludur';
+        if (!/^[a-zA-ZçÇğĞıİöÖşŞüÜ\s]+$/.test(value)) return 'İlçe adı sadece harf içermelidir';
+        return '';
+      
+      case 'postalCode':
+        if (value && value.length !== 5) return 'Posta kodu 5 haneli olmalıdır';
+        if (value && !/^\d+$/.test(value)) return 'Posta kodu sadece rakam içermelidir';
+        return '';
+      
+      default:
+        return '';
+    }
+  };
+
+  const validateAllFields = (): boolean => {
+    const errors: FormErrors = {};
+    let isValid = true;
+    
+    Object.keys(shippingForm).forEach((key) => {
+      if (key !== 'notes') { // Notes is optional
+        const error = validateField(key, shippingForm[key as keyof ShippingForm]);
+        if (error) {
+          errors[key as keyof FormErrors] = error;
+          isValid = false;
+        }
+      }
+    });
+    
+    setFormErrors(errors);
+    return isValid;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
     setShippingForm(prev => ({
       ...prev,
       [name]: value
+    }));
+
+    // Mark field as touched
+    setFormTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+    // Real-time validation
+    if (formTouched[name] || value.length > 0) {
+      const error = validateField(name, value);
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: error
+      }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    // Mark field as touched on blur
+    setFormTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+    // Validate on blur
+    const error = validateField(name, value);
+    setFormErrors(prev => ({
+      ...prev,
+      [name]: error
     }));
   };
 
@@ -77,33 +190,12 @@ export default function CheckoutPage() {
       style: 'currency',
       currency: 'TRY'
     }).format(price);
-  };
-  const validateShippingForm = () => {
-    const requiredFields = ['fullName', 'email', 'phone', 'address', 'city', 'district'];
-    const fieldNames: { [key: string]: string } = {
-      fullName: 'ad soyad',
-      email: 'e-posta',
-      phone: 'telefon',
-      address: 'adres',
-      city: 'il',
-      district: 'ilçe'
-    };
-    
-    for (const field of requiredFields) {
-      if (!shippingForm[field as keyof ShippingForm].trim()) {
-        setError(`Lütfen ${fieldNames[field]} alanını doldurun.`);
-        return false;
-      }
+  };  const validateShippingForm = () => {
+    const isValid = validateAllFields();
+    if (!isValid) {
+      setError('Lütfen tüm zorunlu alanları doğru şekilde doldurun.');
     }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(shippingForm.email)) {
-      setError('Lütfen geçerli bir e-posta adresi girin.');
-      return false;
-    }
-    
-    return true;
+    return isValid;
   };
   const createPendingOrder = async () => {
     setIsLoading(true);
@@ -219,124 +311,120 @@ export default function CheckoutPage() {
                 <>
                   <h2 className="text-xl font-semibold text-gray-900 mb-6" style={{ color: '#1f2937' }}>Teslimat Bilgileri</h2>
                   
-                  <form onSubmit={handleShippingSubmit} className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                          Ad Soyad *
-                        </label>
-                        <input
+                  <form onSubmit={handleShippingSubmit} className="space-y-4">                    <div className="grid md:grid-cols-2 gap-4">                      <div>
+                        <FormInput
+                          leftIcon={<User className="h-4 w-4 text-gray-400" />}
+                          label="Ad Soyad"
                           type="text"
                           id="fullName"
                           name="fullName"
                           value={shippingForm.fullName}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                          error={formErrors.fullName ? { message: formErrors.fullName } : undefined}
+                          className="w-full"
                         />
-                      </div>
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                          E-posta *
-                        </label>
-                        <input
+                      </div>                      <div>
+                        <FormInput
+                          leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
+                          label="E-posta"
                           type="email"
                           id="email"
                           name="email"
                           value={shippingForm.email}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                          error={formErrors.email ? { message: formErrors.email } : undefined}
+                          className="w-full"
                         />
                       </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                        Telefon *
-                      </label>
-                      <input
+                    </div>                    <div>
+                      <FormInput
+                        leftIcon={<Phone className="h-4 w-4 text-gray-400" />}
+                        label="Telefon"
                         type="tel"
                         id="phone"
                         name="phone"
                         value={shippingForm.phone}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                        placeholder="0555 123 45 67"
+                        error={formErrors.phone ? { message: formErrors.phone } : undefined}
+                        className="w-full"
                       />
-                    </div>
-
-                    <div>
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                        Adres *
-                      </label>
-                      <textarea
+                    </div>                    <div>
+                      <FormTextarea
+                        label="Adres"
                         id="address"
                         name="address"
                         value={shippingForm.address}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         required
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                        placeholder="Detaylı adres bilgisi girin..."
+                        error={formErrors.address ? { message: formErrors.address } : undefined}
+                        className="w-full"
                       />
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div>
-                        <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                          İl *
-                        </label>
-                        <input
+                    </div><div className="grid md:grid-cols-3 gap-4">                      <div>
+                        <FormInput
+                          leftIcon={<Building className="h-4 w-4 text-gray-400" />}
+                          label="İl"
                           type="text"
                           id="city"
                           name="city"
                           value={shippingForm.city}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                          placeholder="İstanbul"
+                          error={formErrors.city ? { message: formErrors.city } : undefined}
+                          className="w-full"
                         />
-                      </div>
-                      <div>
-                        <label htmlFor="district" className="block text-sm font-medium text-gray-700 mb-1">
-                          İlçe *
-                        </label>
-                        <input
+                      </div>                      <div>
+                        <FormInput
+                          leftIcon={<MapPin className="h-4 w-4 text-gray-400" />}
+                          label="İlçe"
                           type="text"
                           id="district"
                           name="district"
                           value={shippingForm.district}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                          placeholder="Kadıköy"
+                          error={formErrors.district ? { message: formErrors.district } : undefined}
+                          className="w-full"
                         />
-                      </div>
-                      <div>
-                        <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-1">
-                          Posta Kodu
-                        </label>
-                        <input
+                      </div>                      <div>
+                        <FormInput
+                          leftIcon={<FileText className="h-4 w-4 text-gray-400" />}
+                          label="Posta Kodu"
                           type="text"
                           id="postalCode"
                           name="postalCode"
                           value={shippingForm.postalCode}
                           onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                          onBlur={handleBlur}
+                          placeholder="34000"
+                          maxLength={5}
+                          error={formErrors.postalCode ? { message: formErrors.postalCode } : undefined}
+                          className="w-full"
                         />
                       </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                        Sipariş Notu (Opsiyonel)
-                      </label>
-                      <textarea
+                    </div>                    <div>
+                      <FormTextarea
+                        label="Sipariş Notu (Opsiyonel)"
                         id="notes"
                         name="notes"
                         value={shippingForm.notes}
                         onChange={handleInputChange}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
                         placeholder="Kapı kodu, kat bilgisi vb."
+                        className="w-full"
                       />
                     </div>
 
@@ -344,37 +432,36 @@ export default function CheckoutPage() {
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                         <p className="text-red-600 text-sm">{error}</p>
                       </div>
-                    )}
-
-                    <button
+                    )}                    <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-[#70BB1B] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#5ea516] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                      loading={isLoading}
+                      className="w-full"
+                      size="lg"
                     >
-                      {isLoading ? (
-                        'Devam Ediliyor...'
-                      ) : (
+                      {!isLoading && (
                         <>
                           Ödeme Adımına Geç
                           <ArrowRight className="ml-2" size={16} />
                         </>
                       )}
-                    </button>
+                    </Button>
                   </form>
                 </>
               )}
 
               {currentStep === 2 && (
-                <>
-                  <div className="flex items-center justify-between mb-6">
+                <>                  <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold text-gray-900">Ödeme Bilgileri</h2>
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={goBackToShipping}
                       className="flex items-center text-[#70BB1B] hover:text-[#5ea516] transition-colors"
                     >
                       <ArrowLeft className="mr-1" size={16} />
                       Geri Dön
-                    </button>
+                    </Button>
                   </div>
 
                   {error && (

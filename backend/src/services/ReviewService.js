@@ -41,14 +41,17 @@ class ReviewService extends BaseService {
 
     if (existingReview) {
       throw new Error('Bu ürün için zaten bir yorum yapmışsınız');
-    }
-
-    // Check if user has purchased this product
+    }    // Check if user has purchased this product
     const hasPurchased = await Order.findOne({
       user: userId,
       'items.product': product,
       status: 'delivered'
     });
+
+    // Require purchase verification to leave a review
+    if (!hasPurchased) {
+      throw new Error('Bu ürüne yorum yapabilmek için önce satın almanız gerekiyor');
+    }
 
     const review = await this.create({
       product,
@@ -58,7 +61,7 @@ class ReviewService extends BaseService {
       comment,
       recommend: recommend || true,
       images: images || [],
-      isVerifiedPurchase: !!hasPurchased,
+      isVerifiedPurchase: true, // Always true since we verified purchase above
       status: 'pending' // Reviews need approval
     });
 
@@ -444,6 +447,43 @@ class ReviewService extends BaseService {
     });
 
     logger.info('Product rating updated', { productId, averageRating, totalReviews });
+  }
+
+  /**
+   * Check if user can leave a review for a product
+   * @param {string} productId - Product ID
+   * @param {string} userId - User ID
+   * @returns {Promise<Object>} Review eligibility status
+   */
+  async checkCanReview(productId, userId) {
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error('Ürün bulunamadı');
+    }
+
+    // Check if user has purchased this product
+    const hasPurchased = await Order.findOne({
+      user: userId,
+      'items.product': productId,
+      status: 'delivered'
+    });
+
+    // Check if user already has a review for this product
+    const existingReview = await this.findOne({
+      product: productId,
+      user: userId,
+      status: { $ne: 'deleted' }
+    });    return {
+      canReview: !!hasPurchased && !existingReview,
+      hasPurchased: !!hasPurchased,
+      hasExistingReview: !!existingReview,
+      reason: !hasPurchased 
+        ? 'Bu ürüne yorum yapabilmek için önce satın almanız gerekiyor'
+        : existingReview 
+        ? 'Bu ürün için zaten bir yorum yapmışsınız'
+        : null
+    };
   }
 }
 

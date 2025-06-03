@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart } from 'lucide-react';
 import { productAPI } from '../../utils/api';
+import WishlistButton from '../WishlistButton';
+import Button from '../ui/Button';
 import { Product } from '../../types';
 
 // Statik kategori kartları - bunlar sabit kalacak
@@ -67,13 +68,16 @@ export default function FeaturedProducts() {
                 alt={category.alt}
                 fill
                 className="object-cover transform group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
+              />              <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
                 <div className="text-center">
                   <h3 className="text-white text-xl font-bold mb-2">{category.title}</h3>
-                  <button className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium group-hover:bg-[#70BB1B] group-hover:text-white transition-colors">
+                  <Button 
+                    variant="secondary"
+                    size="sm"
+                    className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium group-hover:bg-[#70BB1B] group-hover:text-white transition-colors border-0"
+                  >
                     Şimdi Keşfet!
-                  </button>
+                  </Button>
                 </div>
               </div>
             </Link>
@@ -103,15 +107,15 @@ export default function FeaturedProducts() {
                 </div>
               </div>
             ))
-          ) : products.length > 0 ? (
-            products.map((product) => (
+          ) : products.length > 0 ? (            products.map((product) => (
               <div key={product._id} className="group relative">
                 {/* Favori Butonu */}
-                <button className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors">
-                  <Heart className="w-5 h-5 text-gray-600" />
-                </button>
+                <WishlistButton
+                  productId={product._id}
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors"
+                />
 
-                {/* Ürün Kartı */}                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                {/* Ürün Kartı */}<div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   {/* Ürün Görseli */}
                   <Link href={`/products/${product._id}`}>
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -130,14 +134,17 @@ export default function FeaturedProducts() {
                       <h3 className="text-sm font-medium text-gray-900 mb-2 line-clamp-2 min-h-[40px]">
                         {product.name}
                       </h3>
-                    </Link>
-                    <div className="flex flex-col gap-2">
+                    </Link>                    <div className="flex flex-col gap-2">
                       <span className="text-lg font-bold text-gray-900">
                         {product.price.toLocaleString('tr-TR')} TL
                       </span>
-                      <button className="w-full bg-gray-100 text-gray-900 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors">
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="w-full bg-gray-100 text-gray-900 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors border-0"
+                      >
                         SEPETE EKLE
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

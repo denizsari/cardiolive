@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, Building2, Banknote, Shield, AlertCircle } from 'lucide-react';
+import { CreditCard, Building2, Banknote, Shield, AlertCircle, User, Hash, Lock } from 'lucide-react';
 import { PaymentMethod, PaymentDetails, PaymentResult } from '@/types';
 import { paymentAPI } from '@/utils/api';
+import { FormInput, FormSelect } from './forms/FormComponents';
+import Button from './ui/Button';
 
 interface PaymentComponentProps {
   orderId: string;
@@ -172,85 +174,67 @@ export default function PaymentComponent({
       {/* Payment Details Form */}
       {selectedMethod === 'credit_card' && (        <div className="space-y-4 mb-6">
           <h4 className="font-medium" style={{ color: '#1f2937' }}>Kredi Kartı Bilgileri</h4>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kart Üzerindeki İsim
-            </label>
-            <input
+            <div>
+            <FormInput
+              leftIcon={<User className="h-4 w-4 text-gray-400" />}
+              label="Kart Üzerindeki İsim"
               type="text"
               value={paymentDetails.cardHolder || ''}
               onChange={(e) => handlePaymentDetailsChange('cardHolder', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="John Doe"
+              className="w-full"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kart Numarası
-            </label>
-            <input
+          </div>          <div>
+            <FormInput
+              leftIcon={<CreditCard className="h-4 w-4 text-gray-400" />}
+              label="Kart Numarası"
               type="text"
               value={paymentDetails.cardNumber || ''}
               onChange={(e) => handlePaymentDetailsChange('cardNumber', e.target.value.replace(/\s/g, ''))}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="1234 5678 9012 3456"
               maxLength={19}
+              className="w-full"
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ay
-              </label>
-              <select
-                value={paymentDetails.expiryMonth || ''}
+          <div className="grid grid-cols-3 gap-4">            <div>
+              <FormSelect
+                label="Ay"
+                value={paymentDetails.expiryMonth?.toString() || ''}
                 onChange={(e) => handlePaymentDetailsChange('expiryMonth', parseInt(e.target.value))}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              >
-                <option value="">Ay</option>
-                {Array.from({ length: 12 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {String(i + 1).padStart(2, '0')}
-                  </option>
-                ))}
-              </select>
+                options={Array.from({ length: 12 }, (_, i) => ({
+                  value: (i + 1).toString(),
+                  label: String(i + 1).padStart(2, '0')
+                }))}
+                placeholder="Ay"
+                className="w-full"
+              />
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Yıl
-              </label>
-              <select
-                value={paymentDetails.expiryYear || ''}
+              <div>
+              <FormSelect
+                label="Yıl"
+                value={paymentDetails.expiryYear?.toString() || ''}
                 onChange={(e) => handlePaymentDetailsChange('expiryYear', parseInt(e.target.value))}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              >
-                <option value="">Yıl</option>
-                {Array.from({ length: 10 }, (_, i) => {
+                options={Array.from({ length: 10 }, (_, i) => {
                   const year = new Date().getFullYear() + i;
-                  return (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  );
+                  return {
+                    value: year.toString(),
+                    label: year.toString()
+                  };
                 })}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                CVV
-              </label>
-              <input
+                placeholder="Yıl"
+                className="w-full"
+              />
+            </div><div>
+              <FormInput
+                leftIcon={<Lock className="h-4 w-4 text-gray-400" />}
+                label="CVV"
                 type="text"
                 value={paymentDetails.cvv || ''}
                 onChange={(e) => handlePaymentDetailsChange('cvv', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="123"
                 maxLength={4}
+                className="w-full"
               />
             </div>
           </div>
@@ -259,30 +243,25 @@ export default function PaymentComponent({
 
       {selectedMethod === 'bank_transfer' && (        <div className="space-y-4 mb-6">
           <h4 className="font-medium" style={{ color: '#1f2937' }}>Banka Havalesi Bilgileri</h4>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Banka Hesap Numarası
-            </label>
-            <input
+            <div>
+            <FormInput
+              leftIcon={<Building2 className="h-4 w-4 text-gray-400" />}
+              label="Banka Hesap Numarası"
               type="text"
               value={paymentDetails.bankAccount || ''}
               onChange={(e) => handlePaymentDetailsChange('bankAccount', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="TR00 0000 0000 0000 0000 00"
+              className="w-full"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Routing Number
-            </label>
-            <input
+          </div>          <div>
+            <FormInput
+              leftIcon={<Hash className="h-4 w-4 text-gray-400" />}
+              label="Routing Number"
               type="text"
               value={paymentDetails.routingNumber || ''}
               onChange={(e) => handlePaymentDetailsChange('routingNumber', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="123456789"
+              className="w-full"
             />
           </div>
         </div>
@@ -337,26 +316,19 @@ export default function PaymentComponent({
             <span>₺{selectedMethodData.fees.toFixed(2)}</span>
           </div>
         )}
-      </div>
-
-      {/* Payment Button */}
-      <button
+      </div>      {/* Payment Button */}
+      <Button
         onClick={validateAndProcessPayment}
         disabled={loading || !selectedMethod}
-        className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+        loading={loading}
+        loadingText="Ödeme İşleniyor..."
+        variant="primary"
+        size="lg"
+        className="w-full flex items-center justify-center"
       >
-        {loading ? (
-          <>
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-            Ödeme İşleniyor...
-          </>
-        ) : (
-          <>
-            <Shield className="w-5 h-5 mr-2" />
-            Güvenli Ödeme Yap
-          </>
-        )}
-      </button>
+        <Shield className="w-5 h-5 mr-2" />
+        Güvenli Ödeme Yap
+      </Button>
 
       {/* Security Note */}
       <div className="mt-4 text-center">

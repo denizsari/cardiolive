@@ -4,7 +4,16 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
-import { FiSave, FiMail, FiShield, FiDatabase, FiSettings } from 'react-icons/fi';
+import {
+  FiSave,
+  FiMail,
+  FiShield,
+  FiDatabase,
+  FiSettings,
+} from 'react-icons/fi';
+import { Globe, Mail, Database, Truck, Package } from 'lucide-react';
+import Button from '../../components/ui/Button';
+import { FormInput, FormSelect } from '../../components/forms/FormComponents';
 
 interface Settings {
   siteName: string;
@@ -34,9 +43,9 @@ export default function AdminSettingsPage() {
     currency: 'TRY',
     taxRate: 18,
     shippingFee: 15,
-    freeShippingThreshold: 500
+    freeShippingThreshold: 500,
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -46,15 +55,18 @@ export default function AdminSettingsPage() {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/settings`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/settings`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
-        
+        );
+
         if (response.ok) {
           const data = await response.json();
-          setSettings(prev => ({ ...prev, ...data }));
+          setSettings((prev) => ({ ...prev, ...data }));
         }
       } catch {
         console.log('Settings not found, using defaults');
@@ -62,7 +74,7 @@ export default function AdminSettingsPage() {
         setLoading(false);
       }
     };
-    
+
     loadSettings();
   }, []);
 
@@ -71,17 +83,21 @@ export default function AdminSettingsPage() {
     setSaving(true);
     setError('');
     setSuccess('');
-    
+
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/settings`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(settings)
-      });      if (response.ok) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/settings`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(settings),
+        }
+      );
+      if (response.ok) {
         setSuccess('Settings saved successfully!');
       } else {
         setError('Failed to save settings');
@@ -92,8 +108,11 @@ export default function AdminSettingsPage() {
       setSaving(false);
     }
   };
-  const handleInputChange = (field: keyof Settings, value: string | number | boolean) => {
-    setSettings(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (
+    field: keyof Settings,
+    value: string | number | boolean
+  ) => {
+    setSettings((prev) => ({ ...prev, [field]: value }));
   };
 
   if (loading) {
@@ -125,103 +144,105 @@ export default function AdminSettingsPage() {
       <form onSubmit={handleSave} className="space-y-6">
         {/* Site Configuration */}
         <div className="bg-white p-6 rounded-lg border">
+          {' '}
           <div className="flex items-center mb-4">
             <FiSettings className="text-blue-500 mr-2" />
-            <h2 className="text-lg font-semibold">Site Configuration</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Site Configuration
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Site Name
-              </label>
-              <input
-                type="text"
-                value={settings.siteName}
-                onChange={(e) => handleInputChange('siteName', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Currency
-              </label>
-              <select
-                value={settings.currency}
-                onChange={(e) => handleInputChange('currency', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="TRY">Turkish Lira (₺)</option>
-                <option value="USD">US Dollar ($)</option>
-                <option value="EUR">Euro (€)</option>
-              </select>
-            </div>
+            <FormInput
+              label="Site Name"
+              leftIcon={<Globe className="h-4 w-4 text-gray-400" />}
+              value={settings.siteName}
+              onChange={(e) => handleInputChange('siteName', e.target.value)}
+            />
+            <FormSelect
+              label="Currency"
+              value={settings.currency}
+              onChange={(e) => handleInputChange('currency', e.target.value)}
+              options={[
+                { value: 'TRY', label: 'Turkish Lira (₺)' },
+                { value: 'USD', label: 'US Dollar ($)' },
+                { value: 'EUR', label: 'Euro (€)' },
+              ]}
+            />
           </div>
         </div>
-
         {/* Email Configuration */}
         <div className="bg-white p-6 rounded-lg border">
+          {' '}
           <div className="flex items-center mb-4">
             <FiMail className="text-green-500 mr-2" />
-            <h2 className="text-lg font-semibold">Email Configuration</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Email Configuration
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Site Email
-              </label>
-              <input
-                type="email"
-                value={settings.siteEmail}
-                onChange={(e) => handleInputChange('siteEmail', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Support Email
-              </label>
-              <input
-                type="email"
-                value={settings.supportEmail}
-                onChange={(e) => handleInputChange('supportEmail', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
+            <FormInput
+              label="Site Email"
+              type="email"
+              leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
+              value={settings.siteEmail}
+              onChange={(e) => handleInputChange('siteEmail', e.target.value)}
+            />
+            <FormInput
+              label="Support Email"
+              type="email"
+              leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
+              value={settings.supportEmail}
+              onChange={(e) =>
+                handleInputChange('supportEmail', e.target.value)
+              }
+            />
           </div>
           <div className="mt-4 space-y-3">
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={settings.emailNotifications}
-                onChange={(e) => handleInputChange('emailNotifications', e.target.checked)}
+                onChange={(e) =>
+                  handleInputChange('emailNotifications', e.target.checked)
+                }
                 className="mr-2"
               />
-              <span className="text-sm text-gray-700">Enable email notifications</span>
+              <span className="text-sm text-gray-700">
+                Enable email notifications
+              </span>
             </label>
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={settings.orderConfirmationEmail}
-                onChange={(e) => handleInputChange('orderConfirmationEmail', e.target.checked)}
+                onChange={(e) =>
+                  handleInputChange('orderConfirmationEmail', e.target.checked)
+                }
                 className="mr-2"
               />
-              <span className="text-sm text-gray-700">Send order confirmation emails</span>
+              <span className="text-sm text-gray-700">
+                Send order confirmation emails
+              </span>
             </label>
           </div>
         </div>
-
         {/* System Settings */}
         <div className="bg-white p-6 rounded-lg border">
+          {' '}
           <div className="flex items-center mb-4">
             <FiShield className="text-orange-500 mr-2" />
-            <h2 className="text-lg font-semibold">System Settings</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              System Settings
+            </h2>
           </div>
           <div className="space-y-3">
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={settings.maintenanceMode}
-                onChange={(e) => handleInputChange('maintenanceMode', e.target.checked)}
+                onChange={(e) =>
+                  handleInputChange('maintenanceMode', e.target.checked)
+                }
                 className="mr-2"
               />
               <span className="text-sm text-gray-700">Maintenance Mode</span>
@@ -230,84 +251,86 @@ export default function AdminSettingsPage() {
               <input
                 type="checkbox"
                 checked={settings.allowRegistration}
-                onChange={(e) => handleInputChange('allowRegistration', e.target.checked)}
+                onChange={(e) =>
+                  handleInputChange('allowRegistration', e.target.checked)
+                }
                 className="mr-2"
               />
-              <span className="text-sm text-gray-700">Allow new user registration</span>
+              <span className="text-sm text-gray-700">
+                Allow new user registration
+              </span>
             </label>
           </div>
         </div>
-
         {/* Store Settings */}
         <div className="bg-white p-6 rounded-lg border">
+          {' '}
           <div className="flex items-center mb-4">
             <FiDatabase className="text-purple-500 mr-2" />
-            <h2 className="text-lg font-semibold">Store Settings</h2>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Store Settings
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Low Stock Threshold
-              </label>
-              <input
-                type="number"
-                value={settings.lowStockThreshold}
-                onChange={(e) => handleInputChange('lowStockThreshold', parseInt(e.target.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                min="0"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tax Rate (%)
-              </label>
-              <input
-                type="number"
-                value={settings.taxRate}
-                onChange={(e) => handleInputChange('taxRate', parseFloat(e.target.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                min="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Shipping Fee (₺)
-              </label>
-              <input
-                type="number"
-                value={settings.shippingFee}
-                onChange={(e) => handleInputChange('shippingFee', parseFloat(e.target.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                min="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Free Shipping Threshold (₺)
-              </label>
-              <input
-                type="number"
-                value={settings.freeShippingThreshold}
-                onChange={(e) => handleInputChange('freeShippingThreshold', parseFloat(e.target.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                min="0"
-                step="0.01"
-              />
-            </div>
+            <FormInput
+              label="Low Stock Threshold"
+              type="number"
+              leftIcon={<Package className="h-4 w-4 text-gray-400" />}
+              value={settings.lowStockThreshold}
+              onChange={(e) =>
+                handleInputChange('lowStockThreshold', parseInt(e.target.value))
+              }
+              min="0"
+            />
+            <FormInput
+              label="Tax Rate (%)"
+              type="number"
+              leftIcon={<Database className="h-4 w-4 text-gray-400" />}
+              value={settings.taxRate}
+              onChange={(e) =>
+                handleInputChange('taxRate', parseFloat(e.target.value))
+              }
+              min="0"
+              step="0.01"
+            />
+            <FormInput
+              label="Shipping Fee (₺)"
+              type="number"
+              leftIcon={<Truck className="h-4 w-4 text-gray-400" />}
+              value={settings.shippingFee}
+              onChange={(e) =>
+                handleInputChange('shippingFee', parseFloat(e.target.value))
+              }
+              min="0"
+              step="0.01"
+            />
+            <FormInput
+              label="Free Shipping Threshold (₺)"
+              type="number"
+              leftIcon={<Truck className="h-4 w-4 text-gray-400" />}
+              value={settings.freeShippingThreshold}
+              onChange={(e) =>
+                handleInputChange(
+                  'freeShippingThreshold',
+                  parseFloat(e.target.value)
+                )
+              }
+              min="0"
+              step="0.01"
+            />
           </div>
-        </div>
-
+        </div>{' '}
         <div className="flex justify-end">
-          <button
+          <Button
             type="submit"
             disabled={saving}
-            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
+            variant="primary"
+            loading={saving}
+            className="flex items-center gap-2"
           >
             <FiSave />
-            {saving ? 'Saving...' : 'Save Settings'}
-          </button>
+            Save Settings
+          </Button>
         </div>
       </form>
     </div>

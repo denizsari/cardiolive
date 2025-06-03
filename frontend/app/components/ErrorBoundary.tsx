@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Button from './ui/Button';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -95,21 +96,22 @@ function DefaultErrorFallback({ error, reset }: { error: Error; reset: () => voi
             </pre>
           </details>
         )}
-        
-        <div className="flex space-x-3">
-          <button
+          <div className="flex space-x-3">
+          <Button
             onClick={reset}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+            variant="primary"
+            className="flex-1"
           >
             Tekrar Dene
-          </button>
+          </Button>
           
-          <button
+          <Button
             onClick={() => window.location.reload()}
-            className="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors"
+            variant="secondary"
+            className="flex-1"
           >
             Sayfayı Yenile
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -132,15 +134,16 @@ export function ApiErrorFallback({ error, reset }: { error: Error; reset: () => 
           </h3>
           <div className="mt-2 text-sm text-red-700">
             <p>{error.message}</p>
-          </div>
-          <div className="mt-4">
-            <button
+          </div>          <div className="mt-4">
+            <Button
               type="button"
               onClick={reset}
-              className="bg-red-100 text-red-800 px-3 py-1 rounded text-sm hover:bg-red-200 transition-colors"
+              variant="outline"
+              size="sm"
+              className="bg-red-100 text-red-800 hover:bg-red-200"
             >
               Tekrar Dene
-            </button>
+            </Button>
           </div>
         </div>
       </div>

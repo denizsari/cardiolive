@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { LinkButton } from '../components/ui/Button';
 
 // Force dynamic rendering to avoid prerender issues
 export const dynamic = 'force-dynamic';
@@ -55,11 +55,9 @@ export default function OrdersPage() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-      });
-
-      if (response.ok) {
+      });      if (response.ok) {
         const data = await response.json();
-        setOrders(data.orders || data);
+        setOrders(data.data?.orders || data.orders || []);
       } else {
         setError('Siparişler yüklenirken hata oluştu');
       }    } catch {
@@ -167,22 +165,37 @@ export default function OrdersPage() {
       <Header />
       <main className="min-h-screen bg-gray-50 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Siparişlerim</h1>
-
-          {orders.length === 0 ? (
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Siparişlerim</h1>          {orders.length === 0 ? (
             <div className="text-center py-16">
-              <Package size={64} className="mx-auto text-gray-400 mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              <div className="bg-blue-50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                <Package size={48} className="text-blue-400" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 Henüz sipariş vermemişsiniz
               </h2>
-              <p className="text-gray-600 mb-8">
-                İlk siparişinizi vermek için mağazamızı ziyaret edin.
-              </p>              <Link
-                href="/products"
-                className="inline-flex items-center px-6 py-3 bg-[#70BB1B] text-white font-medium rounded-lg hover:bg-[#5ea516] transition-colors"
-              >
-                Alışverişe Başla
-              </Link>
+              <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                İlk siparişinizi vermek için kaliteli kardiyoloji ürünlerimizi keşfedin ve güvenle alışveriş yapın.
+              </p>
+              <div className="space-y-4">
+                <LinkButton
+                  href="/products"
+                  variant="primary"
+                  size="lg"
+                >
+                  Alışverişe Başla
+                </LinkButton>
+                <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
+                  <span className="flex items-center gap-2">
+                    🚚 Hızlı Teslimat
+                  </span>
+                  <span className="flex items-center gap-2">
+                    🔒 Güvenli Ödeme
+                  </span>
+                  <span className="flex items-center gap-2">
+                    📞 7/24 Destek
+                  </span>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-6">

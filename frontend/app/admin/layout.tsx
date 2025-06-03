@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Button from '../components/ui/Button';
 import { 
   BarChart3, 
   Package, 
   Users, 
   FileText, 
-  Settings, 
+  Settings,
   LogOut,
   Menu,
   X,
@@ -32,6 +33,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
   useEffect(() => {
     // Check if user is admin
     const token = localStorage.getItem('token');
@@ -106,32 +108,41 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {/* Sidebar Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-[#70BB1B]">Admin Panel</h1>
-            <button
+            <h1 className="text-2xl font-bold text-[#70BB1B]">Admin Panel</h1>            <Button
               onClick={() => setIsSidebarOpen(false)}
+              variant="ghost"
+              size="sm"
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
             >
               <X size={20} />
-            </button>
+            </Button>
           </div>
           <p className="text-sm text-gray-600 mt-2">Hoş geldiniz, {user?.name}</p>
-        </div>
-
-        {/* Navigation Menu */}
+        </div>        {/* Navigation Menu */}
         <nav className="p-4">
           <ul className="space-y-2">
-            {menuItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-[#70BB1B] hover:text-white transition-colors"
-                  onClick={() => setIsSidebarOpen(false)}
-                >
-                  <item.icon size={20} />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              </li>
-            ))}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                      isActive 
+                        ? 'bg-[#70BB1B] text-white shadow-md' 
+                        : 'text-gray-700 hover:bg-[#70BB1B] hover:text-white'
+                    }`}
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
+                    <item.icon size={20} />
+                    <span className="font-medium">{item.label}</span>
+                    {isActive && (
+                      <div className="ml-auto w-2 h-2 bg-white rounded-full"></div>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -143,14 +154,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           >
             <TrendingUp size={20} />
             <span className="font-medium">Siteye Git</span>
-          </Link>
-          <button
+          </Link>          <Button
             onClick={handleLogout}
+            variant="ghost"
+            size="sm"
             className="flex items-center space-x-3 p-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors w-full text-left"
           >
             <LogOut size={20} />
             <span className="font-medium">Çıkış Yap</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -158,13 +170,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="lg:ml-64">
         {/* Top Bar */}
         <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="flex items-center justify-between p-4">
-            <button
+          <div className="flex items-center justify-between p-4">            <Button
               onClick={() => setIsSidebarOpen(true)}
+              variant="ghost"
+              size="sm"
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
             >
               <Menu size={20} />
-            </button>
+            </Button>
             
             <div className="flex items-center space-x-4">
               <div className="text-right">

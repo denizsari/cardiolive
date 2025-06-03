@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
 import { blogAPI } from '@/utils/api';
+import Button from '@/components/ui/Button';
 
 interface Blog {
   _id: string;
@@ -107,15 +108,15 @@ export default function AdminBlogsPage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6">      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-green-900">Blog Management</h1>
-        <button
+        <Button
+          variant="primary"
           onClick={() => setShowCreateForm(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex items-center gap-2"
+          className="flex items-center gap-2"
         >
           <FiPlus /> Create New Blog
-        </button>
+        </Button>
       </div>
 
       {error && (
@@ -193,22 +194,21 @@ export default function AdminBlogsPage() {
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
                 placeholder="Write your blog content here..."
                 required
-              />
-            </div>
+              />            </div>
             <div className="flex gap-4">
-              <button
+              <Button
                 type="submit"
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                variant="success"
               >
                 {editingBlog ? 'Update Blog' : 'Create Blog'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleCancel}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>
@@ -248,30 +248,35 @@ export default function AdminBlogsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(blog.date).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
-                      <button
+                      <Button
                         onClick={() => window.open(`/blog/${blog._id}`, '_blank')}
-                        className="text-blue-600 hover:text-blue-900"
+                        variant="ghost"
+                        size="sm"
+                        className="text-blue-600 hover:text-blue-900 p-1"
                         title="View"
                       >
                         <FiEye />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => handleEdit(blog)}
-                        className="text-green-600 hover:text-green-900"
+                        variant="ghost"
+                        size="sm"
+                        className="text-green-600 hover:text-green-900 p-1"
                         title="Edit"
                       >
                         <FiEdit />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => handleDelete(blog._id)}
-                        className="text-red-600 hover:text-red-900"
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:text-red-900 p-1"
                         title="Delete"
                       >
                         <FiTrash2 />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

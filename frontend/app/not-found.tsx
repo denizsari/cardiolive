@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Home, Search, ArrowLeft, Package } from 'lucide-react';
+import Button from './components/ui/Button';
 
 export default function NotFound() {
   return (
@@ -71,25 +72,21 @@ export default function NotFound() {
             </Link>
             <Link href="/contact" className="text-gray-600 hover:text-blue-600 transition-colors">
               İletişim
-            </Link>
-            <Link href="/blog" className="text-gray-600 hover:text-blue-600 transition-colors">
+            </Link>            <Link href="/blog" className="text-gray-600 hover:text-blue-600 transition-colors">
               Blog
             </Link>
-            <Link href="/track-order" className="text-gray-600 hover:text-blue-600 transition-colors">
-              Sipariş Takip
-            </Link>
           </div>
-        </div>
-
-        {/* Back Button */}
+        </div>        {/* Back Button */}
         <div className="mt-8">
-          <button
+          <Button
             onClick={() => window.history.back()}
-            className="inline-flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+            variant="ghost"
+            size="sm"
+            className="inline-flex items-center"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Geri Dön
-          </button>
+          </Button>
         </div>
       </div>
     </div>

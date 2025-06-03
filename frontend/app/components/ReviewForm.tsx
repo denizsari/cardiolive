@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import StarRating from './StarRating';
+import Button from './ui/Button';
+import { FormInput, FormTextarea } from './forms/FormComponents';
 
 interface ReviewFormProps {
   onSubmit: (reviewData: {
@@ -116,80 +118,65 @@ export default function ReviewForm({
           {errors.rating && (
             <p className="mt-1 text-sm text-red-600">{errors.rating}</p>
           )}
-        </div>
-
-        {/* Title */}
+        </div>        {/* Title */}
         <div>
-          <label htmlFor="review-title" className="block text-sm font-medium text-gray-700 mb-2">
-            Başlık *
-          </label>
-          <input
-            type="text"
+          <FormInput
             id="review-title"
+            type="text"
+            label="Başlık *"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Değerlendirmeniz için kısa bir başlık yazın"
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent ${
-              errors.title ? 'border-red-300' : 'border-gray-300'
-            }`}
+            error={errors.title ? { message: errors.title } : undefined}
+            className="px-4 py-3 focus:ring-[#70BB1B] focus:border-transparent"
             maxLength={100}
             disabled={isSubmitting}
           />
           <div className="flex justify-between items-center mt-1">
-            {errors.title ? (
-              <p className="text-sm text-red-600">{errors.title}</p>
-            ) : (
-              <div />
-            )}
+            <div />
             <span className="text-sm text-gray-500">{title.length}/100</span>
           </div>
         </div>
 
         {/* Comment */}
         <div>
-          <label htmlFor="review-comment" className="block text-sm font-medium text-gray-700 mb-2">
-            Yorumunuz *
-          </label>
-          <textarea
+          <FormTextarea
             id="review-comment"
+            label="Yorumunuz *"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Ürün hakkındaki deneyiminizi detaylı olarak paylaşın"
             rows={5}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent resize-none ${
-              errors.comment ? 'border-red-300' : 'border-gray-300'
-            }`}
+            error={errors.comment ? { message: errors.comment } : undefined}
+            className="px-4 py-3 focus:ring-[#70BB1B] focus:border-transparent resize-none"
             maxLength={1000}
             disabled={isSubmitting}
           />
           <div className="flex justify-between items-center mt-1">
-            {errors.comment ? (
-              <p className="text-sm text-red-600">{errors.comment}</p>
-            ) : (
-              <div />
-            )}
+            <div />
             <span className="text-sm text-gray-500">{comment.length}/1000</span>
           </div>
-        </div>
-
-        {/* Buttons */}
+        </div>{/* Buttons */}
         <div className="flex space-x-4">
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="flex-1 bg-[#70BB1B] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            loading={isSubmitting}
+            loadingText="Gönderiliyor..."
+            className="flex-1"
+            size="lg"
           >
-            {isSubmitting ? 'Gönderiliyor...' : 'Değerlendirme Gönder'}
-          </button>
+            Değerlendirme Gönder
+          </Button>
           {onCancel && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={onCancel}
               disabled={isSubmitting}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              size="lg"
             >
               İptal
-            </button>
+            </Button>
           )}
         </div>
       </form>

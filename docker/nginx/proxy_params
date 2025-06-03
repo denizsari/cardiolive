@@ -1,0 +1,40 @@
+# Nginx Proxy Parameters Configuration
+# Optimized settings for reverse proxy operations
+
+# Basic proxy headers
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Forwarded-Host $server_name;
+proxy_set_header X-Forwarded-Port $server_port;
+
+# Connection settings
+proxy_connect_timeout 30s;
+proxy_send_timeout 30s;
+proxy_read_timeout 30s;
+
+# Buffer settings for performance
+proxy_buffers 8 16k;
+proxy_buffer_size 32k;
+proxy_busy_buffers_size 64k;
+proxy_temp_file_write_size 64k;
+
+# Enable buffering for better performance
+proxy_buffering on;
+proxy_request_buffering on;
+
+# HTTP version
+proxy_http_version 1.1;
+
+# Connection reuse
+proxy_set_header Connection "";
+
+# Hide upstream server information
+proxy_hide_header X-Powered-By;
+proxy_hide_header Server;
+
+# Additional security headers
+proxy_set_header X-Forwarded-SSL on;
+proxy_set_header X-Original-URI $request_uri;
+proxy_set_header X-Original-Method $request_method;

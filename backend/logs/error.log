@@ -179,3 +179,10 @@
 {"adminId":"68372d69ddff1ffe7843d75e","error":"Cannot read properties of undefined (reading 'length')","level":"error","message":"Error getting all users:","timestamp":"2025-06-01 17:56:53:5653"}
 {"adminId":"68372d69ddff1ffe7843d75e","error":"Cannot read properties of undefined (reading 'length')","level":"error","message":"Error getting all users:","timestamp":"2025-06-01 17:57:29:5729"}
 {"adminId":"68372d69ddff1ffe7843d75e","error":"Cannot read properties of undefined (reading 'length')","level":"error","message":"Error getting all users:","timestamp":"2025-06-01 17:58:58:5858"}
+{"adminId":"68372d69ddff1ffe7843d75e","error":"pending durumundan undefined durumuna geçiş yapılamaz","level":"error","message":"Update order status error:","orderId":"683dcc985428ab911f7552c4","timestamp":"2025-06-02 19:08:56:856"}
+{"adminId":"68372d69ddff1ffe7843d75e","error":"pending durumundan undefined durumuna geçiş yapılamaz","level":"error","message":"Update order status error:","orderId":"683dcc995428ab911f7552cd","timestamp":"2025-06-02 19:08:57:857"}
+{"adminId":"68372d69ddff1ffe7843d75e","error":"pending durumundan undefined durumuna geçiş yapılamaz","level":"error","message":"Update order status error:","orderId":"683dcc9a5428ab911f7552d6","timestamp":"2025-06-02 19:08:58:858"}
+{"adminId":"68372d69ddff1ffe7843d75e","error":"pending durumundan undefined durumuna geçiş yapılamaz","level":"error","message":"Update order status error:","orderId":"683dcc9a5428ab911f7552df","timestamp":"2025-06-02 19:08:59:859"}
+{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-02 22:37:07:377"}
+{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-02 22:37:07:377"}
+{"adminId":"68372d69ddff1ffe7843d75e","error":"pending durumundan undefined durumuna geçiş yapılamaz","level":"error","message":"Update order status error:","orderId":"683dd5928fc49e9f63b0f2be","timestamp":"2025-06-02 22:38:14:3814"}

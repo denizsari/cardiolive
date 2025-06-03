@@ -10,7 +10,8 @@ const {
   getReviewStats,
   getAllReviews,
   adminDeleteReview,
-  updateReviewStatus
+  updateReviewStatus,
+  checkCanReview
 } = require('../controllers/reviewController');
 const { protect, authorize, optionalAuth } = require('../middlewares/auth');
 const { userLimiter, adminLimiter } = require('../middlewares/rateLimiter');
@@ -24,6 +25,7 @@ router.get('/stats/:productId', validateReviewQuery, getReviewStats);
 router.use(protect); // All routes below require authentication
 
 router.post('/', userLimiter, validateCreateReview, createReview);
+router.get('/can-review/:productId', checkCanReview);
 router.get('/user', validateReviewQuery, getUserReviews);
 router.put('/:reviewId', userLimiter, validateUpdateReview, updateReview);
 router.delete('/:reviewId', deleteReview);

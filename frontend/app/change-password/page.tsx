@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Eye, EyeOff, Lock, CheckCircle, AlertCircle } from 'lucide-react';
+import Button from '../components/ui/Button';
+import { FormInput } from '../components/forms/FormComponents';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -215,57 +217,56 @@ export default function ChangePasswordPage() {
 
         {/* Form */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Current Password */}
+          <form onSubmit={handleSubmit} className="space-y-6">            {/* Current Password */}
             <div>
-              <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                Mevcut Şifre
-              </label>
-              <div className="relative">
-                <input
-                  type={showPasswords.current ? 'text' : 'password'}
-                  id="currentPassword"
-                  name="currentPassword"
-                  value={formData.currentPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
-                  placeholder="Mevcut şifrenizi giriniz"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility('current')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.current ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            {/* New Password */}
+              <FormInput
+                type={showPasswords.current ? 'text' : 'password'}
+                id="currentPassword"
+                name="currentPassword"
+                label="Mevcut Şifre"
+                value={formData.currentPassword}
+                onChange={handleChange}
+                placeholder="Mevcut şifrenizi giriniz"
+                leftIcon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
+                  <Button
+                    type="button"
+                    onClick={() => togglePasswordVisibility('current')}
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
+                  >
+                    {showPasswords.current ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                  </Button>
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>            {/* New Password */}
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                Yeni Şifre
-              </label>
-              <div className="relative">
-                <input
-                  type={showPasswords.new ? 'text' : 'password'}
-                  id="newPassword"
-                  name="newPassword"
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
-                  placeholder="Yeni şifrenizi giriniz"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility('new')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.new ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+              <FormInput
+                type={showPasswords.new ? 'text' : 'password'}
+                id="newPassword"
+                name="newPassword"
+                label="Yeni Şifre"
+                value={formData.newPassword}
+                onChange={handleChange}
+                placeholder="Yeni şifrenizi giriniz"
+                leftIcon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
+                  <Button
+                    type="button"
+                    onClick={() => togglePasswordVisibility('new')}
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
+                  >
+                    {showPasswords.new ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                  </Button>
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
 
               {/* Password Strength Indicator */}
               {formData.newPassword && (
@@ -297,32 +298,31 @@ export default function ChangePasswordPage() {
                   )}
                 </div>
               )}
-            </div>
-
-            {/* Confirm Password */}
+            </div>            {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                Yeni Şifre (Tekrar)
-              </label>
-              <div className="relative">
-                <input
-                  type={showPasswords.confirm ? 'text' : 'password'}
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
-                  placeholder="Yeni şifrenizi tekrar giriniz"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => togglePasswordVisibility('confirm')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+              <FormInput
+                type={showPasswords.confirm ? 'text' : 'password'}
+                id="confirmPassword"
+                name="confirmPassword"
+                label="Yeni Şifre (Tekrar)"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Yeni şifrenizi tekrar giriniz"
+                leftIcon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
+                  <Button
+                    type="button"
+                    onClick={() => togglePasswordVisibility('confirm')}
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
+                  >
+                    {showPasswords.confirm ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                  </Button>
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
               {formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600">Şifreler eşleşmiyor</p>
               )}
@@ -342,23 +342,17 @@ export default function ChangePasswordPage() {
                 )}
                 {message.text}
               </div>
-            )}
-
-            {/* Submit Button */}
-            <button
+            )}            {/* Submit Button */}
+            <Button
               type="submit"
-              disabled={loading || passwordStrength.score < 3}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              disabled={passwordStrength.score < 3}
+              loading={loading}
+              loadingText="Değiştiriliyor..."
+              className="w-full"
+              size="lg"
             >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Değiştiriliyor...
-                </>
-              ) : (
-                'Şifre Değiştir'
-              )}
-            </button>
+              Şifre Değiştir
+            </Button>
           </form>
         </div>
 

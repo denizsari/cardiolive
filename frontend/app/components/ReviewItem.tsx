@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Review } from '@/types';
 import StarRating from './StarRating';
+import Button from './ui/Button';
 
 interface ReviewItemProps {
   review: Review;
@@ -94,12 +95,13 @@ export default function ReviewItem({
         <p className="text-gray-700 leading-relaxed">{review.comment}</p>
       </div>
 
-      {isLoggedIn && (
-        <div className="flex items-center space-x-4">
+      {isLoggedIn && (        <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-600">Bu değerlendirme faydalı mı?</span>
           <div className="flex items-center space-x-2">
-            <button
+            <Button
               onClick={() => handleVote(true)}
+              variant="ghost"
+              size="sm"
               className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm transition-colors ${
                 userVote === 'helpful'
                   ? 'bg-green-100 text-green-700'
@@ -108,9 +110,11 @@ export default function ReviewItem({
             >
               <ThumbsUp size={14} />
               <span>Evet ({votes.helpful})</span>
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => handleVote(false)}
+              variant="ghost"
+              size="sm"
               className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm transition-colors ${
                 userVote === 'not_helpful'
                   ? 'bg-red-100 text-red-700'
@@ -119,7 +123,7 @@ export default function ReviewItem({
             >
               <ThumbsDown size={14} />
               <span>Hayır ({votes.notHelpful})</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

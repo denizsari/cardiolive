@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Eye, Package } from 'lucide-react';
+import Button from '../../components/ui/Button';
 
 interface Order {
   _id: string;
@@ -51,11 +52,9 @@ export default function AdminOrders() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-      });
-
-      if (response.ok) {
+      });      if (response.ok) {
         const data = await response.json();
-        setOrders(data.orders || []);
+        setOrders(data.data?.orders || data.orders || []);
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -169,10 +168,10 @@ export default function AdminOrders() {
           { key: 'processing', label: 'Hazırlanıyor', color: 'bg-blue-100 text-blue-800' },
           { key: 'shipped', label: 'Kargoda', color: 'bg-purple-100 text-purple-800' },
           { key: 'delivered', label: 'Teslim Edildi', color: 'bg-green-100 text-green-800' },
-          { key: 'cancelled', label: 'İptal Edildi', color: 'bg-red-100 text-red-800' },
-        ].map((status) => (
-          <button
+          { key: 'cancelled', label: 'İptal Edildi', color: 'bg-red-100 text-red-800' },        ].map((status) => (
+          <Button
             key={status.key}
+            variant={selectedStatus === status.key ? "primary" : "outline"}
             onClick={() => setSelectedStatus(status.key)}
             className={`p-4 rounded-lg border-2 text-center transition-all ${
               selectedStatus === status.key
@@ -184,7 +183,7 @@ export default function AdminOrders() {
               {orderCounts[status.key as keyof typeof orderCounts]}
             </div>
             <div className="text-sm">{status.label}</div>
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -213,11 +212,11 @@ export default function AdminOrders() {
                   Tarih
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  İşlemler
-                </th>
-              </tr>            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">{
-              filteredOrders.map((order) => (
+                  İşlemler                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredOrders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
@@ -273,9 +272,10 @@ export default function AdminOrders() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatDate(order.createdAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         // Show order details modal
                         alert(`Sipariş Detayları:\n\nSipariş No: ${order.orderNumber}\nMüşteri: ${order.user?.name}\nAdres: ${order.shippingAddress.fullName}\n${order.shippingAddress.address}\n${order.shippingAddress.city} ${order.shippingAddress.zipCode}\nTelefon: ${order.shippingAddress.phone}`);
@@ -283,11 +283,11 @@ export default function AdminOrders() {
                       className="text-[#70BB1B] hover:text-[#5ea516] p-1 rounded-lg hover:bg-green-50"
                       title="Detayları Görüntüle"
                     >
-                      <Eye size={16} />
-                    </button>
+                      <Eye size={16} />                    </Button>
                   </td>
-                </tr>              ))
-            }</tbody>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 

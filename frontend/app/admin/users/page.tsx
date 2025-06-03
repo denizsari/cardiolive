@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FiSearch, FiTrash2, FiUserCheck, FiUserX } from 'react-icons/fi';
+import { FiTrash2, FiUserCheck, FiUserX } from 'react-icons/fi';
+import { Search } from 'lucide-react';
 import { userAPI } from '@/utils/api';
+import Button from '../../components/ui/Button';
+import { FormInput, FormSelect } from '../../components/forms/FormComponents';
 
 // Force dynamic rendering to avoid prerender issues
 export const dynamic = 'force-dynamic';
@@ -111,30 +114,28 @@ export default function AdminUsersPage() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
-      )}
-
-      {/* Search and Filter */}
+      )}      {/* Search and Filter */}
       <div className="bg-white rounded-lg p-4 mb-6 border border-gray-200">
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
+          <div className="flex-1">
+            <FormInput
               placeholder="Search users by name or email..."
+              leftIcon={<Search className="h-4 w-4 text-gray-400" />}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value as 'all' | 'user' | 'admin')}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-            <option value="all">All Roles</option>
-            <option value="user">Users</option>
-            <option value="admin">Admins</option>
-          </select>
+          <div className="sm:w-48">
+            <FormSelect
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value as 'all' | 'user' | 'admin')}
+              options={[
+                { value: "all", label: "All Roles" },
+                { value: "user", label: "Users" },
+                { value: "admin", label: "Admins" }
+              ]}
+            />
+          </div>
         </div>
       </div>
 
@@ -193,7 +194,7 @@ export default function AdminUsersPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
-                      <button
+                      <Button
                         onClick={() => handleStatusChange(user._id, !user.isActive)}
                         className={`${
                           user.isActive 
@@ -201,16 +202,18 @@ export default function AdminUsersPage() {
                             : 'text-green-600 hover:text-green-900'
                         }`}
                         title={user.isActive ? 'Deactivate' : 'Activate'}
+                        variant="outline"
                       >
                         {user.isActive ? <FiUserX /> : <FiUserCheck />}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => handleDeleteUser(user._id)}
                         className="text-red-600 hover:text-red-900"
                         title="Delete"
+                        variant="outline"
                       >
                         <FiTrash2 />
-                      </button>                    </div>
+                      </Button>                    </div>
                   </td>
                 </tr>
               ))

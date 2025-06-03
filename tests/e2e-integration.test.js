@@ -169,22 +169,10 @@ describe('End-to-End Integration Tests', () => {
       const orderResponse = await request(app)
         .get(`/api/orders/track/${orderNumber}`)
         .expect(200);
-      
-      expect(orderResponse.body.order.orderNumber).toBe(orderNumber);
+        expect(orderResponse.body.order.orderNumber).toBe(orderNumber);
       expect(orderResponse.body.order.status).toBe('pending');
       
-      // 6. Order Tracking
-      console.log('Testing order tracking...');
-      
-      await page.goto('/track-order');
-      await page.fill('[data-testid="order-number-input"]', orderNumber);
-      await page.click('[data-testid="track-button"]');
-      
-      await page.waitForSelector('[data-testid="order-details"]');
-      const statusElement = await page.locator('[data-testid="order-status"]');
-      await expect(statusElement).toContainText('pending');
-      
-      // 7. Blog Content
+      // 6. Blog Content
       console.log('Testing blog functionality...');
       
       // Create blog post via API

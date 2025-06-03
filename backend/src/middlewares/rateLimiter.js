@@ -3,7 +3,14 @@ const ResponseHandler = require('../utils/responseHandler');
 
 /**
  * Rate limiting configurations for different endpoints
+ * Rate limiting can be disabled by setting DISABLE_RATE_LIMIT=true in environment
  */
+
+// Check if rate limiting should be disabled
+const isRateLimitDisabled = process.env.DISABLE_RATE_LIMIT === 'true' || process.env.NODE_ENV === 'development';
+
+// No-op middleware when rate limiting is disabled
+const noOpLimiter = (req, res, next) => next();
 
 // General API rate limiter
 const generalLimiter = rateLimit({
@@ -168,6 +175,12 @@ const wishlistLimiter = rateLimit({
 
 // API rate limiter function
 const applyRateLimit = (type = 'general') => {
+  // Return no-op middleware if rate limiting is disabled
+  if (isRateLimitDisabled) {
+    console.log(`[Rate Limiter] Rate limiting disabled for ${type}`);
+    return noOpLimiter;
+  }
+
   const limiters = {
     general: generalLimiter,
     api: generalLimiter,
@@ -188,16 +201,16 @@ const applyRateLimit = (type = 'general') => {
 };
 
 module.exports = {
-  generalLimiter,
-  authLimiter,
-  passwordResetLimiter,
-  contactLimiter,
-  reviewLimiter,
-  orderLimiter,
-  adminLimiter,
-  userLimiter,
-  searchLimiter,
-  uploadLimiter,
-  wishlistLimiter,
+  generalLimiter: isRateLimitDisabled ? noOpLimiter : generalLimiter,
+  authLimiter: isRateLimitDisabled ? noOpLimiter : authLimiter,
+  passwordResetLimiter: isRateLimitDisabled ? noOpLimiter : passwordResetLimiter,
+  contactLimiter: isRateLimitDisabled ? noOpLimiter : contactLimiter,
+  reviewLimiter: isRateLimitDisabled ? noOpLimiter : reviewLimiter,
+  orderLimiter: isRateLimitDisabled ? noOpLimiter : orderLimiter,
+  adminLimiter: isRateLimitDisabled ? noOpLimiter : adminLimiter,
+  userLimiter: isRateLimitDisabled ? noOpLimiter : userLimiter,
+  searchLimiter: isRateLimitDisabled ? noOpLimiter : searchLimiter,
+  uploadLimiter: isRateLimitDisabled ? noOpLimiter : uploadLimiter,
+  wishlistLimiter: isRateLimitDisabled ? noOpLimiter : wishlistLimiter,
   applyRateLimit
 };

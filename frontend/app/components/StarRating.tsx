@@ -1,6 +1,7 @@
 'use client';
 
 import { Star } from 'lucide-react';
+import Button from './ui/Button';
 
 interface StarRatingProps {
   rating: number;
@@ -30,18 +31,18 @@ export default function StarRating({
       {Array.from({ length: maxStars }, (_, index) => {
         const isFilled = index < rating;
         const isHalfFilled = rating > index && rating < index + 1;
-        
-        return (
-          <button
+          return (
+          <Button
             key={index}
-            type="button"
+            variant="ghost"
+            size="sm"
             disabled={!interactive}
             onClick={() => handleStarClick(index)}
             className={`${
               interactive 
                 ? 'cursor-pointer hover:scale-110 transition-transform' 
                 : 'cursor-default'
-            } ${interactive ? 'p-1' : ''}`}
+            } ${interactive ? 'p-1' : 'p-0'}`}
           >
             <Star
               size={size}
@@ -51,7 +52,7 @@ export default function StarRating({
                   : 'text-gray-300'
               } transition-colors`}
             />
-          </button>
+          </Button>
         );
       })}
     </div>

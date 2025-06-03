@@ -7,6 +7,7 @@ import { CartProvider } from "./contexts/CartContext";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 import { Toaster } from 'react-hot-toast';
 import { EnhancedErrorBoundary } from "./components/ErrorBoundary";
+import { ToastProvider } from "./components/ui/Toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,30 +39,32 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <EnhancedErrorBoundary>
           <ReactQueryProvider>
             <CartProvider>
-              <Header />
-              <main>{children}</main>
-              <Toaster 
-                position="top-right"
-                toastOptions={{
-                  duration: 4000,
-                  style: {
-                    background: '#fff',
-                    color: '#333',
-                  },
-                  success: {
+              <ToastProvider>
+                <Header />
+                <main>{children}</main>
+                <Toaster 
+                  position="top-right"
+                  toastOptions={{
+                    duration: 4000,
                     style: {
-                      background: '#10b981',
-                      color: '#fff',
+                      background: '#fff',
+                      color: '#333',
                     },
-                  },
-                  error: {
-                    style: {
-                      background: '#ef4444',
-                      color: '#fff',
+                    success: {
+                      style: {
+                        background: '#10b981',
+                        color: '#fff',
+                      },
                     },
-                  },
-                }}
-              />
+                    error: {
+                      style: {
+                        background: '#ef4444',
+                        color: '#fff',
+                      },
+                    },
+                  }}
+                />
+              </ToastProvider>
             </CartProvider>
           </ReactQueryProvider>
         </EnhancedErrorBoundary>

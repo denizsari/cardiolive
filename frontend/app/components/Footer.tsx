@@ -31,14 +31,13 @@ export default function Footer() {
           {/* Kurumsal */}
           <div>
             <h3 className="text-lg font-semibold mb-4">KURUMSAL</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/hakkimizda" className="hover:underline">
+            <ul className="space-y-2">              <li>
+                <Link href="/about" className="hover:underline">
                   Hakkımızda
                 </Link>
               </li>
               <li>
-                <Link href="/iletisim" className="hover:underline">
+                <Link href="/contact" className="hover:underline">
                   İletişim
                 </Link>
               </li>
@@ -58,15 +57,9 @@ export default function Footer() {
                 <Link href="/iade-degisim" className="hover:underline">
                   İade & Değişim
                 </Link>
-              </li>
-              <li>
+              </li>              <li>
                 <Link href="/sikca-sorulanlar" className="hover:underline">
                   Sıkça Sorulanlar
-                </Link>
-              </li>
-              <li>
-                <Link href="/siparis-takibi" className="hover:underline">
-                  Sipariş Takibi
                 </Link>
               </li>
             </ul>

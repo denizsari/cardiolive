@@ -464,4 +464,47 @@ exports.getReviewStats = async (req, res) => {
   }
 };
 
+/**
+ * Check if user can leave a review for a product (has purchased it)
+ * @route GET /api/reviews/can-review/:productId
+ * @access Private (authenticated users)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with purchase verification status
+ */
+exports.checkCanReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user.userId;
+
+    logger.logEvent('business', 'purchase_verification_initiated', {
+      productId,
+      userId,
+      requestId: req.id
+    });
+
+    const canReview = await ReviewService.checkCanReview(productId, userId);
+
+    logger.logEvent('business', 'purchase_verification_completed', {
+      productId,
+      userId,
+      canReview: canReview.canReview,
+      hasExistingReview: canReview.hasExistingReview,
+      requestId: req.id
+    });
+
+    ResponseHandler.success(res, 'Değerlendirme durumu kontrol edildi', canReview);
+  } catch (error) {
+    logger.logEvent('error', 'purchase_verification_failed', {
+      productId: req.params.productId,
+      userId: req.user.userId,
+      error: error.message,
+      stack: error.stack,
+      requestId: req.id
+    });
+
+    ResponseHandler.error(res, 'Değerlendirme durumu kontrol hatası', error);
+  }
+};
+
 

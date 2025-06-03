@@ -1,0 +1,161 @@
+# Prometheus Alerting Rules for Cardiolive E-commerce Platform
+# Critical alerts for production monitoring
+
+groups:
+  - name: cardiolive.application
+    rules:
+      # High error rate alert
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 2m
+        labels:
+          severity: critical
+          service: cardiolive-backend
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }}% which is above the 5% threshold"
+
+      # High response time alert
+      - alert: HighResponseTime
+        expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: cardiolive-backend
+        annotations:
+          summary: "High response time detected"
+          description: "Average response time is {{ $value }}s which is above 1s threshold"
+
+      # Low cache hit rate
+      - alert: LowCacheHitRate
+        expr: rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) * 100 < 70
+        for: 10m
+        labels:
+          severity: warning
+          service: cardiolive-backend
+        annotations:
+          summary: "Low cache hit rate"
+          description: "Cache hit rate is {{ $value }}% which is below 70% threshold"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 > 500
+        for: 10m
+        labels:
+          severity: warning
+          service: cardiolive-backend
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}MB which is above 500MB threshold"
+
+  - name: cardiolive.database
+    rules:
+      # High database connection usage
+      - alert: HighDatabaseConnections
+        expr: database_connections_active > 80
+        for: 5m
+        labels:
+          severity: critical
+          service: mongodb
+        annotations:
+          summary: "High database connection usage"
+          description: "Active connections: {{ $value }} which is above 80 threshold"
+
+      # Slow database queries
+      - alert: SlowDatabaseQueries
+        expr: rate(database_query_duration_seconds_sum[5m]) / rate(database_query_duration_seconds_count[5m]) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          service: mongodb
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Average query time is {{ $value }}s which is above 0.5s threshold"
+
+      # Database connection failures
+      - alert: DatabaseConnectionFailures
+        expr: rate(database_connection_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: mongodb
+        annotations:
+          summary: "Database connection failures"
+          description: "Database connection errors detected: {{ $value }} errors/second"
+
+  - name: cardiolive.infrastructure
+    rules:
+      # Service down alert
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute"
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # High disk usage
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk usage"
+          description: "Disk usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # Low disk space
+      - alert: LowDiskSpace
+        expr: node_filesystem_free_bytes / node_filesystem_size_bytes * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Only {{ $value }}% disk space remaining on {{ $labels.instance }}"
+
+  - name: cardiolive.business
+    rules:
+      # Sudden drop in orders
+      - alert: LowOrderRate
+        expr: rate(orders_total[1h]) < 0.1
+        for: 30m
+        labels:
+          severity: warning
+          business_impact: "true"
+        annotations:
+          summary: "Low order rate detected"
+          description: "Order rate has dropped to {{ $value }} orders/hour"
+
+      # High cart abandonment rate (if metrics available)
+      - alert: HighCartAbandonmentRate
+        expr: rate(cart_abandoned_total[1h]) / rate(cart_created_total[1h]) * 100 > 80
+        for: 30m
+        labels:
+          severity: warning
+          business_impact: "true"
+        annotations:
+          summary: "High cart abandonment rate"
+          description: "Cart abandonment rate is {{ $value }}% which is above 80%"
+
+      # Payment failures
+      - alert: HighPaymentFailureRate
+        expr: rate(payment_failures_total[15m]) / rate(payment_attempts_total[15m]) * 100 > 10
+        for: 5m
+        labels:
+          severity: critical
+          business_impact: "true"
+        annotations:
+          summary: "High payment failure rate"
+          description: "Payment failure rate is {{ $value }}% which is above 10%"

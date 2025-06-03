@@ -11,6 +11,8 @@
 !.yarn/versions
 .env.docker
 .github/
+backend/nul
+
 # testing
 /coverage
 

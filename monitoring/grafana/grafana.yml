@@ -1,0 +1,97 @@
+# Grafana Configuration for Cardiolive E-commerce Platform
+# Production-ready monitoring setup
+
+global:
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@cardiolive.com'
+
+# Datasources configuration
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+
+# Alerting configuration
+rule_files:
+  - "alerts/*.yml"
+
+# Dashboard provisioning
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: 'Cardiolive'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+
+# Notification channels
+notifiers:
+  - name: slack-alerts
+    type: slack
+    settings:
+      url: ${SLACK_WEBHOOK_URL}
+      channel: '#alerts'
+      title: 'Cardiolive Alert'
+      text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+      
+  - name: email-alerts
+    type: email
+    settings:
+      addresses: 'admin@cardiolive.com;devops@cardiolive.com'
+      subject: 'Cardiolive Alert: {{ .GroupLabels.alertname }}'
+
+# Security settings
+security:
+  admin_user: ${GF_SECURITY_ADMIN_USER:-admin}
+  admin_password: ${GF_SECURITY_ADMIN_PASSWORD:-admin}
+  secret_key: ${GF_SECURITY_SECRET_KEY}
+  
+# Server settings
+server:
+  protocol: http
+  http_port: 3001
+  domain: ${GF_SERVER_DOMAIN:-localhost}
+  root_url: ${GF_SERVER_ROOT_URL:-http://localhost:3001}
+
+# Database settings
+database:
+  type: sqlite3
+  path: grafana.db
+
+# Authentication
+auth:
+  anonymous:
+    enabled: false
+    org_name: Cardiolive
+    org_role: Viewer
+
+# Users settings
+users:
+  allow_sign_up: false
+  allow_org_create: false
+  auto_assign_org: true
+  auto_assign_org_role: Viewer
+
+# Logging
+log:
+  mode: console
+  level: info
+
+# Metrics
+metrics:
+  enabled: true

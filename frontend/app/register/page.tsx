@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import Header from '../components/Header';
+import Button from '../components/ui/Button';
+import { FormInput } from '../components/forms/FormComponents';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -110,93 +112,61 @@ export default function RegisterPage() {
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                 {error}
               </div>
-            )}
+            )}            <form onSubmit={handleSubmit} className="space-y-6">
+              <FormInput
+                id="name"
+                name="name"
+                type="text"
+                label="Ad Soyad"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Ad Soyadınız"
+                leftIcon={<User className="h-5 w-5 text-gray-400" />}
+                className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                required
+              />
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Ad Soyad
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                    placeholder="Ad Soyadınız"
-                  />
-                </div>
-              </div>
+              <FormInput
+                id="email"
+                name="email"
+                type="email"
+                label="E-posta Adresi"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="ornek@email.com"
+                leftIcon={<Mail className="h-5 w-5 text-gray-400" />}
+                className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                required
+              />
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  E-posta Adresi
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                    placeholder="ornek@email.com"
-                  />
-                </div>
-              </div>
+              <FormInput
+                id="phone"
+                name="phone"
+                type="tel"
+                label="Telefon Numarası"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="0555 123 45 67"
+                leftIcon={<Phone className="h-5 w-5 text-gray-400" />}
+                className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                required
+              />
 
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                  Telefon Numarası
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                    placeholder="0555 123 45 67"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Şifre
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                    placeholder="••••••••"
-                  />
-                  <button
+              <FormInput
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                label="Şifre"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                leftIcon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
+                  <Button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -204,31 +174,27 @@ export default function RegisterPage() {
                     ) : (
                       <Eye className="h-5 w-5 text-gray-400" />
                     )}
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                }
+                className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                required
+              />
 
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                  Şifre Tekrarı
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
-                    placeholder="••••••••"
-                  />
-                  <button
+              <FormInput
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                label="Şifre Tekrarı"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                leftIcon={<Lock className="h-5 w-5 text-gray-400" />}
+                rightIcon={
+                  <Button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    variant="ghost"
+                    size="sm"
+                    className="p-0"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -236,9 +202,11 @@ export default function RegisterPage() {
                     ) : (
                       <Eye className="h-5 w-5 text-gray-400" />
                     )}
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                }
+                className="block w-full py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#70BB1B] focus:border-[#70BB1B]"
+                required
+              />
 
               <div className="flex items-center">
                 <input
@@ -257,16 +225,16 @@ export default function RegisterPage() {
                     Gizlilik Politikası                </Link>
                   &apos;nı kabul ediyorum
                 </label>
-              </div>
-
-              <div>
-                <button
+              </div>              <div>
+                <Button
                   type="submit"
                   disabled={loading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#70BB1B] hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#70BB1B] disabled:opacity-50 disabled:cursor-not-allowed"
+                  loading={loading}
+                  className="w-full"
+                  size="lg"
                 >
-                  {loading ? 'Kayıt oluşturuluyor...' : 'Hesap Oluştur'}
-                </button>
+                  Hesap Oluştur
+                </Button>
               </div>
 
               <div className="text-center">

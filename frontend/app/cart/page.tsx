@@ -3,12 +3,12 @@
 export const dynamic = 'force-dynamic';
 
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import Button, { LinkButton } from '../components/ui/Button';
 
 export default function CartPage() {  const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
 
@@ -38,21 +38,36 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
       <>
         <Header />
         <main className="min-h-screen bg-gray-50 pt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="text-center py-16">
-              <ShoppingBag size={64} className="mx-auto text-gray-400 mb-4" />
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">            <div className="text-center py-16">
+              <div className="bg-gray-100 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                <ShoppingBag size={48} className="text-gray-400" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
                 Sepetiniz Boş
               </h1>
-              <p className="text-gray-600 mb-8">
-                Henüz sepetinize ürün eklemediniz. Alışverişe başlamak için mağazamızı ziyaret edin.
+              <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                Henüz sepetinize ürün eklemediniz. Kaliteli kardiyoloji ürünlerimizi keşfetmek için mağazamızı ziyaret edin.
               </p>
-              <Link
-                href="/products"
-                className="inline-flex items-center px-6 py-3 bg-[#70BB1B] text-white font-medium rounded-lg hover:bg-[#5ea516] transition-colors"
-              >
-                Alışverişe Başla
-              </Link>
+              <div className="space-y-4">
+                <LinkButton
+                  href="/products"
+                  variant="primary"
+                  size="lg"
+                >
+                  Ürünleri Keşfet
+                </LinkButton>
+                <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
+                  <span className="flex items-center gap-2">
+                    ✓ Ücretsiz Kargo
+                  </span>
+                  <span className="flex items-center gap-2">
+                    ✓ Hızlı Teslimat
+                  </span>
+                  <span className="flex items-center gap-2">
+                    ✓ Güvenli Ödeme
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </main>
@@ -73,13 +88,13 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
                 <div className="flex justify-between items-center mb-6">
                   <h1 className="text-2xl font-bold text-gray-900">
                     Sepetim ({items.length} ürün)
-                  </h1>
-                  <button
+                  </h1>                  <Button
                     onClick={handleClearCart}
-                    className="text-red-600 hover:text-red-800 text-sm font-medium"
+                    variant="danger"
+                    size="sm"
                   >
                     Sepeti Temizle
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="space-y-4">                  {items.map((item) => (
@@ -103,24 +118,27 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
                         </p>
                       </div>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-2">
-                        <button
+                      {/* Quantity Controls */}                      <div className="flex items-center gap-2">
+                        <Button
                           onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
+                          variant="ghost"
+                          size="sm"
                           className="p-1 rounded-full hover:bg-gray-100"
                           disabled={item.quantity <= 1}
                         >
                           <Minus size={16} className={item.quantity <= 1 ? 'text-gray-400' : 'text-gray-600'} />
-                        </button>
+                        </Button>
                         
                         <span className="w-8 text-center font-medium">{item.quantity}</span>
                         
-                        <button
+                        <Button
                           onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
+                          variant="ghost"
+                          size="sm"
                           className="p-1 rounded-full hover:bg-gray-100"
                         >
                           <Plus size={16} className="text-gray-600" />
-                        </button>
+                        </Button>
                       </div>
 
                       {/* Item Total */}
@@ -128,15 +146,15 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
                         <p className="font-bold text-gray-900">
                           {formatPrice(item.price * item.quantity)}
                         </p>
-                      </div>
-
-                      {/* Remove Button */}
-                      <button
+                      </div>                      {/* Remove Button */}
+                      <Button
                         onClick={() => handleRemoveItem(item._id)}
+                        variant="ghost"
+                        size="sm"
                         className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full"
                       >
                         <Trash2 size={16} />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -164,21 +182,23 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
                     <span>Toplam</span>
                     <span className="text-[#70BB1B]">{formatPrice(getTotalPrice())}</span>
                   </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Link
+                </div>                <div className="space-y-3">
+                  <LinkButton
                     href="/checkout"
-                    className="w-full bg-[#70BB1B] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#5ea516] transition-colors text-center block"
+                    variant="primary"
+                    size="lg"
+                    className="w-full"
                   >
                     Sipariş Ver
-                  </Link>
-                  <Link
+                  </LinkButton>
+                  <LinkButton
                     href="/products"
-                    className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors text-center block"
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
                   >
                     Alışverişe Devam Et
-                  </Link>
+                  </LinkButton>
                 </div>
 
                 <div className="mt-6 p-4 bg-green-50 rounded-lg">

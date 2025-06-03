@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, User, LogOut, Package, ChevronDown, Heart } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import Button from './ui/Button';
+import { FormInput } from './forms/FormComponents';
 
 interface UserType {
   _id: string;
@@ -90,43 +92,39 @@ export default function Header() {
             </Link>
             <Link href="/about" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
               Hakkımızda
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            </Link>            <Link href="/contact" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
               İletişim
             </Link>
-            <Link href="/track-order" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
-              Sipariş Takip
-            </Link>
-          </nav>          {/* Sağ: Arama, Sepet ve Hesap */}
+          </nav>{/* Sağ: Arama, Sepet ve Hesap */}
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <div className="relative">
-              <button 
+            <div className="relative">              <Button 
+                variant="ghost"
+                size="sm"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 aria-label="Search" 
-                className="text-gray-700 hover:text-[#70BB1B] transition-colors"
+                className="text-gray-700 hover:text-[#70BB1B] transition-colors p-2"
               >
                 <Search size={20} />
-              </button>
-              
-              {/* Search Dropdown */}
+              </Button>
+                {/* Search Dropdown */}
               {isSearchOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border p-4 z-50">
                   <form onSubmit={handleSearch} className="flex gap-2">
-                    <input
+                    <FormInput
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Ürün ara..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#70BB1B] focus:border-transparent"
+                      className="flex-1 focus:ring-[#70BB1B] focus:border-transparent"
                       autoFocus
                     />
-                    <button
+                    <Button
                       type="submit"
                       className="px-4 py-2 bg-[#70BB1B] text-white rounded-lg hover:bg-[#5ea516] transition-colors"
                     >
                       Ara
-                    </button>
+                    </Button>
                   </form>
                 </div>              )}
             </div>
@@ -149,15 +147,15 @@ export default function Header() {
             {!isLoading && (
               <div className="relative">
                 {user ? (
-                  <div>
-                    <button
+                  <div>                    <Button
+                      variant="ghost"
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       className="flex items-center space-x-1 text-gray-700 hover:text-[#70BB1B] transition-colors"
                     >
                       <User size={20} />
                       <span className="hidden sm:block">{user.name}</span>
                       <ChevronDown size={16} />
-                    </button>
+                    </Button>
 
                     {/* User Dropdown */}
                     {isUserMenuOpen && (
@@ -194,8 +192,8 @@ export default function Header() {
                             </div>
                           </Link>
                         )}
-                        <hr className="my-1" />
-                        <button
+                        <hr className="my-1" />                        <Button
+                          variant="ghost"
                           onClick={handleLogout}
                           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                         >
@@ -203,7 +201,7 @@ export default function Header() {
                             <LogOut size={16} />
                             <span>Çıkış Yap</span>
                           </div>
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -225,12 +223,12 @@ export default function Header() {
                   </div>
                 )}
               </div>
-            )}
-
-            {/* Mobil Menü Butonu */}
-            <button 
-              className="md:hidden"
+            )}            {/* Mobil Menü Butonu */}
+            <Button 
+              variant="ghost"
+              className="md:hidden p-2"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
             >
               <svg 
                 className="h-6 w-6 text-gray-700" 
@@ -247,7 +245,7 @@ export default function Header() {
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -316,14 +314,14 @@ export default function Header() {
                       onClick={closeMenus}
                     >
                       Admin Panel
-                    </Link>
-                  )}
-                  <button
+                    </Link>                  )}                  <Button
                     onClick={handleLogout}
+                    variant="ghost"
+                    size="sm"
                     className="block w-full text-left px-3 py-2 text-gray-700 hover:text-[#70BB1B] transition-colors"
                   >
                     Çıkış Yap
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
