@@ -24,7 +24,7 @@ export interface AutoSaveStatus {
 // Auto-save hook for form data
 export const useAutoSave = (config: AutoSaveConfig) => {
   const [status, setStatus] = useState<AutoSaveStatus>({ status: 'idle' });
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const lastDataRef = useRef<string>('');
 
   const saveToLocal = useCallback((data: any) => {
