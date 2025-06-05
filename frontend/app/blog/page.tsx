@@ -55,9 +55,21 @@ export default function BlogList() {
 
     fetchBlogs();
   }, []);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (blog: Blog) => {
+    // Try different date fields in priority order
+    const dateValue = blog.publishedAt || blog.createdAt || blog.date;
+    
+    if (!dateValue) {
+      return 'Tarih belirtilmemiş';
+    }
+    
+    const date = new Date(dateValue);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Tarih belirtilmemiş';
+    }
+    
     return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
@@ -116,7 +128,7 @@ export default function BlogList() {
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{blog.title}</h3>
                   <p className="text-sm text-gray-600 mb-4">{blog.excerpt}</p>                  <div className="flex justify-between items-center text-xs text-gray-500">
                     <span>Cardiolive</span>
-                    <span>{formatDate(blog.date)}</span>
+                    <span>{formatDate(blog)}</span>
                   </div>
                 </div>
               </div>

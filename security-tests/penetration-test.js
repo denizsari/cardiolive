@@ -167,11 +167,9 @@ class SecurityTester {
   }
 
   // Test authentication bypass
-  async testAuthBypass() {
-    const protectedEndpoints = [
+  async testAuthBypass() {    const protectedEndpoints = [
       '/users/profile',
-      '/orders/user',
-      '/wishlist'
+      '/orders/user'
     ];
 
     for (const endpoint of protectedEndpoints) {

@@ -60,10 +60,22 @@ export default function BlogDetail() {
     };
 
     fetchBlog();
-  }, [id]);
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return 'Tarih belirtilmemiş';
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+  }, [id]);  const formatDate = (blog: Blog) => {
+    // Try different date fields in priority order
+    const dateValue = blog.publishedAt || blog.createdAt || blog.date;
+    
+    if (!dateValue) {
+      return 'Tarih belirtilmemiş';
+    }
+    
+    const date = new Date(dateValue);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Tarih belirtilmemiş';
+    }
+    
+    return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -126,8 +138,8 @@ export default function BlogDetail() {
             {blog.title}
           </h1>          <div className="flex items-center text-sm text-gray-500 mb-8">
             <span className="mr-4">Yazar: Cardiolive</span>
-            <span>{formatDate(blog.date || blog.publishedAt)}</span>
-          </div>          <div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
+            <span>{formatDate(blog)}</span>
+          </div><div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
             <ProductImage
               src={getImageSrc(blog)}
               alt={blog.title}

@@ -372,41 +372,8 @@ describe('Cardiolive API Integration Tests', () => {
       it('should get reviews for a product', async () => {
         const response = await request(app)
           .get(`/api/reviews/product/${testProduct._id}`)
-          .expect(200);
-
-        expect(response.body.success).toBe(true);
+          .expect(200);      expect(response.body.success).toBe(true);
         expect(response.body.data.reviews).toBeInstanceOf(Array);
-      });
-    });
-  });
-
-  describe('Wishlist Endpoints', () => {
-    describe('POST /api/wishlist', () => {
-      it('should add product to wishlist', async () => {
-        const wishlistData = {
-          product: testProduct._id
-        };
-
-        const response = await request(app)
-          .post('/api/wishlist')
-          .set('Authorization', `Bearer ${authToken}`)
-          .send(wishlistData)
-          .expect(201);
-
-        expect(response.body.success).toBe(true);
-        expect(response.body.wishlistItem.product).toBe(testProduct._id);
-      });
-    });
-
-    describe('GET /api/wishlist', () => {
-      it('should get user wishlist', async () => {
-        const response = await request(app)
-          .get('/api/wishlist')
-          .set('Authorization', `Bearer ${authToken}`)
-          .expect(200);
-
-        expect(response.body.success).toBe(true);
-        expect(response.body.data.wishlist).toBeInstanceOf(Array);
       });
     });
   });

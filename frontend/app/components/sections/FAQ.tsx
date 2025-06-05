@@ -41,44 +41,55 @@ export default function FAQ() {
               alt="Cardiolive Zeytin Bahçeleri"
               className="object-cover w-full h-full"
             />
-          </div>
-
-          {/* Sağ: SSS */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              En Çok Sorulanlar
-            </h2>
-            <div className="space-y-4">              {faqs.map((faq, index) => (
-                <div key={index} className="border-b border-gray-200 pb-4">
+          </div>          {/* Sağ: SSS */}
+          <div className="space-y-8">
+            <div className="text-center lg:text-left">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                En Çok Sorulanlar
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Zeytinyağlarımız hakkında merak ettikleriniz
+              </p>
+            </div>            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div 
+                  key={index} 
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-[#70BB1B]/20"
+                >
                   <Button
                     variant="ghost"
-                    className="w-full flex items-center justify-between text-left p-0"
+                    className="w-full flex items-center justify-between text-left p-6 hover:bg-gray-50/50 transition-all duration-200 group"
                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   >
-                    <span className="text-gray-900 font-medium">{faq.question}</span>
-                    <span className="ml-4 flex-shrink-0">
-                      {openIndex === index ? (
-                        <Minus className="h-5 w-5 text-[#70BB1B]" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#70BB1B]" />
-                      )}
+                    <span className="text-gray-900 font-semibold text-lg pr-6 flex-1 group-hover:text-gray-800">
+                      {faq.question}
                     </span>
-                  </Button>
-                  {openIndex === index && (
-                    <div className="mt-4 text-gray-600 leading-relaxed">
-                      {faq.answer}
+                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#70BB1B]/10 hover:bg-[#70BB1B]/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md">
+                      {openIndex === index ? (
+                        <Minus className="h-5 w-5 text-[#70BB1B] font-bold" strokeWidth={2.5} />
+                      ) : (
+                        <Plus className="h-5 w-5 text-[#70BB1B] font-bold" strokeWidth={2.5} />
+                      )}
+                    </div>
+                  </Button>                  {openIndex === index && (
+                    <div className="px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-300">
+                      <div className="text-gray-600 leading-relaxed text-base border-t border-gray-100 pt-5 mt-2">
+                        {faq.answer}
+                      </div>
                     </div>
                   )}
                 </div>
               ))}
-            </div>
-            <div className="text-right pt-4">
-              <a href="#" className="text-[#70BB1B] hover:underline text-sm font-medium inline-flex items-center">
+            </div><div className="text-center lg:text-left pt-6">
+              <Button 
+                variant="outline"
+                className="inline-flex items-center text-[#70BB1B] border-[#70BB1B] hover:bg-[#70BB1B] hover:text-white transition-all duration-300 px-6 py-3 rounded-lg font-medium"
+              >
                 Daha Fazla Soru
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </a>
+              </Button>
             </div>
           </div>
         </div>

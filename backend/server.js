@@ -1,8 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const cors = require('cors');
-const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
@@ -10,6 +8,9 @@ const path = require('path');
 
 // Load environment variables first
 dotenv.config();
+
+// Logger import
+const logger = require('./src/utils/logger');
 
 // Route imports
 const userRoutes = require('./src/routes/userRoutes');
@@ -19,13 +20,11 @@ const orderRoutes = require('./src/routes/orderRoutes');
 const settingsRoutes = require('./src/routes/settingsRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const reviewRoutes = require('./src/routes/reviewRoutes');
-const wishlistRoutes = require('./src/routes/wishlistRoutes');
 const uploadRoutes = require('./src/routes/uploadRoutes');
 
 // Middleware imports
 const errorHandler = require('./src/middlewares/errorHandler');
 const { applySecurity } = require('./src/middlewares/security');
-const { generalLimiter } = require('./src/middlewares/rateLimiter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -64,24 +63,24 @@ if (process.env.NODE_ENV === 'development') {
 // Debug middleware (development only)
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
+    logger.debug(`${req.method} ${req.url}`);
     next();
   });
 }
 
 // MongoDB connection with fallback for production testing
-console.log('Connecting to MongoDB...');
+logger.info('Connecting to MongoDB...');
 let dbConnected = false;
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
-  console.log('MongoDB connected successfully');
+  logger.info('MongoDB connected successfully');
   dbConnected = true;
 })
 .catch(err => {
-  console.error('MongoDB connection error:', err);
-  console.log('⚠️  Database connection failed - Please check your MongoDB Atlas IP whitelist');
-  console.log('📖 Guide: https://www.mongodb.com/docs/atlas/security-whitelist/');
+  logger.error('MongoDB connection error:', err);
+  logger.info('⚠️  Database connection failed - Please check your MongoDB Atlas IP whitelist');
+  logger.info('📖 Guide: https://www.mongodb.com/docs/atlas/security-whitelist/');
   dbConnected = false;
   // Don't exit - allow server to run for API testing
 });
@@ -106,7 +105,6 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
-app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/upload', uploadRoutes);
 
 // Basic welcome route
@@ -137,30 +135,36 @@ app.use(errorHandler);
 
 // Graceful shutdown handling
 process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  logger.info('SIGTERM received, shutting down gracefully');
   await mongoose.connection.close();
-  console.log('MongoDB connection closed');
-  process.exit(0);
+  logger.info('MongoDB connection closed');
+  // Use server.close() for graceful shutdown instead of process.exit()
+  server.close(() => {
+    process.exit(0);
+  });
 });
 
 process.on('SIGINT', async () => {
-  console.log('SIGINT received, shutting down gracefully');
+  logger.info('SIGINT received, shutting down gracefully');
   await mongoose.connection.close();
-  console.log('MongoDB connection closed');
-  process.exit(0);
+  logger.info('MongoDB connection closed');
+  // Use server.close() for graceful shutdown instead of process.exit()
+  server.close(() => {
+    process.exit(0);
+  });
 });
 
 // Start server
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-  console.log(`🔐 CSRF token: http://localhost:${PORT}/api/csrf-token`);
+  logger.info(`🚀 Server is running on http://localhost:${PORT}`);
+  logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
+  logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
+  logger.info(`🔐 CSRF token: http://localhost:${PORT}/api/csrf-token`);
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.error('Unhandled Promise Rejection:', err.message);
+process.on('unhandledRejection', (err, _promise) => {
+  logger.error('Unhandled Promise Rejection:', err.message);
   server.close(() => {
     process.exit(1);
   });

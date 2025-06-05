@@ -107,29 +107,9 @@ describe('End-to-End Integration Tests', () => {
       
       // Verify review appears
       await page.waitForSelector('[data-testid="review-list"]');
-      const reviewElement = await page.locator('text="Great product for testing!"');
-      await expect(reviewElement).toBeVisible();
+      const reviewElement = await page.locator('text="Great product for testing!"');      await expect(reviewElement).toBeVisible();
       
-      // 4. Wishlist Functionality
-      console.log('Testing wishlist functionality...');
-      
-      await page.click('[data-testid="add-to-wishlist"]');
-      
-      // Verify wishlist addition via API
-      const wishlistResponse = await request(app)
-        .get('/api/wishlist')
-        .set('Authorization', `Bearer ${authToken}`)
-        .expect(200);
-      
-      expect(wishlistResponse.body.data.wishlist).toHaveLength(1);
-      expect(wishlistResponse.body.data.wishlist[0].product._id).toBe(testProduct._id);
-      
-      // Check wishlist in frontend
-      await page.goto('/wishlist');
-      const wishlistItem = await page.locator(`[data-testid="wishlist-item-${testProduct._id}"]`);
-      await expect(wishlistItem).toBeVisible();
-      
-      // 5. Shopping Cart and Checkout
+      // 4. Shopping Cart and Checkout
       console.log('Testing shopping cart and checkout...');
       
       await page.goto(`/products/${testProduct.slug}`);
@@ -252,11 +232,9 @@ describe('End-to-End Integration Tests', () => {
   describe('API Response Consistency', () => {
     it('should maintain consistent response format across all endpoints', async () => {
       const endpoints = [
-        { method: 'GET', url: '/api/products', auth: false },
-        { method: 'GET', url: '/api/blogs', auth: false },
+        { method: 'GET', url: '/api/products', auth: false },        { method: 'GET', url: '/api/blogs', auth: false },
         { method: 'GET', url: '/api/users/me', auth: true },
         { method: 'GET', url: '/api/orders', auth: true },
-        { method: 'GET', url: '/api/wishlist', auth: true },
         { method: 'GET', url: '/api/reviews/product/nonexistent', auth: false, expectError: true }
       ];
 

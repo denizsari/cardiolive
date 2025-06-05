@@ -33,13 +33,13 @@ const images = [
 export default function Home() {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);// Auto-advance slider
+  const [isTransitioning, setIsTransitioning] = useState(false);  // Auto-advance slider
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isTransitioning) {
         setCurrentSlide((prev) => (prev + 1) % images.length);
       }
-    }, 5000);
+    }, 7000); // 7 saniyede bir geçiş
 
     return () => clearInterval(interval);
   }, [isTransitioning]);
@@ -212,7 +212,7 @@ export default function Home() {
                 console.log('◀️ PREV BUTTON CLICKED');
                 prevSlide();
               }}
-              className="w-14 h-14 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
+              className="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
             >
               ←
             </button>
@@ -221,7 +221,7 @@ export default function Home() {
                 console.log('▶️ NEXT BUTTON CLICKED');
                 nextSlide();
               }}
-              className="w-14 h-14 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
+              className="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
             >
               →
             </button>

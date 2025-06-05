@@ -307,11 +307,9 @@ class RedisCacheManager {
   /**
    * Cache invalidation strategies
    */
-  async invalidateUserCache(userId) {
-    const patterns = [
+  async invalidateUserCache(userId) {    const patterns = [
       this.generateKey('users', userId),
-      this.generateKey('orders', `user:${userId}:*`),
-      this.generateKey('wishlist', userId)
+      this.generateKey('orders', `user:${userId}:*`)
     ];
 
     for (const pattern of patterns) {

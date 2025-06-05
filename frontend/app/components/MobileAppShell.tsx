@@ -34,11 +34,9 @@ export function MobileAppShell({ children }: MobileAppShellProps) {
   if (!isMobile) {
     return <>{children}</>;
   }
-
   const navigationItems = [
     { href: '/', icon: Home, label: 'Ana Sayfa' },
     { href: '/products', icon: Package, label: 'Ürünler' },
-    { href: '/wishlist', icon: Heart, label: 'Favoriler' },
     { href: '/account', icon: User, label: 'Hesabım' },
   ];
 

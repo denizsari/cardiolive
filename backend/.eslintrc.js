@@ -14,13 +14,13 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['security'],
-  rules: {
+  plugins: ['security'],  rules: {
     // Error prevention
     'no-console': 'warn',
     'no-debugger': 'error',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-undef': 'error',
+    'no-process-exit': 'off', // Allow process.exit in server shutdown handlers
 
     // Best practices
     'prefer-const': 'error',

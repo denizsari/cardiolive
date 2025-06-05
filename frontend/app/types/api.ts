@@ -7,7 +7,6 @@ import {
   Order, 
   Blog, 
   Review, 
-  WishlistItem, 
   PaymentMethod, 
   TrackingInfo 
 } from './index';
@@ -81,9 +80,6 @@ export type ApiBlogsResponse = ApiCollectionResponse<Blog>;
 
 export type ApiReviewResponse = ApiResponse<Review>;
 export type ApiReviewsResponse = ApiCollectionResponse<Review>;
-
-export type ApiWishlistResponse = ApiResponse<WishlistItem[]>;
-export type ApiWishlistCountResponse = ApiCountResponse;
 
 // Payment specific responses
 export interface ApiPaymentMethodsResponse {

@@ -21,10 +21,6 @@ interface MockApiClient {
   reviewAPI: {
     create: jest.Mock
   }
-  wishlistAPI: {
-    add: jest.Mock
-    remove: jest.Mock
-  }
 }
 
 const mockApiClient: MockApiClient = {
@@ -43,10 +39,6 @@ const mockApiClient: MockApiClient = {
   },
   reviewAPI: {
     create: jest.fn(),
-  },
-  wishlistAPI: {
-    add: jest.fn(),
-    remove: jest.fn(),
   },
 }
 
@@ -315,42 +307,12 @@ describe('Frontend API Integration Tests', () => {
         rating: 5,
         comment: 'Great product!'
       }
-
+      
       const result = await mockApiClient.reviewAPI.create(reviewData)
 
       expect(mockApiClient.reviewAPI.create).toHaveBeenCalledWith(reviewData)
       expect(result.success).toBe(true)
       expect(result.review.rating).toBe(5)
-    })
-  })
-
-  describe('Wishlist Components', () => {
-    it('should add product to wishlist', async () => {
-      const mockWishlistResponse = {
-        success: true,
-        wishlistItem: {
-          _id: 'wishlist-1',
-          product: 'product-1',
-          user: 'user-1'
-        }
-      }
-
-      mockApiClient.wishlistAPI.add.mockResolvedValue(mockWishlistResponse)
-
-      const result = await mockApiClient.wishlistAPI.add({ product: 'product-1' })
-
-      expect(mockApiClient.wishlistAPI.add).toHaveBeenCalledWith({ product: 'product-1' })
-      expect(result.success).toBe(true)
-    })
-
-    it('should remove product from wishlist', async () => {
-      const mockResponse = { success: true }
-      mockApiClient.wishlistAPI.remove.mockResolvedValue(mockResponse)
-
-      const result = await mockApiClient.wishlistAPI.remove('product-1')
-
-      expect(mockApiClient.wishlistAPI.remove).toHaveBeenCalledWith('product-1')
-      expect(result.success).toBe(true)
     })
   })
 

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { ProductImage } from '../ui/OptimizedImage';
 import Link from 'next/link';
 import { productAPI } from '../../utils/api';
-import WishlistButton from '../WishlistButton';
 import Button from '../ui/Button';
 import { Product } from '../../types';
 
@@ -117,15 +116,8 @@ export default function FeaturedProducts() {
                 </div>
               </div>
             ))
-          ) : products.length > 0 ? (
-            products.map((product) => (
+          ) : products.length > 0 ? (            products.map((product) => (
               <div key={product._id} className="group relative transform hover:-translate-y-2 transition-transform duration-300">
-                {/* Favori Butonu */}
-                <WishlistButton
-                  productId={product._id}
-                  className="absolute top-4 right-4 z-10 p-3 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
-                />
-
                 {/* Ürün Kartı */}
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
                   {/* Ürün Görseli */}

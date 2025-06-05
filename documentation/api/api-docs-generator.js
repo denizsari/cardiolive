@@ -32,12 +32,10 @@ const swaggerOptions = {
         Comprehensive API documentation for the Cardiolive e-commerce platform.
         
         This API provides endpoints for:
-        - User authentication and management
-        - Product catalog and management
+        - User authentication and management        - Product catalog and management
         - Order processing and tracking
         - Review and rating system
         - Blog content management
-        - Wishlist functionality
         - Payment processing
         - Administrative functions
         
@@ -707,12 +705,7 @@ const swaggerOptions = {
       },
       {
         name: 'Reviews',
-        description: 'Product review and rating endpoints'
-      },
-      {
-        name: 'Wishlist',
-        description: 'User wishlist management endpoints'
-      },
+        description: 'Product review and rating endpoints'      },
       {
         name: 'Blog',
         description: 'Blog content management endpoints'

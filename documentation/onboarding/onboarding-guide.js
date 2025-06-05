@@ -58,14 +58,12 @@ const ONBOARDING_CONTENT = {
         monitoring: 'Prometheus + Grafana',
         cicd: 'GitHub Actions'
       }
-    },
-    features: [
+    },    features: [
       'User authentication and authorization',
       'Product catalog with categories and filtering',
       'Shopping cart and checkout process',
       'Order management and tracking',
       'Review and rating system',
-      'Wishlist functionality',
       'Blog content management',
       'Admin dashboard',
       'Payment processing integration',

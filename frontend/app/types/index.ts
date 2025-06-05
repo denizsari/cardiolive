@@ -71,12 +71,23 @@ export interface ShippingAddress {
 export interface Blog {
   _id: string;
   title: string;
-  summary: string;
+  slug: string;
+  excerpt: string;
+  summary?: string; // alias for excerpt
   content: string;
+  category: string;
+  tags?: string[];
+  featured?: boolean;
+  viewCount?: number;
+  publishedAt?: string;
   image: string;
-  isActive: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
+  // Legacy support
+  date?: string; // for backward compatibility
 }
 
 export interface Settings {
@@ -211,16 +222,9 @@ export interface Review {
   userHasVoted?: 'helpful' | 'not_helpful' | null;
 }
 
-export interface ReviewStats {
-  averageRating: number;
+export interface ReviewStats {  averageRating: number;
   totalReviews: number;
   ratingDistribution: { [key: number]: number };
-}
-
-export interface WishlistItem {
-  _id: string;
-  product: Product;
-  addedAt: string;
 }
 
 export interface CreateReviewData {

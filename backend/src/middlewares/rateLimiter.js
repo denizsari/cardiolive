@@ -155,24 +155,6 @@ const uploadLimiter = rateLimit({
   },
 });
 
-// Wishlist operations rate limiter
-const wishlistLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 50, // 50 wishlist operations per 5 minutes
-  message: {
-    success: false,
-    message: 'Çok fazla favori işlemi. Lütfen 5 dakika sonra tekrar deneyin.',
-    timestamp: new Date().toISOString(),
-  },
-  keyGenerator: (req) => {
-    // Use user ID if authenticated, otherwise fall back to IP
-    return req.user?.id || req.ip;
-  },
-  handler: (req, res) => {
-    return ResponseHandler.rateLimit(res, 'Çok fazla favori işlemi. Lütfen biraz bekleyin.');
-  },
-});
-
 // API rate limiter function
 const applyRateLimit = (type = 'general') => {
   // Return no-op middleware if rate limiting is disabled
@@ -190,18 +172,15 @@ const applyRateLimit = (type = 'general') => {
     passwordReset: passwordResetLimiter,
     contact: contactLimiter,
     reviews: reviewLimiter,
-    orders: orderLimiter,
-    search: searchLimiter,
+    orders: orderLimiter,    search: searchLimiter,
     upload: uploadLimiter,
-    wishlist: wishlistLimiter,
     tracking: userLimiter
   };
 
   return limiters[type] || generalLimiter;
 };
 
-module.exports = {
-  generalLimiter: isRateLimitDisabled ? noOpLimiter : generalLimiter,
+module.exports = {  generalLimiter: isRateLimitDisabled ? noOpLimiter : generalLimiter,
   authLimiter: isRateLimitDisabled ? noOpLimiter : authLimiter,
   passwordResetLimiter: isRateLimitDisabled ? noOpLimiter : passwordResetLimiter,
   contactLimiter: isRateLimitDisabled ? noOpLimiter : contactLimiter,
@@ -211,6 +190,5 @@ module.exports = {
   userLimiter: isRateLimitDisabled ? noOpLimiter : userLimiter,
   searchLimiter: isRateLimitDisabled ? noOpLimiter : searchLimiter,
   uploadLimiter: isRateLimitDisabled ? noOpLimiter : uploadLimiter,
-  wishlistLimiter: isRateLimitDisabled ? noOpLimiter : wishlistLimiter,
   applyRateLimit
 };

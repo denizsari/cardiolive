@@ -93,14 +93,6 @@ backend/
 | DELETE | `/api/reviews/:id` | Yorum silme | ✅ |
 | PATCH | `/api/reviews/:id/helpful` | Faydalı işaretleme | ✅ |
 
-### **Wishlist Endpoints**
-| Method | Endpoint | Açıklama | Auth Required |
-|--------|----------|----------|---------------|
-| GET | `/api/wishlist` | Kullanıcı favorileri | ✅ |
-| POST | `/api/wishlist` | Favorilere ekleme | ✅ |
-| DELETE | `/api/wishlist/:productId` | Favorilerden çıkarma | ✅ |
-| GET | `/api/wishlist/count` | Favori sayısı | ✅ |
-
 ---
 
 ## 🗄️ **VERİTABANI ŞEMASI**

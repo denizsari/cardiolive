@@ -5,15 +5,7 @@ import { ProductImage } from '../ui/OptimizedImage';
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { blogAPI } from '../../utils/api';
-
-interface Blog {
-  _id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  date: string;
-}
+import { Blog } from '../../types';
 
 export default function BlogPreview() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -31,8 +23,21 @@ export default function BlogPreview() {
     };
 
     fetchBlogs();
-  }, []);  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  }, []);  const formatDate = (blog: Blog) => {
+    // Try different date fields in priority order
+    const dateValue = blog.publishedAt || blog.createdAt || blog.date;
+    
+    if (!dateValue) {
+      return 'Tarih belirtilmemiş';
+    }
+    
+    const date = new Date(dateValue);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Tarih belirtilmemiş';
+    }
+    
     return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'long',
@@ -90,11 +95,10 @@ export default function BlogPreview() {
                   </div>
 
                   {/* İçerik */}
-                  <div className="p-6">
-                    {/* Tarih */}
+                  <div className="p-6">                    {/* Tarih */}
                     <div className="flex items-center text-sm text-gray-500 mb-3">
                       <Calendar className="w-4 h-4 mr-2" />
-                      {formatDate(blog.date)}
+                      {formatDate(blog)}
                     </div>
 
                     {/* Başlık */}

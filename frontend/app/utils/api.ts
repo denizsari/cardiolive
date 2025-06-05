@@ -7,7 +7,6 @@ import {
   Review,
   ReviewStats,
   ReviewEligibility,
-  WishlistItem,
   CreateReviewData,
   UpdateReviewData,
   TrackingInfo
@@ -581,33 +580,8 @@ export const reviewAPI = {
   },
 };
 
-// Wishlist API functions
-export const wishlistAPI = {
-  getWishlist: async () => {
-    const response = await apiClient.get<{ success: boolean; data: WishlistItem[]; count: number }>('/api/wishlist');
-    return response.data;
-  },
-  getWishlistCount: async () => {
-    const response = await apiClient.get<{ success: boolean; data: { count: number } }>('/api/wishlist/count');
-    return response.data.count;
-  },
-  checkWishlistStatus: async (productId: string) => {
-    const response = await apiClient.get<{ success: boolean; data: { inWishlist: boolean; addedAt: string | null } }>(`/api/wishlist/check/${productId}`);
-    return response.data;
-  },
-  addToWishlist: (productId: string) => 
-    apiClient.post<{ message: string }>('/api/wishlist', { productId }),
-  removeFromWishlist: (productId: string) => 
-    apiClient.delete<{ message: string }>(`/api/wishlist/${productId}`),
-  clearWishlist: () => 
-    apiClient.delete<{ message: string }>('/api/wishlist'),
-  addMultiple: (productIds: string[]) => 
-    apiClient.post<{ message: string }>('/api/wishlist/bulk-add', { productIds }),
-  removeMultiple: (productIds: string[]) => 
-    apiClient.post<{ message: string }>('/api/wishlist/bulk-remove', { productIds }),
-  updateNotes: (productId: string, notes: string) => 
-    apiClient.patch<{ message: string }>(`/api/wishlist/${productId}/notes`, { notes }),
-};
+// Wishlist functionality has been disabled
+// export const wishlistAPI = {...};
 
 // Settings API functions - CRITICAL MISSING
 export const settingsAPI = {

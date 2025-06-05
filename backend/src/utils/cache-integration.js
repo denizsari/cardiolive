@@ -141,18 +141,6 @@ class CacheIntegration {
   async clearCart(userId) {
     return this.cacheManager.delete('cart', userId);
   }
-
-  /**
-   * Wishlist caching
-   */
-  async getWishlist(userId, fetchFunction) {
-    return this.cacheManager.getOrSet('wishlist', userId, fetchFunction, 600); // 10 minutes
-  }
-
-  async updateWishlist(userId, wishlistData) {
-    return this.cacheManager.set('wishlist', userId, wishlistData, 600);
-  }
-
   /**
    * Cache warming
    */

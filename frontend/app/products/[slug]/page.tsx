@@ -7,7 +7,6 @@ import { Minus, Plus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import Header from '../../components/Header';
 import ReviewsSection from '../../components/ReviewsSection';
-import WishlistButton from '../../components/WishlistButton';
 import OptimizedImage from '../../components/ui/OptimizedImage';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../contexts/CartContext';
@@ -160,18 +159,13 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                     onClick={() => setQuantity(quantity + 1)}
                   >
                     <Plus size={20} />
-                  </Button>                </div>                
-                <Button 
+                  </Button>                </div>                  <Button 
                   className="flex-1 bg-[#70BB1B] text-white py-3 px-8 rounded-full hover:bg-opacity-90 transition-colors"
                   onClick={handleAddToCart}
                 >
                   Sepete Ekle
-                </Button><WishlistButton 
-                  productId={resolvedParams?.slug || 'default'}
-                  className="p-3 border-2 border-gray-300 rounded-full hover:border-[#70BB1B] transition-colors"
-                  size={24}
-                />
-              </div>            </div>
+                </Button>
+              </div></div>
           </div>
         </div>
 

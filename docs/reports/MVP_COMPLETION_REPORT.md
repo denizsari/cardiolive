@@ -25,7 +25,7 @@
 
 #### 📊 Data Architecture
 - **MongoDB Integration:** Optimized schemas with proper indexing
-- **Model Relationships:** Users, Products, Orders, Reviews, Blog, Wishlist
+- **Model Relationships:** Users, Products, Orders, Reviews, Blog
 - **Validation Layer:** Express-validator with custom business rules
 - **Error Handling:** Centralized ResponseHandler with consistent format
 - **Performance Optimization:** Database indexes and query optimization
@@ -59,12 +59,6 @@ Reviews:
 ✅ PUT /api/reviews/:reviewId - Review updates
 ✅ DELETE /api/reviews/:reviewId - Review deletion
 ✅ PATCH /api/reviews/:reviewId/helpful - Helpful voting
-
-Wishlist:
-✅ GET /api/wishlist - User wishlist
-✅ POST /api/wishlist - Add to wishlist
-✅ DELETE /api/wishlist/:productId - Remove from wishlist
-✅ GET /api/wishlist/count - Wishlist count
 
 Blog:
 ✅ GET /api/blogs - Blog post listing
@@ -102,7 +96,6 @@ Admin Features:
 ✅ Product API - Listing/Details/CRUD
 ✅ Order API - Creation/History/Tracking
 ✅ Review API - CRUD/Voting/Stats
-✅ Wishlist API - Add/Remove/Bulk operations
 ✅ Blog API - Listing/Details/Management
 ✅ User API - Profile/Admin functions
 ✅ Payment API - Methods/Validation/Processing
@@ -189,7 +182,6 @@ Admin Features:
 - ✅ Shopping cart functionality
 - ✅ Order processing and tracking
 - ✅ Payment integration (mock)
-- ✅ Wishlist management
 
 ### 📝 Content Management
 - ✅ Blog system with admin controls

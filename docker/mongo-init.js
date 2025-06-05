@@ -64,12 +64,6 @@ db.blogs.createIndex({ "published": 1 });
 db.blogs.createIndex({ "createdAt": -1 });
 print("✅ Blogs collection indexes created");
 
-// Wishlist collection indexes
-db.wishlists.createIndex({ "user": 1 });
-db.wishlists.createIndex({ "product": 1 });
-db.wishlists.createIndex({ "user": 1, "product": 1 }, { unique: true });
-print("✅ Wishlist collection indexes created");
-
 // Settings collection indexes
 db.settings.createIndex({ "key": 1 }, { unique: true });
 print("✅ Settings collection indexes created");
@@ -165,5 +159,4 @@ print("Products:", db.products.countDocuments());
 print("Orders:", db.orders.countDocuments());
 print("Reviews:", db.reviews.countDocuments());
 print("Blogs:", db.blogs.countDocuments());
-print("Wishlists:", db.wishlists.countDocuments());
 print("Settings:", db.settings.countDocuments());

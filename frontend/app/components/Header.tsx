@@ -129,13 +129,7 @@ export default function Header() {
                       Ara
                     </Button>
                   </form>
-                </div>              )}
-            </div>
-            
-            {/* Wishlist Link */}
-            <Link href="/wishlist" aria-label="Wishlist" className="text-gray-700 hover:text-[#70BB1B] transition-colors relative">
-              <Heart size={20} />
-            </Link>
+                </div>              )}            </div>
             
             <Link href="/cart" aria-label="Cart" className="text-gray-700 hover:text-[#70BB1B] transition-colors relative">
               <ShoppingCart size={20} />
