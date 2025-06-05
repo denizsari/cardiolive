@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useReducer, useCallback, useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { generateId } from '@/utils/ssr';
 
 // Form state types
 export interface FormField {
@@ -517,10 +518,9 @@ export const FormStateProvider: React.FC<FormStateProviderProps> = ({
     const key = getStorageKey('session');
     storage.removeItem(key);
   }, [config.persistence, getStorageKey]);
-
   // Session management
   const createSession = useCallback((formId: string, sessionId?: string) => {
-    const id = sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = sessionId || generateId(`session_${formId}`);
     dispatch({ type: 'CREATE_SESSION', payload: { sessionId: id, formId } });
     return id;
   }, []);

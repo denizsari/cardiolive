@@ -3,6 +3,7 @@ import React, { forwardRef, useState, useEffect, useRef, InputHTMLAttributes, Te
 import { FieldError } from 'react-hook-form';
 import { AlertCircle, CheckCircle2, Eye, EyeOff, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useId } from '@/utils/ssr';
 
 // Utility function for combining class names
 function cn(...classes: (string | undefined | null | false)[]): string {
@@ -36,10 +37,9 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
     type,
     className,
     id,
-    ...props 
-  }, ref) => {
+    ...props   }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    const inputId = useId(id || 'input');
     
     const inputType = showPasswordToggle && type === 'password' 
       ? (showPassword ? 'text' : 'password')
@@ -176,11 +176,10 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>( 
     value,
     onChange,
     id,
-    ...props 
-  }, ref) => {
+    ...props   }, ref) => {
     const internalRef = useRef<HTMLTextAreaElement>(null);
     const [characterCount, setCharacterCount] = useState(0);
-    const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    const textareaId = useId(id || 'textarea');
 
     // Handle ref forwarding properly
     useEffect(() => {
@@ -336,10 +335,9 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
     options,
     placeholder = "Select an option...",
     className,
-    id,
-    ...props 
+    id,    ...props 
   }, ref) => {
-    const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+    const selectId = useId(id || 'select');
 
     return (
       <div className="space-y-1">
@@ -449,7 +447,7 @@ interface FormCheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 
 export const FormCheckbox = forwardRef<HTMLInputElement, FormCheckboxProps>(
   ({ label, error, helperText, required, className, id, ...props }, ref) => {
-    const checkboxId = id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
+    const checkboxId = useId(id || 'checkbox');
 
     return (
       <div className="space-y-1">
@@ -620,7 +618,7 @@ interface FormSwitchProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 't
 
 export const FormSwitch = forwardRef<HTMLInputElement, FormSwitchProps>(
   ({ label, error, helperText, required, checked, onChange, className, id, ...props }, ref) => {
-    const switchId = id || `switch-${Math.random().toString(36).substr(2, 9)}`;
+    const switchId = useId(id || 'switch');
 
     return (
       <div className="space-y-1">

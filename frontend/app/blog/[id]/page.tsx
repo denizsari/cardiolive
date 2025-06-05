@@ -16,6 +16,7 @@ interface Blog {
   image?: string;
   date?: string;
   publishedAt?: string;
+  createdAt?: string;
 }
 
 // Utility function to ensure all img tags have alt attributes

@@ -7,15 +7,7 @@ import Link from 'next/link';
 import { ProductImage } from '../components/ui/OptimizedImage';
 import Header from '../components/Header';
 import { blogAPI } from '../utils/api';
-
-interface Blog {
-  _id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  image?: string; // Make image optional to handle null/undefined cases
-  date: string;
-}
+import { Blog } from '@/types';
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -54,8 +46,7 @@ export default function BlogList() {
     };
 
     fetchBlogs();
-  }, []);
-  const formatDate = (blog: Blog) => {
+  }, []);  const formatDate = (blog: Blog) => {
     // Try different date fields in priority order
     const dateValue = blog.publishedAt || blog.createdAt || blog.date;
     

@@ -8,16 +8,7 @@ import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
 import { blogAPI, uploadAPI } from '@/utils/api';
 import Button from '@/components/ui/Button';
 import { FileUpload } from '@/components/forms/FileUploadComponents';
-
-interface Blog {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  category: string;
-  image: string;
-  date: string;
-}
+import { Blog } from '@/types';
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -276,10 +267,9 @@ export default function AdminBlogsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {blog.category}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(blog.date).toLocaleDateString()}
-                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(blog.date || blog.createdAt).toLocaleDateString()}
+                  </td><td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
                       <Button
                         onClick={() => window.open(`/blog/${blog._id}`, '_blank')}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { CheckCircle, AlertCircle, X, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { generateId, safeWindow } from '@/utils/ssr';
 
 export interface Toast {
   id: string;
@@ -34,9 +35,8 @@ interface ToastProviderProps {
 
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-
   const addToast = (toast: Omit<Toast, 'id'>) => {
-    const id = Date.now().toString();
+    const id = generateId('toast');
     const newToast: Toast = {
       id,
       duration: 5000,
@@ -161,35 +161,35 @@ function ToastComponent({ toast, onRemove }: ToastComponentProps) {
 // Helper functions for common use cases
 export const toast = {
   success: (title: string, description?: string, duration?: number) => {
-    if (typeof window !== 'undefined') {
+    safeWindow((window) => {
       const event = new CustomEvent('addToast', {
         detail: { type: 'success', title, description, duration },
       });
       window.dispatchEvent(event);
-    }
+    });
   },
   error: (title: string, description?: string, duration?: number) => {
-    if (typeof window !== 'undefined') {
+    safeWindow((window) => {
       const event = new CustomEvent('addToast', {
         detail: { type: 'error', title, description, duration },
       });
       window.dispatchEvent(event);
-    }
+    });
   },
   warning: (title: string, description?: string, duration?: number) => {
-    if (typeof window !== 'undefined') {
+    safeWindow((window) => {
       const event = new CustomEvent('addToast', {
         detail: { type: 'warning', title, description, duration },
       });
       window.dispatchEvent(event);
-    }
+    });
   },
   info: (title: string, description?: string, duration?: number) => {
-    if (typeof window !== 'undefined') {
+    safeWindow((window) => {
       const event = new CustomEvent('addToast', {
         detail: { type: 'info', title, description, duration },
       });
       window.dispatchEvent(event);
-    }
+    });
   },
 };

@@ -1,0 +1,32 @@
+# CardioLive Code Owners
+# These owners will be requested for review when someone opens a pull request.
+
+# Global ownership - Replace with actual GitHub username
+* @denizsari
+
+# Frontend specific
+/frontend/ @denizsari
+/frontend/app/components/ @denizsari
+/frontend/app/utils/ @denizsari
+
+# Backend specific
+/backend/ @denizsari
+/backend/src/controllers/ @denizsari
+/backend/src/models/ @denizsari
+
+# Infrastructure and deployment
+/.github/ @denizsari
+/deployment/ @denizsari
+/docker/ @denizsari
+/scripts/ @denizsari
+
+# Security and configuration
+/security/ @denizsari
+/.env.* @denizsari
+/package.json @denizsari
+/package-lock.json @denizsari
+
+# Documentation
+/docs/ @denizsari
+/README.md @denizsari
+/CONTRIBUTING.md @denizsari

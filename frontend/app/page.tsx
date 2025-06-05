@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useIsClient, safeDocument } from '@/utils/ssr';
 import Header from './components/Header';
 import AboutPreview from './components/sections/AboutPreview';
 import FeaturedProducts from './components/sections/FeaturedProducts';
@@ -32,8 +33,9 @@ const images = [
 
 export default function Home() {
   const router = useRouter();
+  const isClient = useIsClient();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);  // Auto-advance slider
+  const [isTransitioning, setIsTransitioning] = useState(false);// Auto-advance slider
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isTransitioning) {
@@ -72,9 +74,10 @@ export default function Home() {
   const handleAboutClick = () => {
     console.log('Navigating to about page...');
     router.push('/about');
-  };
-  // SEO ve Analytics için structured data injection
+  };  // SEO ve Analytics için structured data injection
   useEffect(() => {
+    if (!isClient) return;
+
     // Organization structured data
     const organizationData = {
       '@context': 'https://schema.org',
@@ -109,55 +112,61 @@ export default function Home() {
           urlTemplate: 'https://kardiyolive.com/products?search={search_term_string}',
         },
         'query-input': 'required name=search_term_string',
-      },
-    };
-
-    // Structured data'yı head'e ekleme
+      },    };    // Structured data'yı head'e ekleme
     const addStructuredData = (data: Record<string, unknown>, id: string) => {
-      const existingScript = document.getElementById(id);
-      if (existingScript) {
-        existingScript.remove();
-      }
-      
-      const script = document.createElement('script');
-      script.id = id;
-      script.type = 'application/ld+json';
-      script.textContent = JSON.stringify(data);
-      document.head.appendChild(script);
+      safeDocument((document) => {
+        const existingScript = document.getElementById(id);
+        if (existingScript) {
+          existingScript.remove();
+        }
+        
+        const script = document.createElement('script');
+        script.id = id;
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(data);
+        document.head.appendChild(script);
+      });
     };
 
-    addStructuredData(organizationData, 'organization-schema');
-    addStructuredData(websiteData, 'website-schema');
+    if (isClient) {
+      addStructuredData(organizationData, 'organization-schema');
+      addStructuredData(websiteData, 'website-schema');
+    }
 
     // Meta description ve keywords güncelleme
     const updateMetaTags = () => {
-      let metaDescription = document.querySelector('meta[name="description"]');
-      if (!metaDescription) {
-        metaDescription = document.createElement('meta');
-        metaDescription.setAttribute('name', 'description');
-        document.head.appendChild(metaDescription);
-      }
-      metaDescription.setAttribute('content', 'Kardiyolive - Ege\'nin en kaliteli zeytinlerinden elde edilen organik zeytinyağları ve doğal ürünler. Premium kalite, doğal lezzet, hızlı teslimat.');
+      safeDocument((document) => {
+        let metaDescription = document.querySelector('meta[name="description"]');
+        if (!metaDescription) {
+          metaDescription = document.createElement('meta');
+          metaDescription.setAttribute('name', 'description');
+          document.head.appendChild(metaDescription);
+        }
+        metaDescription.setAttribute('content', 'Kardiyolive - Ege\'nin en kaliteli zeytinlerinden elde edilen organik zeytinyağları ve doğal ürünler. Premium kalite, doğal lezzet, hızlı teslimat.');
 
-      let metaKeywords = document.querySelector('meta[name="keywords"]');
-      if (!metaKeywords) {
-        metaKeywords = document.createElement('meta');
-        metaKeywords.setAttribute('name', 'keywords');
-        document.head.appendChild(metaKeywords);
-      }
-      metaKeywords.setAttribute('content', 'zeytinyağı, organik, doğal, kardiyolive, zeytin, premium, kalite, sızma, soğuk sıkım, ege, türkiye');
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (!metaKeywords) {
+          metaKeywords = document.createElement('meta');
+          metaKeywords.setAttribute('name', 'keywords');
+          document.head.appendChild(metaKeywords);
+        }        metaKeywords.setAttribute('content', 'zeytinyağı, organik, doğal, kardiyolive, zeytin, premium, kalite, sızma, soğuk sıkım, ege, türkiye');
+      });
     };
 
-    updateMetaTags();
-  }, []);
-
+    if (isClient) {
+      updateMetaTags();
+    }
+  }, [isClient]);
   return (
     <>
       <main className="min-h-screen bg-white">
-        <Header />        {/* Hero Slider - CSS Grid with Background Image */}
+        <Header />
+        
+        {/* Hero Slider - CSS Grid with Background Image */}
         <section 
           className="relative h-screen overflow-hidden"
-        >          {/* Background image layer */}
+        >
+          {/* Background image layer */}
           <div 
             className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out"
             style={{

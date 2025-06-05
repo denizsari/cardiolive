@@ -9,7 +9,8 @@ import {
   ReviewEligibility,
   CreateReviewData,
   UpdateReviewData,
-  TrackingInfo
+  TrackingInfo,
+  Blog
 } from '@/types';
 
 import {
@@ -19,16 +20,6 @@ import {
 } from '@/utils/responseUtils';
 
 // Define proper types for API responses
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  category: string;
-  image: string;
-  date: string;
-}
-
 interface APIPaymentMethod {
   id: string;
   name: string;
@@ -423,17 +414,16 @@ export const orderAPI = {
 
 // Blog API functions with improved response handling
 export const blogAPI = {
-  getAll: async (): Promise<BlogPost[]> => {
-    return safeCollectionCall<BlogPost>(
-      () => apiClient.get<{ success: boolean; data: { blogs: BlogPost[]; pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNext: boolean; hasPrev: boolean }; count: number } }>('/api/blogs'),
+  getAll: async (): Promise<Blog[]> => {
+    return safeCollectionCall<Blog>(
+      () => apiClient.get<{ success: boolean; data: { blogs: Blog[]; pagination: { currentPage: number; totalPages: number; totalBlogs: number; hasNext: boolean; hasPrev: boolean }; count: number } }>('/api/blogs'),
       'Failed to fetch blogs'
-    );
-  },
+    );  },
   
   // CRITICAL MISSING: Featured blogs for homepage
-  getFeatured: async (): Promise<BlogPost[]> => {
-    return safeCollectionCall<BlogPost>(
-      () => apiClient.get<{ success: boolean; data: BlogPost[] }>('/api/blogs/featured'),
+  getFeatured: async (): Promise<Blog[]> => {
+    return safeCollectionCall<Blog>(
+      () => apiClient.get<{ success: boolean; data: Blog[] }>('/api/blogs/featured'),
       'Failed to fetch featured blogs'
     );
   },
@@ -445,10 +435,9 @@ export const blogAPI = {
       'Failed to fetch blog categories'
     );
   },
-  
-  getById: async (id: string): Promise<BlogPost> => {
+    getById: async (id: string): Promise<Blog> => {
     try {
-      const response = await apiClient.get<{ success: boolean; data: { blog: BlogPost } }>(`/api/blogs/${id}`);
+      const response = await apiClient.get<{ success: boolean; data: { blog: Blog } }>(`/api/blogs/${id}`);
       if (response.success && response.data && response.data.blog) {
         return response.data.blog;
       }
@@ -458,24 +447,22 @@ export const blogAPI = {
       throw new Error('Failed to fetch blog post');
     }
   },
-  
-  getBySlug: async (slug: string): Promise<BlogPost> => {
-    return safeApiCall<BlogPost>(
-      () => apiClient.get<{ success: boolean; data: BlogPost }>(`/api/blogs/slug/${slug}`),
+    getBySlug: async (slug: string): Promise<Blog> => {
+    return safeApiCall<Blog>(
+      () => apiClient.get<{ success: boolean; data: Blog }>(`/api/blogs/slug/${slug}`),
       'Failed to fetch blog post by slug'
     );
   },
   
   // CRITICAL MISSING: Related blogs for blog detail page
-  getRelated: async (id: string): Promise<BlogPost[]> => {
-    return safeCollectionCall<BlogPost>(
-      () => apiClient.get<{ success: boolean; data: BlogPost[] }>(`/api/blogs/${id}/related`),
+  getRelated: async (id: string): Promise<Blog[]> => {
+    return safeCollectionCall<Blog>(
+      () => apiClient.get<{ success: boolean; data: Blog[] }>(`/api/blogs/${id}/related`),
       'Failed to fetch related blogs'
     );
   },
-  
-  create: (data: CreateBlogData) => apiClient.post<BlogPost>('/api/blogs', data),
-  update: (id: string, data: Partial<CreateBlogData>) => apiClient.put<BlogPost>(`/api/blogs/${id}`, data),
+    create: (data: CreateBlogData) => apiClient.post<Blog>('/api/blogs', data),
+  update: (id: string, data: Partial<CreateBlogData>) => apiClient.put<Blog>(`/api/blogs/${id}`, data),
   delete: (id: string) => apiClient.delete<APIResponse<string>>(`/api/blogs/${id}`),
 };
 

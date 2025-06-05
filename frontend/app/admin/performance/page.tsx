@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Activity, Clock, Zap, Database, Server, Monitor } from 'lucide-react';
+import { useIsClient } from '@/utils/ssr';
 
 interface PerformanceMetrics {
   firstContentfulPaint: number;
@@ -20,6 +21,7 @@ interface SystemMetrics {
 }
 
 export default function PerformanceDashboard() {
+  const isClient = useIsClient();
   const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics>({
     firstContentfulPaint: 0,
     largestContentfulPaint: 0,
@@ -66,26 +68,22 @@ export default function PerformanceDashboard() {
       });
     });
 
-    observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'first-input'] });
-
-    // Sistem metrikleri simülasyonu
+    observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'first-input'] });    // Sistem metrikleri simülasyonu
     const updateSystemMetrics = () => {
       setSystemMetrics({
-        memoryUsage: Math.floor(Math.random() * 100),
-        loadTime: Math.floor(Math.random() * 3000) + 500,
-        responseTime: Math.floor(Math.random() * 200) + 50,
-        errorRate: Math.random() * 5,
+        memoryUsage: isClient ? Math.floor(Math.random() * 100) : 50,
+        loadTime: isClient ? Math.floor(Math.random() * 3000) + 500 : 1000,
+        responseTime: isClient ? Math.floor(Math.random() * 200) + 50 : 100,
+        errorRate: isClient ? Math.random() * 5 : 1,
       });
     };
 
     updateSystemMetrics();
-    const interval = setInterval(updateSystemMetrics, 5000);
-
-    return () => {
+    const interval = setInterval(updateSystemMetrics, 5000);    return () => {
       observer.disconnect();
       clearInterval(interval);
     };
-  }, []);
+  }, [isClient]);
 
   const getScoreColor = (value: number, thresholds: { good: number; needs: number }) => {
     if (value <= thresholds.good) return 'text-green-600';

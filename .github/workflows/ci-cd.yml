@@ -1,10 +1,11 @@
-name: Cardiolive CI/CD Pipeline
+name: CardioLive CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, development ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, development ]
+  workflow_dispatch: # Allow manual triggers
 
 env:
   NODE_VERSION: '18.x'
