@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Package, Clock, CheckCircle, XCircle } from 'lucide-react';
@@ -221,13 +221,11 @@ export default function OrdersPage() {
                     <div>
                       <h4 className="font-medium text-gray-900 mb-3">Ürünler</h4>
                       <div className="space-y-3">                        {order.items.map((item) => (
-                          <div key={item._id} className="flex items-center gap-3">
-                            <div className="relative w-12 h-12 rounded overflow-hidden">
-                              <Image
+                          <div key={item._id} className="flex items-center gap-3">                            <div className="relative w-12 h-12 rounded overflow-hidden">
+                              <ProductImage
                                 src={item.image}
                                 alt={item.name}
-                                fill
-                                className="object-cover"
+                                className="object-cover w-full h-full"
                               />
                             </div>
                             <div className="flex-1">

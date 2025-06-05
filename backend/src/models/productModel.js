@@ -21,12 +21,25 @@ const productSchema = new mongoose.Schema({  name: {
   images: [{
     type: String,
     required: [true, 'En az bir ürün görseli zorunludur']
-  }],
-  category: {
+  }],  category: {
     type: String,
     required: [true, 'Ürün kategorisi zorunludur'],
     enum: {
-      values: ['Sızma Zeytinyağı', 'Naturel Zeytinyağı', 'Organik Zeytinyağı', 'Özel Seri'],
+      values: [
+        'Sızma Zeytinyağı', 
+        'Naturel Zeytinyağı', 
+        'Organik Zeytinyağı', 
+        'Özel Seri',
+        'Yeşil Zeytin',
+        'Siyah Zeytin', 
+        'Karma Zeytin',
+        'Gemlik Zeytin',
+        'Kalamata Zeytin',
+        'Turşu',
+        'Domates Ürünleri',
+        'Pekmez',
+        'Baharat'
+      ],
       message: 'Lütfen geçerli bir kategori seçin'
     }
   },
@@ -35,15 +48,14 @@ const productSchema = new mongoose.Schema({  name: {
     required: [true, 'Stok miktarı zorunludur'],
     min: [0, 'Stok miktarı 0\'dan küçük olamaz'],
     default: 0
-  },
-  size: {
+  },  size: {
     type: String,
     required: [true, 'Ürün boyutu zorunludur'],
     enum: {
-      values: ['250ml', '500ml', '1L', '2L', '5L'],
+      values: ['250ml', '500ml', '1L', '2L', '5L', '200g', '250g', '300g', '400g', '500g', '750g', '1kg', '2kg', '18L', 'Cam Kavanoz', 'Plastik Kap'],
       message: 'Lütfen geçerli bir boyut seçin'
     }
-  },  isActive: {
+  },isActive: {
     type: Boolean,
     default: true
   },

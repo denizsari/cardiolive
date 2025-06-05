@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Heart, ShoppingCart, Trash2, X, LoaderIcon } from 'lucide-react';
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import Link from 'next/link';
 import { wishlistAPI } from '../utils/api';
 import { WishlistItem } from '@/types';
@@ -323,15 +323,12 @@ export default function WishlistPage() {
                       ) : (
                         <X className="w-4 h-4 text-gray-600 hover:text-red-500" />
                       )}
-                    </Button>
-
-                    {/* Product Image */}
+                    </Button>                    {/* Product Image */}
                     <div className="relative aspect-square">
-                      <Image
+                      <ProductImage
                         src={item.product.images?.[0] || '/placeholder-product.jpg'}
                         alt={item.product.name}
-                        fill
-                        className="object-cover"
+                        className="object-cover w-full h-full"
                       />
                     </div>
 

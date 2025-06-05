@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
@@ -485,13 +485,11 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Sipariş Özeti</h2>
               
               <div className="space-y-4 mb-6">                {items.map((item) => (
-                  <div key={`${item._id}-${item.size}`} className="flex items-center gap-4">
-                    <div className="relative w-16 h-16 rounded overflow-hidden">
-                      <Image
+                  <div key={`${item._id}-${item.size}`} className="flex items-center gap-4">                    <div className="relative w-16 h-16 rounded overflow-hidden">
+                      <ProductImage
                         src={item.image}
                         alt={item.name}
-                        fill
-                        className="object-cover"
+                        className="object-cover w-full h-full"
                       />
                     </div>
                     <div className="flex-1">

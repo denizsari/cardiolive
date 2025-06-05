@@ -3,12 +3,12 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { Minus, Plus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import Header from '../../components/Header';
 import ReviewsSection from '../../components/ReviewsSection';
 import WishlistButton from '../../components/WishlistButton';
+import OptimizedImage from '../../components/ui/OptimizedImage';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../contexts/CartContext';
 import Button from '../../components/ui/Button';
@@ -79,9 +79,8 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Sol: Ürün Görselleri */}
-          <div className="space-y-4">
-            <div className="relative aspect-square rounded-lg overflow-hidden">
-              <Image
+          <div className="space-y-4">            <div className="relative aspect-square rounded-lg overflow-hidden">
+              <OptimizedImage
                 src={product.images[selectedImage]}
                 alt={product.name}
                 fill
@@ -95,9 +94,8 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                   className={`relative aspect-square rounded-lg overflow-hidden p-0 ${
                     selectedImage === index ? 'ring-2 ring-[#70BB1B]' : ''
                   }`}
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <Image
+                  onClick={() => setSelectedImage(index)}                >
+                  <OptimizedImage
                     src={image}
                     alt={`${product.name} ${index + 1}`}
                     fill

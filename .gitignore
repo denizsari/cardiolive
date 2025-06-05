@@ -10,8 +10,19 @@
 !.yarn/releases
 !.yarn/versions
 .env.docker
-.github/
-backend/nul
+
+# logs
+*.log
+logs/
+server.log
+
+# debug and test files
+*debug*.js
+*test*.js
+*sample*.js
+*seed*.js
+create-*.js
+check-*.js
 
 # testing
 /coverage

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "../../components/ui/OptimizedImage";
 import { Plus, Edit, Trash2, Eye, Search } from "lucide-react";
 import Button from "../../components/ui/Button";
 import { FormInput, FormSelect } from "../../components/forms/FormComponents";
@@ -223,13 +223,11 @@ export default function AdminProducts() {
                   {" "}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      {" "}
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                        <Image
+                      {" "}                      <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                        <ProductImage
                           src={getImageSrc(product)}
                           alt={product.name}
-                          fill
-                          className="object-cover"
+                          className="object-cover w-full h-full"
                         />
                       </div>
                       <div className="ml-4">

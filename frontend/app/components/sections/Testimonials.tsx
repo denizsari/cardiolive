@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { ProductImage } from '../ui/OptimizedImage';
 import { Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -92,13 +92,11 @@ export default function Testimonials() {
               <div className="bg-white rounded-lg p-6 shadow-sm h-full flex flex-col">
                 {/* Üst Kısım: Profil ve Değerlendirme */}
                 <div className="flex items-start mb-4">
-                  {/* Profil Görseli */}
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
-                    <Image
+                  {/* Profil Görseli */}                  <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
+                    <ProductImage
                       src={testimonial.image}
                       alt={testimonial.name}
-                      fill
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                     />
                   </div>
 

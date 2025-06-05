@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '../ui/OptimizedImage';
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { blogAPI } from '../../utils/api';
@@ -81,13 +81,11 @@ export default function BlogPreview() {
                 className="group"
               >
                 <article className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  {/* Görsel */}
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image
+                  {/* Görsel */}                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <ProductImage
                       src={getImageSrc(blog)}
                       alt={blog.title}
-                      fill
-                      className="object-cover transform group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-300 w-full h-full"
                     />
                   </div>
 

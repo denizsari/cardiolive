@@ -7,7 +7,7 @@ const ResponseHandler = require('../utils/responseHandler');
 const JWT_CONFIG = {
   access: {
     secret: process.env.JWT_SECRET || 'your-super-secret-access-key',
-    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m'
+    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '1h'
   },
   refresh: {
     secret: process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key',

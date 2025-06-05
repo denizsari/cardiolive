@@ -1,6 +1,44 @@
 {
+  "name": "cardiolive",
+  "version": "1.0.0",
+  "description": "Modern zeytinyağı e-ticaret platformu",
+  "main": "ecosystem.config.js",
+  "scripts": {
+    "install": "npm install --prefix frontend && npm install --prefix backend",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "start": "npm run start --prefix backend",
+    "test": "npm test --prefix backend && npm test --prefix frontend",
+    "test:e2e": "jest tests/e2e-integration.test.js",
+    "test:performance": "k6 run performance-tests/load-test.js",
+    "test:security": "node security-tests/penetration-test.js",
+    "clean": "rm -rf frontend/.next backend/dist node_modules/*/node_modules",
+    "lint": "npm run lint --prefix frontend && npm run lint --prefix backend",
+    "docker:dev": "docker-compose up -d",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "deploy": "bash deployment/deploy.sh"
+  },
+  "keywords": [
+    "e-commerce",
+    "zeytinyağı",
+    "next.js",
+    "express.js",
+    "typescript",
+    "mongodb"
+  ],
+  "author": "Cardiolive Team",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.9.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }

@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 // Load environment variables first
 dotenv.config();
@@ -19,6 +20,7 @@ const settingsRoutes = require('./src/routes/settingsRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const reviewRoutes = require('./src/routes/reviewRoutes');
 const wishlistRoutes = require('./src/routes/wishlistRoutes');
+const uploadRoutes = require('./src/routes/uploadRoutes');
 
 // Middleware imports
 const errorHandler = require('./src/middlewares/errorHandler');
@@ -45,6 +47,9 @@ app.use(cookieParser());
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files from frontend public directory
+app.use('/api/files', express.static(path.join(__dirname, '../frontend/public')));
 
 // Public rate limiting (TEMPORARILY DISABLED FOR TESTING)
 // app.use('/api/', generalLimiter);
@@ -102,6 +107,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Basic welcome route
 app.get('/', (req, res) => {

@@ -68,9 +68,9 @@ export function useAuth() {
       isLoading: false
     });
   };
-
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setAuthState({
       user: null,

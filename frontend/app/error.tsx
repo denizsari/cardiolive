@@ -11,10 +11,18 @@ export default function Error({
 }: {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
-  useEffect(() => {
+}) {  useEffect(() => {
     // Log the error to an error reporting service
     console.error('Application error:', error);
+    
+    // Send error to analytics
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'exception', {
+        description: error.message,
+        fatal: false,
+        error_id: error.digest,
+      });
+    }
   }, [error]);
 
   return (

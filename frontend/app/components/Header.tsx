@@ -48,9 +48,9 @@ export default function Header() {
     }
     setIsLoading(false);
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setUser(null);
     setIsUserMenuOpen(false);
@@ -86,6 +86,9 @@ export default function Header() {
             </Link>
             <Link href="/products" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
               Mağaza
+            </Link>
+            <Link href="/gallery" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+              Galeri
             </Link>
             <Link href="/blog" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
               Blog
@@ -252,8 +255,7 @@ export default function Header() {
         {/* Mobil Menü */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link 
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">              <Link 
                 href="/" 
                 className="block px-3 py-2 text-gray-700 hover:text-[#70BB1B] transition-colors"
                 onClick={closeMenus}
@@ -266,6 +268,13 @@ export default function Header() {
                 onClick={closeMenus}
               >
                 Mağaza
+              </Link>
+              <Link 
+                href="/gallery" 
+                className="block px-3 py-2 text-gray-700 hover:text-[#70BB1B] transition-colors"
+                onClick={closeMenus}
+              >
+                Galeri
               </Link>
               <Link 
                 href="/blog" 

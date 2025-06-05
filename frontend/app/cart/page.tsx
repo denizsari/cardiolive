@@ -3,9 +3,9 @@
 export const dynamic = 'force-dynamic';
 
 import React from 'react';
-import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import { useCart } from '../contexts/CartContext';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Button, { LinkButton } from '../components/ui/Button';
@@ -98,13 +98,11 @@ export default function CartPage() {  const { items, updateQuantity, removeItem,
                 </div>
 
                 <div className="space-y-4">                  {items.map((item) => (
-                    <div key={`${item._id}-${item.size}`} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-                      <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                        <Image
+                    <div key={`${item._id}-${item.size}`} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">                      <div className="relative w-20 h-20 rounded-lg overflow-hidden">
+                        <ProductImage
                           src={item.image}
                           alt={item.name}
-                          fill
-                          className="object-cover"
+                          className="object-cover w-full h-full"
                         />
                       </div>
                       

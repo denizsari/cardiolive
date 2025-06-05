@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
+import { ProductImage } from '../../components/ui/OptimizedImage';
 import Header from '../../components/Header';
 
 interface Blog {
@@ -127,12 +127,11 @@ export default function BlogDetail() {
           </h1>          <div className="flex items-center text-sm text-gray-500 mb-8">
             <span className="mr-4">Yazar: Cardiolive</span>
             <span>{formatDate(blog.date || blog.publishedAt)}</span>
-          </div><div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
-            <Image
+          </div>          <div className="relative aspect-[16/9] rounded-lg overflow-hidden mb-8">
+            <ProductImage
               src={getImageSrc(blog)}
               alt={blog.title}
-              fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
 

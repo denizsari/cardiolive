@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import { useCart } from '../contexts/CartContext';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { productAPI } from '../utils/api';
@@ -189,13 +189,11 @@ function ProductsContent() {
         {/* Ürün Listesi */}
         {!loading && !error && filteredProducts.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">          {filteredProducts.map(product => (
-            <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
-              <div className="relative aspect-square overflow-hidden">
-                <Image
+            <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group">              <div className="relative aspect-square overflow-hidden">
+                <ProductImage
                   src={getImageSrc(product.images)}
                   alt={product.name}
-                  fill
-                  className="object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full transform group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex gap-2">

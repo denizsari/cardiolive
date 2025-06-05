@@ -1,20 +1,18 @@
 'use client';
 
-import Image from 'next/image';
+import { ProductImage } from '../ui/OptimizedImage';
 import Link from 'next/link';
 
 export default function AboutPreview() {
   return (
-    <section className="relative bg-white py-16" style={{ fontFamily: 'var(--font-inter)' }}>
+    <section data-section="about" className="relative bg-white py-16" style={{ fontFamily: 'var(--font-inter)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Sol: Görsel */}
-          <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-            <Image
+          {/* Sol: Görsel */}          <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+            <ProductImage
               src="/about/olive-tree.jpg"
               alt="Cardiolive Zeytin Ağaçları"
-              fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
 

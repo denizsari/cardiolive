@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { ArrowLeft, Save, Upload, X, Package, DollarSign, FileText, Tag, Image as ImageIcon, ToggleLeft, ToggleRight } from 'lucide-react';
 import { FormInput, FormTextarea, FormSelect } from '../../../components/forms/FormComponents';
 import Button from '../../../components/ui/Button';
+import { FileUpload } from '../../../components/forms/FileUploadComponents';
+import { uploadAPI } from '../../../utils/api';
 
 interface ProductFormData {
   name: string;
@@ -358,15 +361,62 @@ export default function AdminProductFormClient() {
               step="0.1"
             />
           </div>
-        </div>
-
-        {/* Product Images */}
+        </div>        {/* Product Images */}
         <div className="bg-white p-6 rounded-lg border">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <ImageIcon className="text-purple-500 mr-2 h-5 w-5" />
               <h2 className="text-lg font-semibold">Product Images</h2>
             </div>
+          </div>          <FileUpload
+            label="Product Images"
+            accept="image/*"
+            multiple={true}
+            maxFiles={5}
+            maxSize={10 * 1024 * 1024} // 10MB
+            onFilesChange={(files) => {
+              // Update the UI to show selected files
+              console.log('Files changed:', files);
+            }}            uploadFunction={async (file) => {
+              try {
+                const uploadResult = await uploadAPI.uploadSingle(file);
+                setImageUrls(prev => [...prev, uploadResult.url]);
+                return uploadResult.url;
+              } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload image');
+                throw error;
+              }
+            }}
+            className="mb-4"
+          />
+          
+          {/* Display uploaded images */}
+          {imageUrls.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+              {imageUrls.map((url, index) => (
+                <div key={index} className="relative group">
+                  <Image
+                    src={url}
+                    alt={`Product image ${index + 1}`}
+                    width={200}
+                    height={150}
+                    className="w-full h-32 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImageUrl(index)}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Manual URL input as fallback */}
+          <div className="mt-4">
             <Button
               type="button"
               variant="secondary"
@@ -374,31 +424,33 @@ export default function AdminProductFormClient() {
               className="flex items-center space-x-2"
             >
               <Upload className="h-4 w-4" />
-              <span>Add Image URL</span>
+              <span>Add Image URL Manually</span>
             </Button>
-          </div>
-          
-          {imageUrls.map((url, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-3">
-              <div className="flex-1">
-                <FormInput
-                  placeholder="Enter image URL"
-                  value={url}
-                  onChange={(e) => updateImageUrl(index, e.target.value)}
-                />
+            
+            {imageUrls.some(url => url === '') && (
+              <div className="mt-3 space-y-2">
+                {imageUrls.map((url, index) => url === '' && (
+                  <div key={index} className="flex items-center space-x-2">
+                    <div className="flex-1">
+                      <FormInput
+                        placeholder="Enter image URL"
+                        value={url}
+                        onChange={(e) => updateImageUrl(index, e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      onClick={() => removeImageUrl(index)}
+                      className="p-2"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
-              {imageUrls.length > 1 && (
-                <Button
-                  type="button"
-                  variant="danger"
-                  onClick={() => removeImageUrl(index)}
-                  className="p-2"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          ))}
+            )}
+          </div>
         </div>
 
         {/* Product Features */}

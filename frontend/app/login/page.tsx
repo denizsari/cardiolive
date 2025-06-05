@@ -47,8 +47,11 @@ export default function LoginPage() {
       if (!response.ok) {
         throw new Error(data.message || 'Giriş işlemi başarısız');
       }      if (data.success) {
-        // Token'ı localStorage'a kaydet
+        // Token'ları localStorage'a kaydet
         localStorage.setItem('token', data.data.accessToken);
+        if (data.data.refreshToken) {
+          localStorage.setItem('refreshToken', data.data.refreshToken);
+        }
         localStorage.setItem('user', JSON.stringify(data.data.user));
         
         // Admin kullanıcıyı admin paneline, normal kullanıcıyı anasayfaya yönlendir

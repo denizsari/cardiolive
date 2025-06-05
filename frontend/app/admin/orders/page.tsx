@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '../../components/ui/OptimizedImage';
 import { Eye, Package } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -233,13 +233,11 @@ export default function AdminOrders() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col space-y-1">                      {order.items.slice(0, 2).map((item, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="relative w-8 h-8 rounded overflow-hidden">
-                            <Image
+                        <div key={index} className="flex items-center space-x-2">                          <div className="relative w-8 h-8 rounded overflow-hidden">
+                            <ProductImage
                               src={item.product.image || '/products/default.jpg'}
                               alt={item.product.name}
-                              fill
-                              className="object-cover"
+                              className="object-cover w-full h-full"
                             />
                           </div>
                           <span className="text-sm text-gray-900">

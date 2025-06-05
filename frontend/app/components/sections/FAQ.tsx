@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
-import Image from 'next/image';
+import { ProductImage } from '../ui/OptimizedImage';
 import Button from '../ui/Button';
 
 const faqs = [
@@ -35,13 +35,11 @@ export default function FAQ() {
     <section className="relative bg-[#F8F9FA] py-16" style={{ fontFamily: 'var(--font-inter)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Sol: Görsel */}
-          <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-            <Image
+          {/* Sol: Görsel */}          <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+            <ProductImage
               src="/about/olive-field.jpg"
               alt="Cardiolive Zeytin Bahçeleri"
-              fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
 

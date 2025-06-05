@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -10,13 +10,11 @@ export default function AboutUs() {
       <Header />
       
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Hakkımızda</h1>        <div className="flex flex-col md:flex-row items-start">
-          <div className="relative w-full md:w-1/3 h-64 md:h-auto md:aspect-square rounded-lg overflow-hidden shadow-md mb-4 md:mb-0 md:mr-8">
-            <Image 
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Hakkımızda</h1>        <div className="flex flex-col md:flex-row items-start">          <div className="relative w-full md:w-1/3 h-64 md:h-auto md:aspect-square rounded-lg overflow-hidden shadow-md mb-4 md:mb-0 md:mr-8">
+            <ProductImage 
               src="/about/about-image.jpg" 
               alt="Cardiolive" 
-              fill
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
           <div><p className="text-lg text-gray-700 mb-4">

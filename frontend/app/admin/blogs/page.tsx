@@ -3,9 +3,11 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
-import { blogAPI } from '@/utils/api';
+import { blogAPI, uploadAPI } from '@/utils/api';
 import Button from '@/components/ui/Button';
+import { FileUpload } from '@/components/forms/FileUploadComponents';
 
 interface Blog {
   _id: string;
@@ -170,18 +172,47 @@ export default function AdminBlogsPage() {
                 placeholder="Blog category"
                 required
               />
-            </div>
-            <div>
+            </div>            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Image URL
-              </label>
-              <input
-                type="url"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
-                required
-              />
+                Blog Image
+              </label>              <FileUpload
+                label="Blog Image"
+                accept="image/*"
+                multiple={false}
+                maxSize={10 * 1024 * 1024} // 10MB
+                onFilesChange={(files) => {
+                  // Update the form with the selected files
+                  console.log('Files changed:', files);
+                }}                uploadFunction={async (file) => {
+                  try {
+                    const uploadResult = await uploadAPI.uploadSingle(file);
+                    setFormData({ ...formData, image: uploadResult.url });
+                    return uploadResult.url;
+                  } catch (error) {
+                    setError('Failed to upload image');
+                    console.error('Upload error:', error);
+                    throw error;
+                  }
+                }}
+                className="mb-2"
+              />{formData.image && (
+                <div className="mt-2">
+                  <Image 
+                    src={formData.image} 
+                    alt="Blog preview" 
+                    width={128}
+                    height={80}
+                    className="w-32 h-20 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, image: '' })}
+                    className="mt-1 text-sm text-red-600 hover:text-red-800"
+                  >
+                    Remove image
+                  </button>
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 import Header from '../components/Header';
 import { blogAPI } from '../utils/api';
 
@@ -105,16 +105,10 @@ export default function BlogList() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map(blog => (              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <Link href={`/blog/${blog._id}`}>
-                  <div className="relative aspect-[16/9] overflow-hidden">                    <Image
+                <Link href={`/blog/${blog._id}`}>                  <div className="relative aspect-[16/9] overflow-hidden">                    <ProductImage
                       src={getImageSrc(blog)}
                       alt={blog.title || 'Blog görseli'}
-                      fill
-                      className="object-cover transform group-hover:scale-105 transition-transform duration-300"
-                      onError={() => {
-                        // Handle image load errors by using a fallback
-                        console.warn(`Failed to load image for blog: ${blog.title}`);
-                      }}
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-300 w-full h-full"
                     />
                   </div>
                 </Link>

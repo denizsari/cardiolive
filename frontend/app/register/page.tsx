@@ -72,12 +72,13 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         throw new Error(data.message || 'Kayıt işlemi başarısız');
-      }
-
-      if (data.success) {
-        // Token'ı localStorage'a kaydet
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      }      if (data.success) {
+        // Token'ları localStorage'a kaydet
+        localStorage.setItem('token', data.data.accessToken || data.token);
+        if (data.data.refreshToken || data.refreshToken) {
+          localStorage.setItem('refreshToken', data.data.refreshToken || data.refreshToken);
+        }
+        localStorage.setItem('user', JSON.stringify(data.data.user || data.user));
 
         // Ana sayfaya yönlendir
         router.push('/');

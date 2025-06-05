@@ -132,8 +132,7 @@ class UserService extends BaseService {
    * @param {string} refreshToken - Current refresh token
    * @returns {Promise<Object>} New tokens
    * @throws {Error} If refresh token is invalid
-   */
-  async refreshUserToken(refreshToken) {
+   */  async refreshUserToken(refreshToken) {
     try {
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
       const user = await this.findById(decoded.userId);
@@ -149,7 +148,11 @@ class UserService extends BaseService {
 
       logger.info('Token refreshed successfully', { userId: user._id });
 
-      return tokens;
+      const userObj = user.toObject();
+      delete userObj.password;
+      delete userObj.refreshToken;
+
+      return Object.assign({}, tokens, { user: userObj });
     } catch (error) {
       logger.error('Token refresh failed', { error: error.message });
       throw new Error('Token yenileme başarısız');

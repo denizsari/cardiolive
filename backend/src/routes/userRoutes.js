@@ -13,9 +13,10 @@ const {
   deleteUser, 
   changePassword,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  refreshToken
 } = require('../controllers/userController');
-const { authenticateToken, authorizeRoles, refreshTokens, logout } = require('../middlewares/auth');
+const { authenticateToken, authorizeRoles, logout } = require('../middlewares/auth');
 const { userValidation, validateUser, validateUserQuery } = require('../validations/userValidation');
 const rateLimiter = require('../middlewares/rateLimiter');
 
@@ -46,7 +47,7 @@ router.post('/reset-password',
 
 router.post('/refresh-token', 
   rateLimiter.authLimiter,
-  refreshTokens
+  refreshToken
 );
 
 // Protected routes

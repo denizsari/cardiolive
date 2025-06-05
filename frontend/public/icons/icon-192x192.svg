@@ -1,0 +1,7 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#0f172a"/>
+  <path d="M96 48C113.673 48 128 62.327 128 80C128 97.673 113.673 112 96 112C78.327 112 64 97.673 64 80C64 62.327 78.327 48 96 48Z" fill="#ef4444"/>
+  <path d="M96 80L96 144" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+  <path d="M76 124L116 124" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+  <text x="96" y="168" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">CardioLive</text>
+</svg>

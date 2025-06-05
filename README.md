@@ -1,6 +1,6 @@
 # 🫒 Cardiolive E-ticaret Platformu
 
-Modern Next.js ve Express.js ile geliştirilmiş tam özellikli zeytinyağı e-ticaret sistemi.
+Modern, temiz ve optimize edilmiş Next.js ve Express.js ile geliştirilmiş tam özellikli zeytinyağı e-ticaret sistemi.
 
 ![Cardiolive](https://img.shields.io/badge/Cardiolive-E--commerce-green)
 ![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)
@@ -8,6 +8,24 @@ Modern Next.js ve Express.js ile geliştirilmiş tam özellikli zeytinyağı e-t
 ![Node.js](https://img.shields.io/badge/Node.js-Express-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+
+## 📁 Proje Yapısı
+
+Bu proje temizlik işlemi geçirmiş, production-ready bir e-ticaret platformudur.
+
+```
+cardiolive/
+├── 📁 frontend/          # Next.js frontend uygulaması
+├── 📁 backend/           # Express.js API sunucusu
+├── 📁 docs/              # Organize edilmiş dokümantasyon
+│   ├── 📁 guides/        # Kurulum ve güvenlik rehberleri
+│   └── 📁 reports/       # Proje raporları ve analizler
+├── 📁 deployment/        # Deployment scripts
+├── 📁 monitoring/        # Prometheus, Grafana, Loki
+├── 📁 security/          # WAF, IDS, Security headers
+├── 📁 tests/             # E2E ve integration testler
+└── 📁 performance-tests/ # Yük ve stress testleri
+```
 
 ## ✨ Özellikler
 

@@ -13,7 +13,7 @@ import {
   Phone,
   Copy
 } from 'lucide-react';
-import Image from 'next/image';
+import { ProductImage } from '../ui/OptimizedImage';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
 
@@ -165,13 +165,11 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
           {/* Order Items */}
           <div className="space-y-4 mb-6">
             {order.items.map((item) => (
-              <div key={item._id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                  <Image
+              <div key={item._id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">                <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                  <ProductImage
                     src={item.image}
                     alt={item.name}
-                    fill
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
                 <div className="flex-1">

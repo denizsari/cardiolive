@@ -28,7 +28,7 @@ import {
   Search
 } from 'lucide-react';
 import { userAPI } from '../utils/api';
-import Image from 'next/image';
+import { ProductImage } from '../components/ui/OptimizedImage';
 
 interface UserData {
   _id: string;
@@ -591,14 +591,12 @@ export default function AccountPage() {
                                   <span className="font-medium text-[#70BB1B]">{formatPrice(order.total)}</span>
                                 </div>
 
-                                <div className="flex items-center gap-2">
-                                  {order.items.slice(0, 3).map((item) => (
+                                <div className="flex items-center gap-2">                                  {order.items.slice(0, 3).map((item) => (
                                     <div key={item._id} className="relative w-8 h-8 rounded overflow-hidden">
-                                      <Image
+                                      <ProductImage
                                         src={item.image}
                                         alt={item.name}
-                                        fill
-                                        className="object-cover"
+                                        className="object-cover w-full h-full"
                                       />
                                     </div>
                                   ))}

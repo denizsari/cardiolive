@@ -177,6 +177,43 @@ exports.resetPassword = async (req, res) => {
 };
 
 /**
+ * @desc Refresh access token
+ * @route POST /api/users/refresh-token
+ * @access Public
+ */
+exports.refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return ResponseHandler.badRequest(res, 'Refresh token gerekli');
+    }
+
+    const tokens = await UserService.refreshUserToken(refreshToken);
+
+    logger.logAuthEvent('token_refreshed', { 
+      userId: tokens.userId,
+      userAgent: req.headers['user-agent'],
+      ip: req.ip 
+    });
+
+    ResponseHandler.success(res, 'Token başarıyla yenilendi', tokens);
+  } catch (error) {
+    logger.logAuthEvent('token_refresh_failed', { 
+      reason: error.message,
+      userAgent: req.headers['user-agent'],
+      ip: req.ip 
+    });
+    
+    if (error.message === 'Geçersiz refresh token' || 
+        error.message === 'Token yenileme başarısız') {
+      return ResponseHandler.unauthorized(res, error.message);
+    }
+    ResponseHandler.error(res, 'Token yenileme hatası', error);
+  }
+};
+
+/**
  * @desc Get user count (Admin)
  * @route GET /api/admin/users/count
  * @access Private/Admin

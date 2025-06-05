@@ -97,28 +97,150 @@ interface UpdateProfileResponse {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+// Token refresh state
+interface TokenRefreshState {
+  isRefreshing: boolean;
+  failedQueue: Array<{
+    resolve: (token: string) => void;
+    reject: (error: Error) => void;
+  }>;
+}
+
+const tokenRefreshState: TokenRefreshState = {
+  isRefreshing: false,
+  failedQueue: []
+};
+
+// Helper to decode JWT and check expiration
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    // Check if token expires in the next 5 minutes (300 seconds)
+    return payload.exp <= (currentTime + 300);
+  } catch {
+    return true;
+  }
+};
+
 class ApiClient {
   private baseURL: string;
 
   constructor(baseURL: string) {
     this.baseURL = baseURL;
-  }
-  private getAuthHeaders(): HeadersInit {
+  }  private async getValidToken(): Promise<string | null> {
     const token = localStorage.getItem('token');
     
-    // Basic token validation before sending
-    if (token && (!token.includes('.') || token.split('.').length !== 3)) {
+    if (!token) {
+      return null;
+    }
+
+    // Basic token format validation
+    if (!token.includes('.') || token.split('.').length !== 3) {
       console.warn('Invalid token format detected, removing from localStorage');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      return { 'Content-Type': 'application/json' };
+      return null;
+    }
+
+    // Check if token is expired or will expire soon
+    if (!isTokenExpired(token)) {
+      return token;
+    }
+
+    // Token is expired or will expire soon, try to refresh
+    return await this.refreshTokenIfNeeded();
+  }
+
+  private async refreshTokenIfNeeded(): Promise<string | null> {
+    // If already refreshing, wait for the result
+    if (tokenRefreshState.isRefreshing) {
+      return new Promise((resolve, reject) => {
+        tokenRefreshState.failedQueue.push({ resolve, reject });
+      });
+    }
+
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      // No refresh token available, user needs to login again
+      this.handleAuthFailure();
+      return null;
+    }
+
+    tokenRefreshState.isRefreshing = true;
+
+    try {
+      const response = await fetch(`${this.baseURL}/api/users/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken })
+      });
+
+      if (!response.ok) {
+        throw new Error('Token refresh failed');
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.data.accessToken) {
+        // Store new tokens
+        localStorage.setItem('token', result.data.accessToken);
+        if (result.data.refreshToken) {
+          localStorage.setItem('refreshToken', result.data.refreshToken);
+        }
+
+        // Process the queue
+        tokenRefreshState.failedQueue.forEach(({ resolve }) => {
+          resolve(result.data.accessToken);
+        });
+        
+        return result.data.accessToken;
+      } else {
+        throw new Error('Invalid refresh response');
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      
+      // Process the failed queue
+      tokenRefreshState.failedQueue.forEach(({ reject }) => {
+        reject(error as Error);
+      });
+
+      this.handleAuthFailure();
+      return null;
+    } finally {
+      tokenRefreshState.isRefreshing = false;
+      tokenRefreshState.failedQueue.length = 0;
+    }
+  }
+
+  private handleAuthFailure(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    
+    // Redirect to login if not already there
+    if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+      window.location.href = '/login';
+    }
+  }
+
+  private async getAuthHeaders(isFormData: boolean = false): Promise<HeadersInit> {
+    const token = await this.getValidToken();
+    
+    const headers: HeadersInit = {};
+    
+    // Don't set Content-Type for FormData - let browser set it with boundary
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
     }
     
-    return {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-    };
-  }  private async handleResponse<T>(response: Response): Promise<T> {
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
+    return headers;
+  }private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: 'Network error' }));
       throw new Error(error.message || `HTTP ${response.status}`);
@@ -134,42 +256,53 @@ class ApiClient {
     // Return the full result to let individual API functions extract what they need
     return result as T;
   }
-
   async get<T>(endpoint: string): Promise<T> {
+    const headers = await this.getAuthHeaders();
     const response = await fetch(`${this.baseURL}${endpoint}`, {
-      headers: this.getAuthHeaders(),
+      headers,
     });
     return this.handleResponse<T>(response);
   }
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
+
+  async post<T>(endpoint: string, data?: unknown, options?: { headers?: HeadersInit }): Promise<T> {
+    const isFormData = data instanceof FormData;
+    const headers = {
+      ...(await this.getAuthHeaders(isFormData)),
+      ...options?.headers
+    };
+    
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'POST',
-      headers: this.getAuthHeaders(),
-      body: data ? JSON.stringify(data) : undefined,
+      headers,
+      body: isFormData ? data : (data ? JSON.stringify(data) : undefined),
     });
     return this.handleResponse<T>(response);
   }
 
   async put<T>(endpoint: string, data?: unknown): Promise<T> {
+    const headers = await this.getAuthHeaders();
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'PUT',
-      headers: this.getAuthHeaders(),
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
     return this.handleResponse<T>(response);
   }
+
   async delete<T>(endpoint: string): Promise<T> {
+    const headers = await this.getAuthHeaders();
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'DELETE',
-      headers: this.getAuthHeaders(),
+      headers,
     });
     return this.handleResponse<T>(response);
   }
 
   async patch<T>(endpoint: string, data?: unknown): Promise<T> {
+    const headers = await this.getAuthHeaders();
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'PATCH',
-      headers: this.getAuthHeaders(),
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
     return this.handleResponse<T>(response);
@@ -192,9 +325,8 @@ export const authAPI = {
   // CRITICAL MISSING ENDPOINTS - IMPLEMENTING NOW
   resetPassword: (token: string, newPassword: string) =>
     apiClient.post<APIResponse<string>>('/api/users/reset-password', { token, newPassword }),
-  
-  refreshToken: () =>
-    apiClient.post<AuthResponse>('/api/users/refresh-token'),
+    refreshToken: (refreshToken: string) =>
+    apiClient.post<AuthResponse>('/api/users/refresh-token', { refreshToken }),
   
   logout: () =>
     apiClient.post<APIResponse<string>>('/api/users/logout'),
@@ -506,4 +638,54 @@ export const settingsAPI = {
     
   resetSettings: () => 
     apiClient.post<APIResponse<string>>('/api/settings/reset'),
+};
+
+// Upload API
+interface UploadResponse {
+  filename: string;
+  originalName: string;
+  size: number;
+  mimetype: string;
+  path: string;
+  url: string;
+}
+
+export const uploadAPI = {
+  uploadSingle: async (file: File): Promise<UploadResponse> => {
+    const formData = new FormData();
+    formData.append('image', file); // Backend expects 'image' field name
+    
+    const response = await apiClient.post<{ success: boolean; data: UploadResponse }>('/api/upload/single', formData);
+    
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error('Upload failed');
+    }
+  },
+  
+  uploadMultiple: async (files: File[]): Promise<UploadResponse[]> => {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('images', file); // Backend expects 'images' field name for multiple
+    });
+    
+    const response = await apiClient.post<{ success: boolean; data: UploadResponse[] }>('/api/upload/multiple', formData);
+    
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error('Upload failed');
+    }
+  },
+  
+  deleteFile: async (filename: string, folder?: string): Promise<void> => {
+    const url = folder ? `/api/upload/${filename}?folder=${folder}` : `/api/upload/${filename}`;
+    await apiClient.delete(url);
+  },
+    listFiles: async (folder?: string) => {
+    const url = folder ? `/api/upload/list?folder=${folder}` : '/api/upload/list';
+    const response = await apiClient.get<{ success: boolean; data: { files: UploadResponse[] } }>(url);
+    return response.data.files;
+  }
 };
