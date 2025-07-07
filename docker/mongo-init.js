@@ -72,7 +72,7 @@ print("✅ Settings collection indexes created");
 const initialSettings = [
   {
     key: "site_name",
-    value: "Cardiolive E-commerce",
+          value: "Kardiyolive E-commerce",
     category: "general",
     description: "Site name displayed in headers and titles"
   },
@@ -84,7 +84,7 @@ const initialSettings = [
   },
   {
     key: "contact_email",
-    value: "info@cardiolive.com",
+          value: "info@kardiyolive.com",
     category: "contact",
     description: "Primary contact email address"
   },

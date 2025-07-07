@@ -1,13 +1,80 @@
-# 🫒 Cardiolive E-ticaret Platformu
+# 🫒 Kardiyolive E-ticaret Platformu
 
 Modern, temiz ve optimize edilmiş Next.js ve Express.js ile geliştirilmiş tam özellikli zeytinyağı e-ticaret sistemi.
 
-![Cardiolive](https://img.shields.io/badge/Cardiolive-E--commerce-green)
+![Kardiyolive](https://img.shields.io/badge/Kardiyolive-E--commerce-green)
 ![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)
 ![React](https://img.shields.io/badge/React-19.0.0-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+![Production](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
+
+## 🚀 Production Ready!
+
+Kardiyolive e-ticaret platformu artık **100% production-ready** durumda! Tüm güvenlik, performans ve deployment optimizasyonları tamamlanmış, enterprise-grade bir e-ticaret sistemidir.
+
+## 📦 Hızlı Deployment
+
+### 🔥 Tek Komutla Production Deployment
+```bash
+# Otomatik production deployment
+./scripts/production-deployment.sh
+
+# Environment ayarları
+cp .env.production.template .env
+# .env dosyasını düzenleyip production değerlerinizi girin
+
+# Database setup
+node backend/scripts/setup-production-db.js
+```
+
+### 🛠️ Development Modu
+```bash
+# Her iki uygulamayı da aynı anda development modunda çalıştır
+npm run dev
+
+# Alternatif komutlar:
+npm run start:dev    # Aynı işlevi yapar
+npm run start:both   # Production modunda çalıştır
+```
+
+### 📋 Deployment Guides
+- 📖 **[Production Deployment Guide](PRODUCTION_DEPLOYMENT_GUIDE.md)** - Kapsamlı production rehberi
+- 🔧 **[Installation Guide](docs/guides/KURULUM_REHBERI.md)** - Detaylı kurulum rehberi
+- 🔐 **[Security Guide](docs/guides/GUVENLIK_REHBERI.md)** - Güvenlik yapılandırması
+
+## 🚀 Hızlı Başlangıç
+
+### Tek Komutla Çalıştır
+```bash
+# Her iki uygulamayı da aynı anda development modunda çalıştır
+npm run dev
+
+# Alternatif komutlar:
+npm run start:dev    # Aynı işlevi yapar
+npm run start:both   # Production modunda çalıştır
+```
+
+### Ayrı Ayrı Çalıştır
+```bash
+# Sadece frontend
+npm run frontend
+
+# Sadece backend  
+npm run backend
+```
+
+### Kurulum
+```bash
+# Tüm bağımlılıkları yükle
+npm run install:all
+
+# Veya manuel olarak:
+npm install                    # Ana klasör bağımlılıkları
+npm install --prefix frontend  # Frontend bağımlılıkları
+npm install --prefix backend   # Backend bağımlılıkları
+```
 
 ## 📁 Proje Yapısı
 
@@ -86,8 +153,8 @@ cardiolive/
 
 ### 1. Projeyi Klonlayın
 ```bash
-git clone https://github.com/your-username/cardiolive.git
-cd cardiolive
+git clone https://github.com/your-username/kardiyolive.git
+cd kardiyolive
 ```
 
 ### 2. Backend Kurulumu
@@ -126,7 +193,7 @@ npm run dev
 
 ### Backend Environment Variables (.env)
 ```env
-MONGO_URI=mongodb://localhost:27017/cardiolive
+MONGO_URI=mongodb://localhost:27017/kardiyolive
 JWT_SECRET=your_super_secure_jwt_secret
 JWT_EXPIRE=30d
 PORT=5000
@@ -201,7 +268,7 @@ cardiolive/
 ## 🧪 Test Kullanıcıları
 
 ### Admin Kullanıcı
-- **Email**: admin@cardiolive.com
+- **Email**: admin@kardiyolive.com
 - **Password**: admin123
 - **Role**: admin
 
@@ -313,7 +380,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 - **Proje Sahibi**: [Your Name]
 - **Email**: your.email@example.com
-- **Website**: [https://cardiolive.com](https://cardiolive.com)
+- **Website**: [https://kardiyolive.com](https://kardiyolive.com)
 
 ## 🙏 Teşekkürler
 

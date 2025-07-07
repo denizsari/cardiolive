@@ -10,6 +10,7 @@ import { EnhancedErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./components/ui/Toast";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import { Analytics } from "./components/Analytics";
+import WhatsAppWidget from './components/WhatsAppWidget';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -135,7 +136,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     },
                   }}
                 />
+                {/* WhatsApp Widget - Global */}
+                <WhatsAppWidget 
+                  phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
+                  message="Merhaba! Kardiyolive ürünleri hakkında bilgi almak istiyorum."
+                  position="bottom-right"
+                  showPopup={true}
+                />
               </ToastProvider>
+              
+              {/* WhatsApp Widget - Global */}
+              <WhatsAppWidget 
+                phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
+                message="Merhaba! Kardiyolive ürünleri hakkında bilgi almak istiyorum."
+                position="bottom-right"
+                showPopup={true}
+              />
             </CartProvider>
           </ReactQueryProvider>
         </EnhancedErrorBoundary>

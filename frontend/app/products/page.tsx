@@ -11,6 +11,7 @@ import { ShoppingCart, Eye } from 'lucide-react';
 import { productAPI } from '../utils/api';
 import { Product } from '../types';
 import Button from '../components/ui/Button';
+import OrderDisabledNotice from '../components/OrderDisabledNotice';
 
 export const dynamic = 'force-dynamic';
 
@@ -235,8 +236,24 @@ function ProductsContent() {
 // Main component with Suspense wrapper
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProductsContent />
-    </Suspense>
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Premium Ürünlerimiz
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Doğanın en kaliteli ürünlerini özenle seçtik
+          </p>
+        </div>
+        
+        {/* Order Disabled Notice */}
+        <OrderDisabledNotice variant="banner" className="mb-8" />
+        
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProductsContent />
+        </Suspense>
+      </div>
+    </div>
   );
 }

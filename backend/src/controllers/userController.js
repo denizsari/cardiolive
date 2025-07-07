@@ -12,9 +12,13 @@ exports.register = async (req, res) => {  try {
 
     const result = await UserService.registerUser({ name, email, password, phoneNumber: phone });
 
-    logger.logAuthEvent('user_registered', { userId: result?._id, email, userAgent: req.headers['user-agent'] });
+    logger.logAuthEvent('user_registered', { 
+      userId: result?.user?._id, 
+      email, 
+      userAgent: req.headers['user-agent'] 
+    });
 
-    ResponseHandler.created(res, 'Kullanıcı başarıyla kaydedildi', { user: result });  } catch (error) {
+    ResponseHandler.created(res, 'Kullanıcı başarıyla kaydedildi', result);  } catch (error) {
     logger.error('User registration error:', { 
       email: req.body?.email, 
       error: error.message, 

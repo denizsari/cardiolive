@@ -1,5 +1,5 @@
 {
-  "name": "cardiolive",
+  "name": "kardiyolive",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -78,14 +78,14 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/denizsari/cardiolive.git"
+    "url": "git+https://github.com/denizsari/kardiyolive.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/denizsari/cardiolive/issues"
+    "url": "https://github.com/denizsari/kardiyolive/issues"
   },
-  "homepage": "https://github.com/denizsari/cardiolive#readme"
+  "homepage": "https://github.com/denizsari/kardiyolive#readme"
 }

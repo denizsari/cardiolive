@@ -11,6 +11,13 @@ import OptimizedImage from '../../components/ui/OptimizedImage';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../contexts/CartContext';
 import Button from '../../components/ui/Button';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft, Star, Heart, Truck, Shield, Award, MessageCircle } from 'lucide-react';
+import WhatsAppWidget from '../../components/WhatsAppWidget';
+import OrderDisabledNotice from '../../components/OrderDisabledNotice';
 
 // Bu veriyi normalde API'den alacağız
 const product = {
@@ -36,7 +43,87 @@ const product = {
   ]
 };
 
-export default function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
+// This would typically come from your API
+async function getProduct(slug: string) {
+  // Simulated product data
+  const products = [
+    {
+      id: '1',
+      name: 'Premium Soğuk Sıkım Zeytinyağı 500ml',
+      slug: 'premium-soguk-sikim-zeytinyagi-500ml',
+      price: '₺89,90',
+      originalPrice: '₺99,90',
+      image: '/images/products/olive-oil-500ml.jpg',
+      images: [
+        '/images/products/olive-oil-500ml.jpg',
+        '/images/products/olive-oil-500ml-2.jpg',
+        '/images/products/olive-oil-500ml-3.jpg'
+      ],
+      description: 'Ege\'nin bereketli topraklarından özenle hasat edilen zeytinlerden elde edilen premium kalite soğuk sıkım zeytinyağı.',
+      longDescription: `
+        Kardiyolive Premium Soğuk Sıkım Zeytinyağı, Ege bölgesinin en kaliteli zeytinlerinden özel soğuk sıkım yöntemiyle üretilmektedir. 
+        
+        18°C altında işlenen zeytinlerimiz, tüm doğal vitaminlerini ve antioksidanlarını korur. Her damla, doğanın saf tadını sofranıza getirir.
+        
+        Özellikler:
+        • %100 Doğal ve Organik
+        • Soğuk Sıkım Teknolojisi
+        • Antioksidan Açısından Zengin
+        • Kimyasal Katkı İçermez
+        • Cam Şişede Korunmuş Kalite
+      `,
+      category: 'Zeytinyağı',
+      stock: 45,
+      rating: 4.8,
+      reviewCount: 127,
+      features: [
+        'Soğuk sıkım yöntemiyle üretilmiştir',
+        'Antioksidan açısından zengindir',
+        '%100 doğal ve katkısızdır',
+        'Cam şişede uzun ömürlüdür'
+      ],
+      nutritionInfo: {
+        energy: '884 kcal',
+        fat: '100g',
+        saturatedFat: '14g',
+        carbs: '0g',
+        protein: '0g',
+        vitaminE: '14mg'
+      }
+    },
+    // Add more products as needed
+  ];
+
+  return products.find(product => product.slug === slug);
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const product = await getProduct(params.slug);
+  
+  if (!product) {
+    return {
+      title: 'Ürün Bulunamadı'
+    };
+  }
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.image],
+    },
+  };
+}
+
+export default async function ProductDetail({ params }: { params: { slug: string } }) {
+  const product = await getProduct(params.slug);
+
+  if (!product) {
+    notFound();
+  }
+
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -72,110 +159,202 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
   };
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
-      <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-green-600">Ana Sayfa</Link>
+          <span>/</span>
+          <Link href="/products" className="hover:text-green-600">Ürünler</Link>
+          <span>/</span>
+          <span className="text-gray-800">{product.name}</span>
+        </nav>
+
+        {/* Back Button */}
+        <Link 
+          href="/products" 
+          className="inline-flex items-center text-green-600 hover:text-green-700 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Ürünlere Geri Dön
+        </Link>
+
+        {/* Order Disabled Notice */}
+        <OrderDisabledNotice variant="banner" className="mb-8" />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Sol: Ürün Görselleri */}
-          <div className="space-y-4">            <div className="relative aspect-square rounded-lg overflow-hidden">
-              <OptimizedImage
-                src={product.images[selectedImage]}
+          {/* Product Images */}
+          <div className="space-y-4">
+            <div className="aspect-square relative bg-white rounded-lg overflow-hidden shadow-lg">
+              <Image
+                src={product.image}
                 alt={product.name}
                 fill
                 className="object-cover"
+                priority
               />
+              {product.originalPrice && (
+                <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
+                  İndirim
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-3 gap-4">              {product.images.map((image, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className={`relative aspect-square rounded-lg overflow-hidden p-0 ${
-                    selectedImage === index ? 'ring-2 ring-[#70BB1B]' : ''
-                  }`}
-                  onClick={() => setSelectedImage(index)}                >
-                  <OptimizedImage
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </Button>
-              ))}
-            </div>
+            
+            {/* Thumbnail Images */}
+            {product.images && product.images.length > 1 && (
+              <div className="grid grid-cols-3 gap-2">
+                {product.images.slice(1).map((image, index) => (
+                  <div key={index} className="aspect-square relative bg-white rounded overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+                    <Image
+                      src={image}
+                      alt={`${product.name} ${index + 2}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Sağ: Ürün Bilgileri */}
+          {/* Product Info */}
           <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-            <p className="text-2xl font-bold text-[#70BB1B]">{selectedSize.price} TL</p>
-            <p className="text-gray-600">{product.description}</p>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+              <p className="text-gray-600">{product.description}</p>
+            </div>
 
-            {/* Özellikler */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Özellikler</h3>
-              <ul className="list-disc list-inside space-y-2 text-gray-600">
+            {/* Rating */}
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-5 h-5 ${
+                      i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600">
+                {product.rating} ({product.reviewCount} değerlendirme)
+              </span>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center space-x-3">
+              <span className="text-3xl font-bold text-green-600">{product.price}</span>
+              {product.originalPrice && (
+                <span className="text-xl text-gray-500 line-through">{product.originalPrice}</span>
+              )}
+            </div>
+
+            {/* Stock Status */}
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-600">Stokta ({product.stock} adet)</span>
+            </div>
+
+            {/* WhatsApp Order Section */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                <MessageCircle className="w-5 h-5 mr-2 text-green-600" />
+                WhatsApp ile Sipariş
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Bu ürünü WhatsApp üzerinden sipariş edebilirsiniz. 
+                Kargo seçenekleri ve ödeme yöntemleri hakkında detaylı bilgi alın.
+              </p>
+              <WhatsAppWidget
+                productName={product.name}
+                productPrice={product.price}
+                message={`Merhaba! "${product.name}" ürününü sipariş etmek istiyorum. (Fiyat: ${product.price})`}
+                showPopup={false}
+                className="relative"
+              />
+            </div>
+
+            {/* Features */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-gray-800">Ürün Özellikleri</h3>
+              <ul className="space-y-2">
                 {product.features.map((feature, index) => (
-                  <li key={index}>{feature}</li>
+                  <li key={index} className="flex items-start">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <span className="text-gray-600">{feature}</span>
+                  </li>
                 ))}
               </ul>
             </div>
 
-            {/* Boyut Seçimi */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Boyut Seçimi</h3>              <div className="flex flex-wrap gap-3">
-                {product.sizes.map((size) => (
-                  <Button
-                    key={size.value}
-                    variant="outline"
-                    className={`px-4 py-2 rounded-full border-2 ${
-                      selectedSize.value === size.value
-                        ? 'border-[#70BB1B] text-[#70BB1B]'
-                        : 'border-gray-300 text-gray-600 hover:border-[#70BB1B] hover:text-[#70BB1B]'
-                    }`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size.value}
-                  </Button>
-                ))}
+            {/* Trust Badges */}
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-200">
+              <div className="text-center">
+                <Truck className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">Hızlı Kargo</p>
+              </div>
+              <div className="text-center">
+                <Shield className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">Güvenli Ödeme</p>
+              </div>
+              <div className="text-center">
+                <Award className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">Kalite Garantisi</p>
               </div>
             </div>
-
-            {/* Miktar ve Sepete Ekle */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">                <div className="flex items-center border-2 border-[#70BB1B] rounded-full">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 text-[#70BB1B]"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  >
-                    <Minus size={20} />
-                  </Button>                  <span className="w-12 text-center text-[#70BB1B]">{quantity}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 text-[#70BB1B]"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    <Plus size={20} />
-                  </Button>                </div>                  <Button 
-                  className="flex-1 bg-[#70BB1B] text-white py-3 px-8 rounded-full hover:bg-opacity-90 transition-colors"
-                  onClick={handleAddToCart}
-                >
-                  Sepete Ekle
-                </Button>
-              </div></div>
           </div>
         </div>
 
-        {/* Reviews Section */}        <div className="mt-16">          <ReviewsSection
-            productId={resolvedParams?.slug || 'default'} // Using slug as productId for now
-            isLoggedIn={isLoggedIn}
-            userToken={token || undefined}
-          />
+        {/* Product Details Tabs */}
+        <div className="mt-16">
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Ürün Detayları</h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Description */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Açıklama</h3>
+                <div className="text-gray-600 whitespace-pre-line leading-relaxed">
+                  {product.longDescription}
+                </div>
+              </div>
+
+              {/* Nutrition Info */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Beslenme Değerleri (100g)</h3>
+                <table className="w-full text-sm">
+                  <tbody className="space-y-2">
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Enerji</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.energy}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Yağ</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.fat}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Doymuş Yağ</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.saturatedFat}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Karbonhidrat</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.carbs}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Protein</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.protein}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 text-gray-600">Vitamin E</td>
+                      <td className="py-2 text-right font-medium">{product.nutritionInfo.vitaminE}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

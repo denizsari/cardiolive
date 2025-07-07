@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'cardiolive-api',
+      name: 'kardiyolive-api',
       script: 'server.js',
       cwd: './backend',
       instances: 'max',
@@ -24,7 +24,7 @@ module.exports = {
       min_uptime: '10s'
     },
     {
-      name: 'cardiolive-frontend',
+      name: 'kardiyolive-frontend',
       script: 'npm',
       args: 'start',
       cwd: './frontend',

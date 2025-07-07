@@ -1,4 +1,4 @@
-# Production Docker Compose Configuration for Cardiolive E-commerce Platform
+# Production Docker Compose Configuration for Kardiyolive E-commerce Platform
 # Optimized for production deployment with monitoring and security
 
 version: '3.8'
@@ -7,18 +7,18 @@ services:
   # MongoDB Database
   mongo:
     image: mongo:6.0
-    container_name: cardiolive-mongo
+    container_name: kardiyolive-mongo
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-strongpassword}
-      MONGO_INITDB_DATABASE: cardiolive
+      MONGO_INITDB_DATABASE: kardiyolive
     volumes:
       - mongo_data:/data/db
       - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./logs/mongodb:/var/log/mongodb
     networks:
-      - cardiolive-network
+      - kardiyolive-network
     ports:
       - "27017:27017"
     command: ["mongod", "--logpath", "/var/log/mongodb/mongod.log", "--logappend"]
@@ -31,14 +31,14 @@ services:
   # Redis Cache
   redis:
     image: redis:7-alpine
-    container_name: cardiolive-redis
+    container_name: kardiyolive-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
       - ./logs/redis:/var/log/redis
     networks:
-      - cardiolive-network
+      - kardiyolive-network
     ports:
       - "6379:6379"
     healthcheck:
@@ -53,13 +53,13 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: production
-    image: ${REGISTRY:-cardiolive}/backend:${IMAGE_TAG:-latest}
-    container_name: cardiolive-backend
+    image: ${REGISTRY:-kardiyolive}/backend:${IMAGE_TAG:-latest}
+    container_name: kardiyolive-backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 5000
-      MONGO_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-strongpassword}@mongo:27017/cardiolive?authSource=admin
+      MONGO_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-strongpassword}@mongo:27017/kardiyolive?authSource=admin
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRE: ${JWT_EXPIRE:-7d}
@@ -70,7 +70,7 @@ services:
       - ./logs/backend:/app/logs
       - ./uploads:/app/uploads
     networks:
-      - cardiolive-network
+      - kardiyolive-network
     ports:
       - "5000:5000"
     depends_on:
@@ -91,8 +91,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: production
-    image: ${REGISTRY:-cardiolive}/frontend:${IMAGE_TAG:-latest}
-    container_name: cardiolive-frontend
+    image: ${REGISTRY:-kardiyolive}/frontend:${IMAGE_TAG:-latest}
+    container_name: kardiyolive-frontend
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -101,7 +101,7 @@ services:
     volumes:
       - ./logs/frontend:/app/logs
     networks:
-      - cardiolive-network
+      - kardiyolive-network
     ports:
       - "3000:3000"
     depends_on:
@@ -281,7 +281,7 @@ services:
 
 # Networks
 networks:
-  cardiolive-network:
+  kardiyolive-network:
     driver: bridge
     ipam:
       config:

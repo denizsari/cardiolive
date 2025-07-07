@@ -10,7 +10,7 @@ const path = require('path');
 dotenv.config();
 
 // Logger import
-const logger = require('./src/utils/logger');
+const { logger } = require('./src/utils/logger');
 
 // Route imports
 const userRoutes = require('./src/routes/userRoutes');
@@ -21,6 +21,7 @@ const settingsRoutes = require('./src/routes/settingsRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const reviewRoutes = require('./src/routes/reviewRoutes');
 const uploadRoutes = require('./src/routes/uploadRoutes');
+const wishlistRoutes = require('./src/routes/wishlistRoutes');
 
 // Middleware imports
 const errorHandler = require('./src/middlewares/errorHandler');
@@ -50,7 +51,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Serve static files from frontend public directory
 app.use('/api/files', express.static(path.join(__dirname, '../frontend/public')));
 
-// Public rate limiting (TEMPORARILY DISABLED FOR TESTING)
+// Apply rate limiting (TEMPORARILY DISABLED FOR DEBUGGING)
+// const { generalLimiter } = require('./src/middlewares/rateLimiter');
 // app.use('/api/', generalLimiter);
 
 // Logging middleware
@@ -69,15 +71,19 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // MongoDB connection with fallback for production testing
+console.log('🔍 DEBUG: About to connect to MongoDB...');
+console.log('🔍 DEBUG: MONGO_URI exists:', !!process.env.MONGO_URI);
 logger.info('Connecting to MongoDB...');
 let dbConnected = false;
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
+  console.log('✅ MongoDB connected successfully');
   logger.info('MongoDB connected successfully');
   dbConnected = true;
 })
 .catch(err => {
+  console.error('❌ MongoDB connection error:', err.message);
   logger.error('MongoDB connection error:', err);
   logger.info('⚠️  Database connection failed - Please check your MongoDB Atlas IP whitelist');
   logger.info('📖 Guide: https://www.mongodb.com/docs/atlas/security-whitelist/');
@@ -106,12 +112,22 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+
+// app.use('/api/products', productRoutes);
+// app.use('/api/blogs', blogRoutes);
+// app.use('/api/orders', orderRoutes);
+// app.use('/api/settings', settingsRoutes);
+// app.use('/api/payments', paymentRoutes);
+// app.use('/api/reviews', reviewRoutes);
+// app.use('/api/upload', uploadRoutes);
+// app.use('/api/wishlist', wishlistRoutes);
 
 // Basic welcome route
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Welcome to the Cardiolive API',
+    message: 'Welcome to the Kardiyolive API',
     version: '1.0.0',    endpoints: {
       health: '/health',
       api: '/api',
@@ -155,7 +171,9 @@ process.on('SIGINT', async () => {
 });
 
 // Start server
+console.log('🚀 Starting server...');
 const server = app.listen(PORT, () => {
+  console.log(`✅ Server started on port ${PORT}`);
   logger.info(`🚀 Server is running on http://localhost:${PORT}`);
   logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
   logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
@@ -164,6 +182,7 @@ const server = app.listen(PORT, () => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, _promise) => {
+  console.error('❌ Unhandled Promise Rejection:', err.message);
   logger.error('Unhandled Promise Rejection:', err.message);
   server.close(() => {
     process.exit(1);

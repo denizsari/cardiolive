@@ -1,11 +1,11 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../server');
-const User = require('../src/models/User');
-const Product = require('../src/models/Product');
-const Order = require('../src/models/Order');
-const Blog = require('../src/models/Blog');
-const Review = require('../src/models/Review');
+const User = require('../src/models/userModel');
+const Product = require('../src/models/productModel');
+const Order = require('../src/models/orderModel');
+const Blog = require('../src/models/blogModel');
+const Review = require('../src/models/reviewModel');
 
 describe('Cardiolive API Integration Tests', () => {
   let authToken;
@@ -17,11 +17,7 @@ describe('Cardiolive API Integration Tests', () => {
   let testBlog;
 
   beforeAll(async () => {
-    // Connect to test database
-    const mongoUri = process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/cardiolive_test';
-    await mongoose.connect(mongoUri);
-    
-    // Clean test database
+    // Clean test database - connection is handled by setup.js
     await User.deleteMany({});
     await Product.deleteMany({});
     await Order.deleteMany({});
@@ -30,9 +26,12 @@ describe('Cardiolive API Integration Tests', () => {
   });
 
   afterAll(async () => {
-    // Clean up and close connections
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
+    // Clean up database - connection close is handled by setup.js
+    await User.deleteMany({});
+    await Product.deleteMany({});
+    await Order.deleteMany({});
+    await Blog.deleteMany({});
+    await Review.deleteMany({});
   });
 
   describe('Authentication Endpoints', () => {
@@ -41,28 +40,28 @@ describe('Cardiolive API Integration Tests', () => {
         const userData = {
           name: 'Test User',
           email: 'test@example.com',
-          password: 'password123'
+          password: 'Password123'
         };
 
         const response = await request(app)
           .post('/api/users/register')
-          .send(userData)
-          .expect(201);
+          .send(userData);
 
+        expect(response.status).toBe(201);
         expect(response.body.success).toBe(true);
-        expect(response.body.token).toBeDefined();
-        expect(response.body.user.email).toBe(userData.email);
-        expect(response.body.user.password).toBeUndefined();
+        expect(response.body.data.accessToken).toBeDefined();
+        expect(response.body.data.user.email).toBe(userData.email);
+        expect(response.body.data.user.password).toBeUndefined();
         
-        authToken = response.body.token;
-        testUser = response.body.user;
+        authToken = response.body.data.accessToken;
+        testUser = response.body.data.user;
       });
 
       it('should fail with duplicate email', async () => {
         const userData = {
           name: 'Test User 2',
           email: 'test@example.com',
-          password: 'password123'
+          password: 'Password123'
         };
 
         const response = await request(app)
@@ -78,7 +77,7 @@ describe('Cardiolive API Integration Tests', () => {
         const userData = {
           name: 'Test User',
           email: 'invalid-email',
-          password: 'password123'
+          password: 'Password123'
         };
 
         const response = await request(app)
@@ -94,7 +93,7 @@ describe('Cardiolive API Integration Tests', () => {
       it('should login with valid credentials', async () => {
         const loginData = {
           email: 'test@example.com',
-          password: 'password123'
+          password: 'Password123'
         };
 
         const response = await request(app)
@@ -103,8 +102,8 @@ describe('Cardiolive API Integration Tests', () => {
           .expect(200);
 
         expect(response.body.success).toBe(true);
-        expect(response.body.token).toBeDefined();
-        expect(response.body.user.email).toBe(loginData.email);
+        expect(response.body.data.accessToken).toBeDefined();
+        expect(response.body.data.user.email).toBe(loginData.email);
       });
 
       it('should fail with invalid credentials', async () => {
@@ -130,7 +129,7 @@ describe('Cardiolive API Integration Tests', () => {
           .expect(200);
 
         expect(response.body.success).toBe(true);
-        expect(response.body.user.email).toBe('test@example.com');
+        expect(response.body.data.user.email).toBe('test@example.com');
       });
 
       it('should fail without authentication', async () => {
@@ -149,7 +148,7 @@ describe('Cardiolive API Integration Tests', () => {
       const adminData = {
         name: 'Admin User',
         email: 'admin@example.com',
-        password: 'admin123',
+        password: 'Admin123',
         role: 'admin'
       };
 
@@ -161,7 +160,7 @@ describe('Cardiolive API Integration Tests', () => {
         .post('/api/users/login')
         .send({ email: adminData.email, password: adminData.password });
       
-      adminToken = loginResponse.body.token;
+      adminToken = loginResponse.body.data.accessToken;
     });
 
     describe('POST /api/products', () => {
@@ -372,7 +371,9 @@ describe('Cardiolive API Integration Tests', () => {
       it('should get reviews for a product', async () => {
         const response = await request(app)
           .get(`/api/reviews/product/${testProduct._id}`)
-          .expect(200);      expect(response.body.success).toBe(true);
+          .expect(200);
+          
+        expect(response.body.success).toBe(true);
         expect(response.body.data.reviews).toBeInstanceOf(Array);
       });
     });

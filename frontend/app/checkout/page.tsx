@@ -9,11 +9,14 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
 import { FormInput, FormTextarea } from '../components/forms/FormComponents';
-import { ArrowLeft, ArrowRight, Package, Truck, Shield, User, Mail, Phone, MapPin, Building, FileText } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Package, Truck, Shield, User, Mail, Phone, MapPin, Building, FileText, MessageCircle, ShoppingCart } from 'lucide-react';
 import PaymentComponent from '../components/PaymentComponent';
 import Button from '../components/ui/Button';
 import { PaymentResult } from '../types';
 import { orderAPI } from '../utils/api';
+import { Suspense } from 'react';
+import OrderDisabledNotice from '../components/OrderDisabledNotice';
+import Link from 'next/link';
 
 interface ShippingForm {
   fullName: string;
@@ -80,6 +83,7 @@ export default function CheckoutPage() {
       }));
     }
   }, [items, router]);
+
   const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'fullName':
@@ -190,13 +194,16 @@ export default function CheckoutPage() {
       style: 'currency',
       currency: 'TRY'
     }).format(price);
-  };  const validateShippingForm = () => {
+  };
+
+  const validateShippingForm = () => {
     const isValid = validateAllFields();
     if (!isValid) {
       setError('Lütfen tüm zorunlu alanları doğru şekilde doldurun.');
     }
     return isValid;
   };
+
   const createPendingOrder = async () => {
     setIsLoading(true);
     setError('');
@@ -221,7 +228,8 @@ export default function CheckoutPage() {
           country: 'Türkiye'
         },
         paymentMethod: 'cash_on_delivery'
-      };      const order = await orderAPI.create(orderData);
+      };
+      const order = await orderAPI.create(orderData);
       setCreatedOrderId(order._id);
       setOrderNumber(order.orderNumber);
       setCurrentStep(2);
@@ -240,6 +248,7 @@ export default function CheckoutPage() {
       createPendingOrder();
     }
   };
+
   const handlePaymentSuccess = async (result: PaymentResult) => {
     try {
       // Update order with payment information
@@ -268,11 +277,22 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return null; // Will redirect
-  }  return (
+  }
+
+  return (
     <div className="min-h-screen bg-gray-50 text-gray-900" style={{ backgroundColor: '#f8fafc', color: '#1f2937' }}>
       <Header />
       <main className="min-h-screen bg-gray-50 pt-20" style={{ backgroundColor: '#f8fafc' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Back Button */}
+          <Link 
+            href="/cart" 
+            className="inline-flex items-center text-green-600 hover:text-green-700 mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Sepete Geri Dön
+          </Link>
+
           {/* Progress Steps */}
           <div className="mb-8">
             <div className="flex items-center justify-center">
@@ -311,7 +331,9 @@ export default function CheckoutPage() {
                 <>
                   <h2 className="text-xl font-semibold text-gray-900 mb-6" style={{ color: '#1f2937' }}>Teslimat Bilgileri</h2>
                   
-                  <form onSubmit={handleShippingSubmit} className="space-y-4">                    <div className="grid md:grid-cols-2 gap-4">                      <div>
+                  <form onSubmit={handleShippingSubmit} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
                         <FormInput
                           leftIcon={<User className="h-4 w-4 text-gray-400" />}
                           label="Ad Soyad"
@@ -325,7 +347,8 @@ export default function CheckoutPage() {
                           error={formErrors.fullName ? { message: formErrors.fullName } : undefined}
                           className="w-full"
                         />
-                      </div>                      <div>
+                      </div>
+                      <div>
                         <FormInput
                           leftIcon={<Mail className="h-4 w-4 text-gray-400" />}
                           label="E-posta"
@@ -340,7 +363,8 @@ export default function CheckoutPage() {
                           className="w-full"
                         />
                       </div>
-                    </div>                    <div>
+                    </div>
+                    <div>
                       <FormInput
                         leftIcon={<Phone className="h-4 w-4 text-gray-400" />}
                         label="Telefon"
@@ -355,7 +379,8 @@ export default function CheckoutPage() {
                         error={formErrors.phone ? { message: formErrors.phone } : undefined}
                         className="w-full"
                       />
-                    </div>                    <div>
+                    </div>
+                    <div>
                       <FormTextarea
                         label="Adres"
                         id="address"
@@ -369,7 +394,9 @@ export default function CheckoutPage() {
                         error={formErrors.address ? { message: formErrors.address } : undefined}
                         className="w-full"
                       />
-                    </div><div className="grid md:grid-cols-3 gap-4">                      <div>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
                         <FormInput
                           leftIcon={<Building className="h-4 w-4 text-gray-400" />}
                           label="İl"
@@ -384,7 +411,8 @@ export default function CheckoutPage() {
                           error={formErrors.city ? { message: formErrors.city } : undefined}
                           className="w-full"
                         />
-                      </div>                      <div>
+                      </div>
+                      <div>
                         <FormInput
                           leftIcon={<MapPin className="h-4 w-4 text-gray-400" />}
                           label="İlçe"
@@ -399,7 +427,8 @@ export default function CheckoutPage() {
                           error={formErrors.district ? { message: formErrors.district } : undefined}
                           className="w-full"
                         />
-                      </div>                      <div>
+                      </div>
+                      <div>
                         <FormInput
                           leftIcon={<FileText className="h-4 w-4 text-gray-400" />}
                           label="Posta Kodu"
@@ -415,7 +444,8 @@ export default function CheckoutPage() {
                           className="w-full"
                         />
                       </div>
-                    </div>                    <div>
+                    </div>
+                    <div>
                       <FormTextarea
                         label="Sipariş Notu (Opsiyonel)"
                         id="notes"
@@ -432,7 +462,8 @@ export default function CheckoutPage() {
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                         <p className="text-red-600 text-sm">{error}</p>
                       </div>
-                    )}                    <Button
+                    )}
+                    <Button
                       type="submit"
                       disabled={isLoading}
                       loading={isLoading}
@@ -451,7 +482,8 @@ export default function CheckoutPage() {
               )}
 
               {currentStep === 2 && (
-                <>                  <div className="flex items-center justify-between mb-6">
+                <>
+                  <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold text-gray-900">Ödeme Bilgileri</h2>
                     <Button
                       variant="ghost"
@@ -484,8 +516,10 @@ export default function CheckoutPage() {
             <div className="bg-white rounded-lg shadow-sm p-6 h-fit" style={{ backgroundColor: '#ffffff', color: '#1f2937' }}>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Sipariş Özeti</h2>
               
-              <div className="space-y-4 mb-6">                {items.map((item) => (
-                  <div key={`${item._id}-${item.size}`} className="flex items-center gap-4">                    <div className="relative w-16 h-16 rounded overflow-hidden">
+              <div className="space-y-4 mb-6">
+                {items.map((item) => (
+                  <div key={`${item._id}-${item.size}`} className="flex items-center gap-4">
+                    <div className="relative w-16 h-16 rounded overflow-hidden">
                       <ProductImage
                         src={item.image}
                         alt={item.name}
@@ -542,7 +576,8 @@ export default function CheckoutPage() {
                   <p className="text-sm text-green-600">
                     Sipariş No: <span className="font-bold">#{orderNumber}</span>
                   </p>
-                </div>              )}
+                </div>
+              )}
             </div>
           </div>
         </div>

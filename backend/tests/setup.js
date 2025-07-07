@@ -4,19 +4,30 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 let mongod;
 
 beforeAll(async () => {
+  // Close any existing connection first
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.connection.close();
+  }
+  
   // Start in-memory MongoDB instance
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
   
   await mongoose.connect(uri);
-});
+}, 30000);
 
 afterAll(async () => {
   // Cleanup
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongod.stop();
-});
+  try {
+    await mongoose.connection.dropDatabase();
+    await mongoose.connection.close();
+    if (mongod) {
+      await mongod.stop();
+    }
+  } catch (error) {
+    console.warn('Cleanup error:', error.message);
+  }
+}, 30000);
 
 beforeEach(async () => {
   // Clear all collections before each test

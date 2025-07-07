@@ -51,9 +51,15 @@ class UserService extends BaseService {
 
     logger.info('User registered successfully', { userId: user._id, email });
 
-    // Return user without password
+    // Generate tokens for new user
+    const tokens = this.generateTokens(user);
+
+    // Return user without password and tokens
     const { password: _, ...userWithoutPassword } = user.toObject();
-    return userWithoutPassword;
+    return {
+      user: userWithoutPassword,
+      ...tokens
+    };
   }
 
   /**

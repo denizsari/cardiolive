@@ -75,7 +75,7 @@ const settingsSchema = new mongoose.Schema({
   
   // Business Settings
   businessInfo: {
-    companyName: { type: String, default: 'Cardiolive Ltd.' },
+    companyName: { type: String, default: 'Kardiyolive Ltd.' },
     taxNumber: { type: String, default: '' },
     registrationNumber: { type: String, default: '' },
     businessAddress: { type: String, default: '' },

@@ -1,4 +1,4 @@
-# Cardiolive E-ticaret Projesi Deployment Rehberi
+# Kardiyolive E-ticaret Projesi Deployment Rehberi
 
 ## 🚀 Production Deployment
 

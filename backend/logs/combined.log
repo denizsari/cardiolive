@@ -1,400 +1,163 @@
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 13:32:19:3219"}
-{"error":"Operation `products.find()` buffering timed out after 10000ms","filters":{},"fullError":"{\"stack\":\"MongooseError: Operation `products.find()` buffering timed out after 10000ms\\n    at Timeout.<anonymous> (D:\\\\expoProjects\\\\cardiolive\\\\backend\\\\node_modules\\\\mongoose\\\\lib\\\\drivers\\\\node-mongodb-native\\\\collection.js:187:23)\\n    at listOnTimeout (node:internal/timers:594:17)\\n    at process.processTimers (node:internal/timers:529:7)\",\"message\":\"Operation `products.find()` buffering timed out after 10000ms\"}","level":"error","message":"Get products error:","stack":"MongooseError: Operation `products.find()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\expoProjects\\cardiolive\\backend\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-06-03 13:32:29:3229"}
-{"error":"Operation `blogs.find()` buffering timed out after 10000ms","event":"blogs_fetch_failed","filters":{},"level":"error","message":"Error: blogs_fetch_failed","stack":"MongooseError: Operation `blogs.find()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\expoProjects\\cardiolive\\backend\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-06-03 13:32:29:3229"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 13:32:35:3235"}
-{"error":"Operation `blogs.find()` buffering timed out after 10000ms","event":"blogs_fetch_failed","filters":{},"level":"error","message":"Error: blogs_fetch_failed","stack":"MongooseError: Operation `blogs.find()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\expoProjects\\cardiolive\\backend\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-06-03 13:32:45:3245"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 13:32:45:3245"}
-{"error":"Operation `blogs.find()` buffering timed out after 10000ms","event":"blogs_fetch_failed","filters":{},"level":"error","message":"Error: blogs_fetch_failed","stack":"MongooseError: Operation `blogs.find()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\expoProjects\\cardiolive\\backend\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-06-03 13:32:55:3255"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 13:34:13:3413"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 13:34:13:3413"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 13:37:40:3740"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 13:37:40:3740"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 13:37:40:3740"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:03:08:38"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:08:04:84"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:08:12:812"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:08:12:812"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:09:59:959"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:09:59:959"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:09:59:959"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:10:23:1023"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:10:23:1023"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:10:23:1023"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:10:23:1023"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:11:12:1112"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:12:21:1221"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:13:11:1311"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:17:14:1714"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:17:14:1714"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:17:14:1714"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:17:14:1714"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:17:14:1714"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:17:14:1714"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:18:20:1820"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:18:20:1820"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:18:21:1821"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:18:28:1828"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:18:28:1828"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:18:28:1828"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:21:43:2143"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:21:43:2143"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:21:43:2143"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:21:43:2143"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:21:43:2143"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:21:43:2143"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:21:52:2152"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:21:52:2152"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:21:52:2152"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:21:52:2152"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:21:52:2152"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:21:52:2152"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:22:09:229"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:22:09:229"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:22:09:229"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:22:09:229"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:22:09:229"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:22:10:2210"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:35:25:3525"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:35:25:3525"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:35:25:3525"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:36:27:3627"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:36:27:3627"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:36:27:3627"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:36:35:3635"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:36:35:3635"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:36:35:3635"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:39:32:3932"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:39:32:3932"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:39:32:3932"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:40:38:4038"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:40:38:4038"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:40:38:4038"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-03 20:40:44:4044"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-03 20:40:44:4044"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-03 20:40:44:4044"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:41:05:415"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:41:05:415"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:41:05:415"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:41:05:415"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:41:05:415"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:41:05:415"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:41:19:4119"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:41:20:4120"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:41:20:4120"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:42:21:4221"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:42:22:4222"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:42:22:4222"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:42:22:4222"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:42:22:4222"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:42:22:4222"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:42:41:4241"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:42:41:4241"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:42:41:4241"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:08:458"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:08:458"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:08:458"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:08:458"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:08:458"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:08:458"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:23:4523"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:23:4523"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:23:4523"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:23:4523"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:23:4523"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:23:4523"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:41:4541"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:41:4541"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:41:4541"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:45:41:4541"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:45:41:4541"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:45:41:4541"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:20:4920"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:20:4920"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:20:4920"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:21:4921"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:21:4921"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:21:4921"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:40:4940"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:40:4940"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:40:4940"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:40:4940"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:40:4940"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:40:4940"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:54:4954"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:54:4954"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:49:54:4954"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:54:4954"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:49:54:4954"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:49:54:4954"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:50:07:507"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:50:07:507"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:50:07:507"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:50:07:507"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:50:07:507"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:50:07:507"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:50:17:5017"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:50:17:5017"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:50:17:5017"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:50:17:5017"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:50:17:5017"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:50:17:5017"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:51:14:5114"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:51:14:5114"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:14:5114"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:51:20:5120"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:51:20:5120"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:51:20:5120"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:21:5121"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:51:21:5121"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:21:5121"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:21:5121"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:22:5122"}
-{"category":"business","event":"review_stats_fetch_initiated","level":"info","message":"Business: review_stats_fetch_initiated","productId":"683ec0e3ba94ce47fa5e19f3","timestamp":"2025-06-04 10:51:24:5124"}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-04 10:51:24:5124"}
-{"averageRating":0,"category":"business","event":"review_stats_fetched","level":"info","message":"Business: review_stats_fetched","productId":"683ec0e3ba94ce47fa5e19f3","timestamp":"2025-06-04 10:51:24:5124","totalReviews":0}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-04 10:51:24:5124"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:51:25:5125"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:51:25:5125"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 10:51:25:5125"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:25:5125"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 10:51:25:5125"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 10:51:26:5126"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 11:53:12:5312"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 11:53:13:5313"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 11:53:13:5313"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:18:41:1841"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:18:41:1841"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 12:18:41:1841"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 12:18:47:1847","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 12:18:47:1847","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 12:18:49:1849"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 12:18:49:1849"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 12:18:49:1849"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 12:18:49:1849"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 12:18:51:1851"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 12:18:51:1851"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 12:18:51:1851"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 12:18:51:1851"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:19:04:194"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:19:04:194"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:19:04:194"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:19:04:194"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:19:45:1945"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:19:45:1945"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:19:45:1945"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:19:46:1946"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:21:24:2124"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:21:24:2124"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:21:24:2124"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:21:24:2124"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:12:2212"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:12:2212"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:12:2212"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:12:2212"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:46:2246"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:46:2246"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:46:2246"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:46:2246"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:55:2255"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:55:2255"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:22:55:2255"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:22:55:2255"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:06:276"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:06:276"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:06:276"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:07:277"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:16:2716"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:16:2716"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:16:2716"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:16:2716"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:33:2733"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:33:2733"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:27:33:2733"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:27:33:2733"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:36:43:3643"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:36:43:3643"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:36:43:3643"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:36:43:3643"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:36:51:3651"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:36:51:3651"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:36:51:3651"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:36:51:3651"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 12:45:04:454","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 12:45:04:454","userAgent":"node-fetch/1.0 (+https://github.com/bitinn/node-fetch)","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:46:12:4612"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:46:12:4612"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 12:46:12:4612"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 12:46:12:4612"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:04:204"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:04:204"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:04:204"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:05:205"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:18:2018"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:18:2018"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:18:2018"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 13:20:18:2018"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:18:2018"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 13:20:18:2018"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 13:20:22:2022","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 13:20:22:2022","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 13:20:24:2024"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 13:20:24:2024"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 13:20:24:2024"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 13:20:24:2024"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:25:2025"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:25:2025"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:25:2025"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:25:2025"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:26:2026"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:26:2026"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 13:20:26:2026"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 13:20:26:2026"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 14:23:08:238"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 14:23:08:238"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 14:23:08:238"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 14:23:13:2313","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 14:23:13:2313","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 14:23:14:2314"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 14:23:14:2314"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-04 14:23:14:2314"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-04 14:23:14:2314"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 14:23:17:2317"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 14:23:17:2317"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 14:23:17:2317"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 14:23:18:2318"}
-{"email":"test@example.com","event":"login_failed","ip":"::1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-06-04 14:48:25:4825","userAgent":"node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"}
-{"email":"test@example.com","error":"Bu e-posta adresi zaten kullanımda","level":"error","message":"User registration error:","stack":"Error: Bu e-posta adresi zaten kullanımda\n    at UserService.registerUser (D:\\expoProjects\\cardiolive\\backend\\src\\services\\UserService.js:35:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.register (D:\\expoProjects\\cardiolive\\backend\\src\\controllers\\userController.js:13:20)","timestamp":"2025-06-04 15:34:25:3425"}
-{"email":"test@example.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 15:34:32:3432","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"email":"test@example.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 15:34:32:3432","userAgent":"curl/8.11.0","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"email":"test@example.com","error":"Bu e-posta adresi zaten kullanımda","level":"error","message":"User registration error:","stack":"Error: Bu e-posta adresi zaten kullanımda\n    at UserService.registerUser (D:\\expoProjects\\cardiolive\\backend\\src\\services\\UserService.js:35:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.register (D:\\expoProjects\\cardiolive\\backend\\src\\controllers\\userController.js:13:20)","timestamp":"2025-06-04 15:34:46:3446"}
-{"email":"test@example.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 15:34:47:3447","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"email":"test@example.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 15:34:47:3447","userAgent":"node-fetch/1.0 (+https://github.com/bitinn/node-fetch)","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"email":"test@example.com","error":"Bu e-posta adresi zaten kullanımda","level":"error","message":"User registration error:","stack":"Error: Bu e-posta adresi zaten kullanımda\n    at UserService.registerUser (D:\\expoProjects\\cardiolive\\backend\\src\\services\\UserService.js:35:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async exports.register (D:\\expoProjects\\cardiolive\\backend\\src\\controllers\\userController.js:13:20)","timestamp":"2025-06-04 15:49:51:4951"}
-{"email":"test@example.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-04 15:49:52:4952","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"email":"test@example.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-04 15:49:52:4952","userAgent":"node-fetch/1.0 (+https://github.com/bitinn/node-fetch)","userId":"6839d6bc53f0f1af61b0fc7d"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 15:50:04:504"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 15:50:05:505"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-04 15:50:05:505"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-04 15:50:05:505"}
-{"error":"Geçersiz refresh token","level":"error","message":"Token refresh failed","timestamp":"2025-06-05 11:58:04:584"}
-{"event":"token_refresh_failed","ip":"::1","level":"info","message":"Auth: token_refresh_failed","reason":"Token yenileme başarısız","timestamp":"2025-06-05 11:58:04:584","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 11:58:05:585"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:25:29:2529"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:25:29:2529"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:25:29:2529"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:25:29:2529"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:25:29:2529"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:25:29:2529"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:26:02:262"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:26:02:262"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:26:02:262"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:26:09:269"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:26:09:269"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:26:09:269"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:28:12:2812"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:28:12:2812"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:28:12:2812"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:28:23:2823"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:28:23:2823"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:28:23:2823"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:28:40:2840"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:28:40:2840"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:28:40:2840"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:28:55:2855"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:28:55:2855"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:28:59:2859"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:29:00:290"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:29:00:290"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:29:00:290"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:29:00:290"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:29:00:290"}
-{"category":"business","event":"review_stats_fetch_initiated","level":"info","message":"Business: review_stats_fetch_initiated","productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 12:29:13:2913"}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-05 12:29:13:2913"}
-{"averageRating":0,"category":"business","event":"review_stats_fetched","level":"info","message":"Business: review_stats_fetched","productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 12:29:13:2913","totalReviews":0}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-05 12:29:13:2913"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:29:14:2914"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:29:14:2914"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 12:29:14:2914"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:29:15:2915"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 12:29:15:2915"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 12:29:15:2915"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:04:21:421"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:04:21:421"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:04:21:421"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:04:50:450"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:04:50:450"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:04:50:450"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:05:00:50"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:05:00:50"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:05:00:50"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:05:55:555"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:05:55:555"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:05:55:555"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:06:33:633"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:06:33:633"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:06:33:633"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:14:45:1445"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:14:46:1446"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:14:55:1455"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:14:55:1455"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:14:55:1455"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:14:55:1455"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:15:03:153"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:15:03:153"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:15:08:158"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:15:08:158"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:15:08:158"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:15:08:158"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:15:08:158"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:15:08:158"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:19:30:1930"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:19:30:1930"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:19:30:1930"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 13:58:18:5818"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 13:58:18:5818"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 13:58:18:5818"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 14:08:33:833"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 14:08:33:833"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:08:33:833"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-05 14:08:48:848","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-05 14:08:48:848","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0","userId":"68372d69ddff1ffe7843d75e"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 14:08:50:850"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 14:08:50:850"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:08:50:850"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:08:50:850"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:08:54:854"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 14:08:54:854"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:08:54:854"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 14:08:54:854"}
-{"category":"business","event":"wishlist_viewed","filters":{},"itemCount":0,"level":"info","message":"Business: wishlist_viewed","options":{"limit":10,"page":1,"sortBy":"addedAt","sortOrder":"desc"},"timestamp":"2025-06-05 14:09:00:90","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"wishlist_viewed","filters":{},"itemCount":0,"level":"info","message":"Business: wishlist_viewed","options":{"limit":10,"page":1,"sortBy":"addedAt","sortOrder":"desc"},"timestamp":"2025-06-05 14:12:27:1227","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"wishlist_viewed","filters":{},"itemCount":0,"level":"info","message":"Business: wishlist_viewed","options":{"limit":10,"page":1,"sortBy":"addedAt","sortOrder":"desc"},"timestamp":"2025-06-05 14:13:35:1335","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:13:36:1336"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:13:36:1336"}
-{"category":"business","event":"review_stats_fetch_initiated","level":"info","message":"Business: review_stats_fetch_initiated","productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 14:13:38:1338"}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-05 14:13:38:1338"}
-{"averageRating":0,"category":"business","event":"review_stats_fetched","level":"info","message":"Business: review_stats_fetched","productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 14:13:38:1338","totalReviews":0}
-{"error":"Ürün bulunamadı","level":"error","message":"Get product by slug error:","slug":"default","timestamp":"2025-06-05 14:13:38:1338"}
-{"level":"info","message":"Product added to wishlist","productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 14:13:39:1339","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"product_added_to_wishlist","level":"info","message":"Business: product_added_to_wishlist","notes":false,"productId":"683ec0e3ba94ce47fa5e19f1","timestamp":"2025-06-05 14:13:39:1339","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"wishlist_viewed","filters":{},"itemCount":1,"level":"info","message":"Business: wishlist_viewed","options":{"limit":10,"page":1,"sortBy":"addedAt","sortOrder":"desc"},"timestamp":"2025-06-05 14:13:41:1341","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-06-05 14:43:46:4346"}
-{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-06-05 14:43:46:4346"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 14:43:46:4346"}
-{"error":"Geçersiz refresh token","level":"error","message":"Token refresh failed","timestamp":"2025-06-05 18:54:11:5411"}
-{"event":"token_refresh_failed","ip":"::1","level":"info","message":"Auth: token_refresh_failed","reason":"Token yenileme başarısız","timestamp":"2025-06-05 18:54:11:5411","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 18:54:11:5411"}
-{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-06-05 18:54:18:5418","userId":"68372d69ddff1ffe7843d75e"}
-{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-06-05 18:54:18:5418","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0","userId":"68372d69ddff1ffe7843d75e"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 18:54:20:5420"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 18:54:20:5420"}
-{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-06-05 18:54:20:5420"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 18:54:20:5420"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_products_viewed","filters":{},"level":"info","message":"Business: admin_products_viewed","options":{"includeInactive":true,"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"resultCount":10,"timestamp":"2025-06-05 18:54:24:5424"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_products_viewed","filters":{},"level":"info","message":"Business: admin_products_viewed","options":{"includeInactive":true,"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"resultCount":10,"timestamp":"2025-06-05 18:54:24:5424"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 18:54:26:5426"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 18:54:26:5426"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 19:10:20:1020"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 19:10:21:1021"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 19:49:51:4951"}
-{"adminId":"68372d69ddff1ffe7843d75e","category":"business","event":"admin_orders_viewed","filters":{},"level":"info","message":"Business: admin_orders_viewed","options":{"limit":10,"page":1,"sortBy":"createdAt","sortOrder":"desc"},"orderCount":10,"timestamp":"2025-06-05 19:49:52:4952"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-04 00:33:07:337"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-04 00:33:07:337"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-04 00:33:07:337"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-04 00:33:07:337"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-04 00:33:07:337"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-04 00:33:08:338"}
+{"level":"debug","message":"GET /","timestamp":"2025-07-04 00:33:11:3311"}
+{"level":"debug","message":"GET /favicon.ico","timestamp":"2025-07-04 00:33:11:3311"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-05 15:39:09:399"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-05 15:39:09:399"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-05 15:39:09:399"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-05 15:39:09:399"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-05 15:39:09:399"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-05 15:39:10:3910"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-05 15:40:31:4031"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-05 15:40:31:4031"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-05 15:40:31:4031"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-05 15:40:31:4031"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-05 15:40:31:4031"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-05 15:40:32:4032"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-05 15:43:14:4314"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-05 15:43:14:4314"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-05 15:43:14:4314"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-05 15:43:14:4314"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-05 15:43:14:4314"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-05 15:43:15:4315"}
+{"level":"debug","message":"GET /api/products","timestamp":"2025-07-05 15:45:20:4520"}
+{"level":"debug","message":"GET /api/blogs","timestamp":"2025-07-05 15:45:20:4520"}
+{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-07-05 15:45:20:4520"}
+{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-07-05 15:45:20:4520"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-07-05 15:45:20:4520"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-05 15:46:49:4649"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-05 15:46:49:4649"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-05 15:46:49:4649"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-05 15:46:49:4649"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-05 15:46:49:4649"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-05 15:46:50:4650"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-05 15:49:27:4927"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-05 15:49:27:4927"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-05 15:49:27:4927"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-05 15:49:27:4927"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-05 15:49:27:4927"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-05 15:49:28:4928"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-06 01:10:36:1036"}
+{"level":"info","message":"MongoDB connection closed","timestamp":"2025-07-06 01:10:37:1037"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:10:51:1051"}
+{"level":"debug","message":"GET /api/products","timestamp":"2025-07-06 01:10:54:1054"}
+{"level":"debug","message":"GET /api/blogs","timestamp":"2025-07-06 01:10:54:1054"}
+{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-07-06 01:10:54:1054"}
+{"blogCount":3,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-07-06 01:10:54:1054"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-07-06 01:10:55:1055"}
+{"level":"debug","message":"GET /health","timestamp":"2025-07-06 01:11:33:1133"}
+{"level":"debug","message":"GET /","timestamp":"2025-07-06 01:11:46:1146"}
+{"level":"debug","message":"GET /api/products","timestamp":"2025-07-06 01:12:44:1244"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-07-06 01:12:44:1244"}
+{"level":"debug","message":"GET /api/users","timestamp":"2025-07-06 01:12:50:1250"}
+{"level":"debug","message":"GET /api/products","timestamp":"2025-07-06 01:13:37:1337"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-07-06 01:13:37:1337"}
+{"level":"debug","message":"GET /api/products?limit=1","timestamp":"2025-07-06 01:13:43:1343"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":1,"page":1,"sort":"-createdAt"},"resultCount":1,"timestamp":"2025-07-06 01:13:44:1344"}
+{"level":"debug","message":"POST /api/users/register","timestamp":"2025-07-06 01:14:45:1445"}
+{"email":"test@example.com","error":"Bu e-posta adresi zaten kullanımda","level":"error","message":"User registration error:","stack":"Error: Bu e-posta adresi zaten kullanımda\n    at UserService.registerUser (D:\\expoProjects\\cardiolive\\backend\\src\\services\\UserService.js:35:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async exports.register (D:\\expoProjects\\cardiolive\\backend\\src\\controllers\\userController.js:13:20)","timestamp":"2025-07-06 01:14:45:1445"}
+{"level":"debug","message":"POST /api/users/login","timestamp":"2025-07-06 01:14:52:1452"}
+{"email":"admin@cardiolive.com","level":"info","message":"User authenticated successfully","timestamp":"2025-07-06 01:14:52:1452","userId":"68372d69ddff1ffe7843d75e"}
+{"email":"admin@cardiolive.com","event":"user_login","ip":"::1","level":"info","message":"Auth: user_login","timestamp":"2025-07-06 01:14:52:1452","userAgent":"curl/8.11.0","userId":"68372d69ddff1ffe7843d75e"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:15:53:1553"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:15:53:1553"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:15:53:1553"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:15:53:1553"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:15:53:1553"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:15:54:1554"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:20:24:2024"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:20:24:2024"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:20:24:2024"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:20:24:2024"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:20:24:2024"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:20:25:2025"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:22:49:2249"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:22:49:2249"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:22:49:2249"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:22:49:2249"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:22:49:2249"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:22:51:2251"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:27:21:2721"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:27:21:2721"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:27:21:2721"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:27:21:2721"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:27:21:2721"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:27:22:2722"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:27:23:2723"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:27:23:2723"}
+{"email":"admin@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:27:23:2723"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":0,"timestamp":"2025-07-06 01:27:23:2723"}
+{"error":"Ürün bulunamadı","level":"error","message":"Get product error:","productId":"6869a6cbe3c50068282b986b","timestamp":"2025-07-06 01:27:23:2723"}
+{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-07-06 01:27:23:2723"}
+{"blogCount":0,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-07-06 01:27:23:2723"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:29:39:2939"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:29:39:2939"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:29:39:2939"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:29:39:2939"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:29:39:2939"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:29:40:2940"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:30:42:3042"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:30:42:3042"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:30:42:3042"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:30:42:3042"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:30:42:3042"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:30:43:3043"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 01:40:30:4030"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 01:40:30:4030"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 01:40:30:4030"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 01:40:30:4030"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 01:40:30:4030"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 01:40:31:4031"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 01:40:32:4032","userId":"6869a9e06641f855c430464a"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 01:40:32:4032","userId":"6869a9e06641f855c430464a"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 01:40:32:4032","userId":"6869a9e06641f855c4304653"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 01:40:32:4032","userId":"6869a9e06641f855c4304653"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:40:32:4032"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:40:32:4032"}
+{"email":"admin@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 01:40:32:4032"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":0,"timestamp":"2025-07-06 01:40:32:4032"}
+{"error":"Ürün bulunamadı","level":"error","message":"Get product error:","productId":"6869a9e06641f855c43046a1","timestamp":"2025-07-06 01:40:32:4032"}
+{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-07-06 01:40:32:4032"}
+{"blogCount":0,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-07-06 01:40:32:4032"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 05:11:37:1137"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 05:11:37:1137"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 05:11:37:1137"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 05:11:37:1137"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 05:11:37:1137"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 05:11:38:1138"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 05:11:39:1139","userId":"6869db5b45595f3af1e229ea"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 05:11:39:1139"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 05:11:40:1140","userId":"6869db5c45595f3af1e229f3"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 05:11:40:1140"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 05:11:40:1140"}
+{"email":"test@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 05:11:40:1140"}
+{"email":"admin@example.com","event":"login_failed","ip":"::ffff:127.0.0.1","level":"info","message":"Auth: login_failed","reason":"Geçersiz e-posta veya şifre","timestamp":"2025-07-06 05:11:40:1140"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":0,"timestamp":"2025-07-06 05:11:40:1140"}
+{"error":"Ürün bulunamadı","level":"error","message":"Get product error:","productId":"6869db5c45595f3af1e22a41","timestamp":"2025-07-06 05:11:40:1140"}
+{"category":"business","event":"blogs_fetch_initiated","filters":{"limit":10,"order":"desc","page":1,"sort":"createdAt"},"level":"info","message":"Business: blogs_fetch_initiated","timestamp":"2025-07-06 05:11:40:1140"}
+{"blogCount":0,"event":"blogs_fetched","level":"info","message":"Business: blogs_fetched","timestamp":"2025-07-06 05:11:40:1140"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 05:28:49:2849"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 05:28:49:2849"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 05:28:49:2849"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 05:28:49:2849"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 05:28:49:2849"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 05:28:50:2850"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 05:28:51:2851","userId":"6869df63bf205e4c7838f5b9"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 05:28:51:2851","userId":"6869df63bf205e4c7838f5b9"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-06 06:08:20:820"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-06 06:08:20:820"}
+{"level":"info","message":"📊 Environment: test","timestamp":"2025-07-06 06:08:20:820"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-06 06:08:20:820"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-06 06:08:20:820"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 06:08:21:821"}
+{"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 06:08:23:823","userId":"6869e8a7c9c24003b0fcf292"}
+{"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 06:08:23:823","userId":"6869e8a7c9c24003b0fcf292"}
