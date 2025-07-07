@@ -9,4 +9,24 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000 
+        value: 10000
+      - key: MONGO_URI
+        value: mongodb+srv://kardiyolive:kardiyolive2548@kardiyolive.44a1l4a.mongodb.net/kardiyolive?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: Kardiyolive2024SuperSecureJWTSecretKey789
+      - key: JWT_REFRESH_SECRET
+        value: Kardiyolive2024SuperSecureRefreshSecretKey456
+      - key: JWT_EXPIRE
+        value: 30d
+      - key: FRONTEND_URL
+        value: https://kardiyolive.netlify.app
+      - key: CORS_ORIGIN
+        value: https://kardiyolive.netlify.app
+      - key: RATE_LIMIT_WINDOW
+        value: 15
+      - key: RATE_LIMIT_MAX
+        value: 100
+      - key: LOG_LEVEL
+        value: info
+      - key: ENABLE_HELMET
+        value: true 
