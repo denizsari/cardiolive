@@ -45,38 +45,38 @@ const fileFormat = winston.format.combine(
 // Create transports array
 const transports = [];
 
-// Console transport for development
+// Console transport for all environments
+transports.push(
+  new winston.transports.Console({
+    level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+    format: consoleFormat
+  })
+);
+
+// File transports only for development (when logs directory exists)
 if (process.env.NODE_ENV === 'development') {
   transports.push(
-    new winston.transports.Console({
-      level: 'debug',
-      format: consoleFormat
+    // Error log file
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/error.log'),
+      level: 'error',
+      format: fileFormat,
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    }),
+
+    // Combined log file
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/combined.log'),
+      format: fileFormat,
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
     })
   );
 }
 
-// File transports for all environments
-transports.push(
-  // Error log file
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/error.log'),
-    level: 'error',
-    format: fileFormat,
-    maxsize: 5242880, // 5MB
-    maxFiles: 5,
-  }),
-
-  // Combined log file
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/combined.log'),
-    format: fileFormat,
-    maxsize: 5242880, // 5MB
-    maxFiles: 5,
-  })
-);
-
-// HTTP requests log file
-if (process.env.NODE_ENV === 'production') {
+// HTTP requests log file (only in development)
+if (process.env.NODE_ENV === 'development') {
   transports.push(
     new winston.transports.File({
       filename: path.join(__dirname, '../../logs/http.log'),
@@ -94,18 +94,26 @@ const logger = winston.createLogger({
   levels,
   format: fileFormat,
   transports,
-  // Handle uncaught exceptions
-  exceptionHandlers: [
+  // Handle uncaught exceptions (console only in production)
+  exceptionHandlers: process.env.NODE_ENV === 'development' ? [
     new winston.transports.File({
       filename: path.join(__dirname, '../../logs/exceptions.log'),
       format: fileFormat
     })
+  ] : [
+    new winston.transports.Console({
+      format: consoleFormat
+    })
   ],
-  // Handle unhandled rejections
-  rejectionHandlers: [
+  // Handle unhandled rejections (console only in production)
+  rejectionHandlers: process.env.NODE_ENV === 'development' ? [
     new winston.transports.File({
       filename: path.join(__dirname, '../../logs/rejections.log'),
       format: fileFormat
+    })
+  ] : [
+    new winston.transports.Console({
+      format: consoleFormat
     })
   ]
 });
