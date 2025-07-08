@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Cardiolive Performance Testing Script
+# Kardiyolive Performance Testing Script
 # Runs comprehensive performance tests using k6
 
 set -euo pipefail
@@ -136,7 +136,7 @@ generate_report() {
     
     # Create summary report
     cat > "$RESULTS_DIR/performance_summary.md" << EOF
-# Cardiolive Performance Test Report
+# Kardiyolive Performance Test Report
 
 **Generated:** $(date)
 **Test Results:** $(basename "$latest_results")
@@ -188,9 +188,9 @@ main() {
     cat << "EOF"
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-║               🚀 Cardiolive Performance Testing Suite 🚀                     ║
+║               🚀 Kardiyolive Performance Testing Suite 🚀                     ║
 ║                                                                              ║
-║  Comprehensive performance testing for the Cardiolive e-commerce platform   ║
+║  Comprehensive performance testing for the Kardiyolive e-commerce platform   ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 EOF

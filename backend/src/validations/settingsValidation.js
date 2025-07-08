@@ -1,4 +1,4 @@
-// filepath: d:\expoProjects\cardiolive\backend\src\validations\settingsValidation.js
+// filepath: d:\expoProjects\Kardiyolive\backend\src\validations\settingsValidation.js
 const Joi = require('joi');
 const ResponseHandler = require('../utils/responseHandler');
 

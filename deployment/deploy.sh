@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Cardiolive E-commerce Platform - Production Deployment Script
+# Kardiyolive E-commerce Platform - Production Deployment Script
 # Automated deployment with health checks and rollback capabilities
 
 set -euo pipefail
@@ -21,7 +21,7 @@ NC='\033[0m' # No Color
 
 # Environment variables with defaults
 ENVIRONMENT="${ENVIRONMENT:-production}"
-REGISTRY="${REGISTRY:-registry.cardiolive.com}"
+REGISTRY="${REGISTRY:-registry.Kardiyolive.com}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 HEALTH_CHECK_TIMEOUT="${HEALTH_CHECK_TIMEOUT:-300}"
 ROLLBACK_ENABLED="${ROLLBACK_ENABLED:-true}"
@@ -323,7 +323,7 @@ send_notification() {
     
     if [[ -n "${SLACK_WEBHOOK_URL:-}" ]]; then
         curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"🚀 Cardiolive Deployment $status: $message\"}" \
+            --data "{\"text\":\"🚀 Kardiyolive Deployment $status: $message\"}" \
             "$SLACK_WEBHOOK_URL" >/dev/null 2>&1 || {
             log WARN "Failed to send Slack notification"
         }
@@ -340,7 +340,7 @@ send_notification() {
 
 # Main deployment function
 main() {
-    log INFO "🚀 Starting Cardiolive production deployment..."
+    log INFO "🚀 Starting Kardiyolive production deployment..."
     log INFO "Environment: $ENVIRONMENT"
     log INFO "Image Tag: $IMAGE_TAG"
     log INFO "Timestamp: $(date)"

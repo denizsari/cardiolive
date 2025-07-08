@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * CardioLive Final Setup Master Script
+ * Kardiyolive Final Setup Master Script
  * 
- * This script guides you through all final setup steps for the CardioLive project.
+ * This script guides you through all final setup steps for the Kardiyolive project.
  */
 
 const { execSync } = require('child_process');
@@ -37,7 +37,7 @@ function colorLog(color, message) {
 
 function showBanner() {
   console.log('\n' + '='.repeat(60));
-  colorLog('cyan', '🚀 CardioLive Final Setup - Step 4 Completion');
+  colorLog('cyan', '🚀 Kardiyolive Final Setup - Step 4 Completion');
   console.log('='.repeat(60));
   console.log('This script will guide you through the final setup steps:');
   console.log('1. 📋 GitHub Secrets Configuration');
@@ -184,7 +184,7 @@ async function showSummary() {
   console.log('• ✅ Code quality tools setup');
   console.log('• ✅ Deployment pipeline ready');
   
-  console.log('\n🎯 Your CardioLive project is now:');
+  console.log('\n🎯 Your Kardiyolive project is now:');
   colorLog('green', '• 🏭 Production-ready with enterprise-grade workflows');
   colorLog('green', '• 🔒 Secure with automated security scanning');
   colorLog('green', '• 🧪 Tested with comprehensive CI/CD pipeline');
@@ -209,7 +209,7 @@ async function showSummary() {
   console.log('• Review error messages and adjust configurations as needed');
   
   console.log('\n' + '='.repeat(60));
-  colorLog('magenta', '🌟 Congratulations! Your CardioLive project is now enterprise-ready! 🌟');
+  colorLog('magenta', '🌟 Congratulations! Your Kardiyolive project is now enterprise-ready! 🌟');
   console.log('='.repeat(60) + '\n');
 }
 

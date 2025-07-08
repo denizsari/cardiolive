@@ -1,4 +1,4 @@
-// filepath: d:\expoProjects\cardiolive\backend\src\middlewares\errorHandler.js
+// filepath: d:\expoProjects\Kardiyolive\backend\src\middlewares\errorHandler.js
 
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };

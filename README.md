@@ -81,7 +81,7 @@ npm install --prefix backend   # Backend bağımlılıkları
 Bu proje temizlik işlemi geçirmiş, production-ready bir e-ticaret platformudur.
 
 ```
-cardiolive/
+Kardiyolive/
 ├── 📁 frontend/          # Next.js frontend uygulaması
 ├── 📁 backend/           # Express.js API sunucusu
 ├── 📁 docs/              # Organize edilmiş dokümantasyon
@@ -193,7 +193,7 @@ npm run dev
 
 ### Backend Environment Variables (.env)
 ```env
-MONGO_URI=mongodb://localhost:27017/kardiyolive
+MONGO_URI=mongodb+srv://kardiyolive:kardiyolive2548@kardiyolive.44a1l4a.mongodb.net/?retryWrites=true&w=majority&appName=kardiyolive
 JWT_SECRET=your_super_secure_jwt_secret
 JWT_EXPIRE=30d
 PORT=5000
@@ -244,7 +244,7 @@ DELETE /api/blogs/admin/:id  - Blog sil (Admin)
 ## 🏗️ Proje Yapısı
 
 ```
-cardiolive/
+Kardiyolive/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/     # API controllers

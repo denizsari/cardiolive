@@ -34,7 +34,7 @@ services:
       - "5000:5000"
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/cardiolive
+      - MONGODB_URI=mongodb://mongo:27017/Kardiyolive
       - JWT_SECRET=\${JWT_SECRET}
       - CLOUDINARY_CLOUD_NAME=\${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=\${CLOUDINARY_API_KEY}
@@ -53,7 +53,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=\${MONGO_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=\${MONGO_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=cardiolive
+      - MONGO_INITDB_DATABASE=Kardiyolive
     restart: unless-stopped
 
   nginx:
@@ -74,7 +74,7 @@ volumes:
 
 networks:
   default:
-    name: cardiolive-network
+    name: Kardiyolive-network
 `;
 
   const dockerComposePath = path.join(process.cwd(), 'docker-compose.production.yml');
@@ -83,11 +83,11 @@ networks:
 }
 
 function createEnvironmentTemplate() {
-  const envTemplate = `# CardioLive Environment Variables Template
+  const envTemplate = `# Kardiyolive Environment Variables Template
 # Copy this file to .env and fill in your actual values
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/cardiolive
+MONGODB_URI=mongodb://localhost:27017/Kardiyolive
 MONGO_ROOT_USERNAME=admin
 MONGO_ROOT_PASSWORD=your_secure_password
 
@@ -114,10 +114,10 @@ GITHUB_TOKEN=your_github_token
 LHCI_GITHUB_APP_TOKEN=your_lighthouse_token
 
 # Production URLs (update for production)
-PRODUCTION_API_URL=https://api.cardiolive.com
-PRODUCTION_SITE_URL=https://cardiolive.com
-STAGING_API_URL=https://staging-api.cardiolive.com
-STAGING_SITE_URL=https://staging.cardiolive.com
+PRODUCTION_API_URL=https://api.Kardiyolive.com
+PRODUCTION_SITE_URL=https://Kardiyolive.com
+STAGING_API_URL=https://staging-api.Kardiyolive.com
+STAGING_SITE_URL=https://staging.Kardiyolive.com
 `;
 
   const envTemplatePath = path.join(process.cwd(), '.env.template');
@@ -128,7 +128,7 @@ STAGING_SITE_URL=https://staging.cardiolive.com
 function createDeploymentScript() {
   const deploymentScript = `#!/bin/bash
 
-# CardioLive Deployment Script
+# Kardiyolive Deployment Script
 # Usage: ./deploy.sh [staging|production]
 
 set -e

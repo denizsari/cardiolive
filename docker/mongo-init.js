@@ -1,17 +1,17 @@
-// MongoDB Initialization Script for Cardiolive E-commerce Platform
+// MongoDB Initialization Script for Kardiyolive E-commerce Platform
 // This script sets up the database structure, indexes, and initial data
 
 // Switch to the application database
-db = db.getSiblingDB('cardiolive');
+db = db.getSiblingDB('Kardiyolive');
 
 // Create application user with appropriate permissions
 db.createUser({
-  user: "cardiolive_app",
+  user: "Kardiyolive_app",
   pwd: "SecureAppPassword123!",
   roles: [
     {
       role: "readWrite",
-      db: "cardiolive"
+      db: "Kardiyolive"
     }
   ]
 });

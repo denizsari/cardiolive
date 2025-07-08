@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Developer Onboarding Guide Generator for Cardiolive
+ * Developer Onboarding Guide Generator for Kardiyolive
  * Comprehensive setup and development documentation
  * 
  * Features:
@@ -23,8 +23,8 @@ const ResponseHandler = require('../../backend/src/utils/responseHandler');
 // Onboarding guide content
 const ONBOARDING_CONTENT = {
   welcome: {
-    title: 'Welcome to Cardiolive Development Team! 🎉',
-    description: 'This comprehensive guide will help you get up and running with the Cardiolive e-commerce platform.',
+    title: 'Welcome to Kardiyolive Development Team! 🎉',
+    description: 'This comprehensive guide will help you get up and running with the Kardiyolive e-commerce platform.',
     quickStart: {
       timeEstimate: '30-45 minutes',
       prerequisites: [
@@ -78,8 +78,8 @@ const ONBOARDING_CONTENT = {
         step: 1,
         title: 'Clone the Repository',
         commands: [
-          'git clone https://github.com/your-org/cardiolive.git',
-          'cd cardiolive'
+          'git clone https://github.com/your-org/Kardiyolive.git',
+          'cd Kardiyolive'
         ],
         description: 'Clone the repository and navigate to the project directory.'
       },
@@ -113,14 +113,14 @@ const ONBOARDING_CONTENT = {
           backend: {
             'NODE_ENV': 'development',
             'PORT': '5000',
-            'MONGO_URI': 'mongodb://localhost:27017/cardiolive',
+            'MONGO_URI': 'mongodb://localhost:27017/Kardiyolive',
             'JWT_SECRET': 'your-super-secret-jwt-key-here',
             'JWT_REFRESH_SECRET': 'your-super-secret-refresh-key-here',
             'FRONTEND_URL': 'http://localhost:3000'
           },
           frontend: {
             'NEXT_PUBLIC_API_URL': 'http://localhost:5000',
-            'NEXT_PUBLIC_APP_NAME': 'Cardiolive',
+            'NEXT_PUBLIC_APP_NAME': 'Kardiyolive',
             'NEXT_PUBLIC_APP_VERSION': '1.0.0'
           }
         }
@@ -133,7 +133,7 @@ const ONBOARDING_CONTENT = {
           'mongod',
           '',
           '# Or use Docker',
-          'docker run -d -p 27017:27017 --name cardiolive-mongo mongo:6',
+          'docker run -d -p 27017:27017 --name Kardiyolive-mongo mongo:6',
           '',
           '# Run database migrations',
           'cd backend',
@@ -389,17 +389,17 @@ describe('POST /api/users/register', () => {
       },
       {
         title: 'GitHub Repository',
-        url: 'https://github.com/your-org/cardiolive',
+        url: 'https://github.com/your-org/Kardiyolive',
         description: 'Source code and issue tracking'
       },
       {
         title: 'Team Wiki',
-        url: 'https://github.com/your-org/cardiolive/wiki',
+        url: 'https://github.com/your-org/Kardiyolive/wiki',
         description: 'Detailed project documentation'
       },
       {
         title: 'Slack Channel',
-        url: '#cardiolive-dev',
+        url: '#Kardiyolive-dev',
         description: 'Team communication and support'
       }
     ],
@@ -438,7 +438,7 @@ const generateOnboardingHTML = (content) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardiolive Developer Onboarding Guide</title>
+    <title>Kardiyolive Developer Onboarding Guide</title>
     <style>
         * {
             margin: 0;

@@ -1,5 +1,5 @@
 /**
- * API Integration Tests for Cardiolive Frontend
+ * API Integration Tests for Kardiyolive Frontend
  * Simple test suite to validate API integration patterns
  */
 

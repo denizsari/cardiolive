@@ -168,7 +168,7 @@ jobs:
       - name: Run Backend Tests
         env:
           NODE_ENV: test
-          MONGODB_URI: mongodb://root:password@localhost:27017/cardiolive_test?authSource=admin
+          MONGODB_URI: mongodb://root:password@localhost:27017/Kardiyolive_test?authSource=admin
           JWT_SECRET: test-secret-key-for-ci
         run: |
           cd backend

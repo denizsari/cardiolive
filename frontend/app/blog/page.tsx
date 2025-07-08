@@ -72,9 +72,9 @@ export default function BlogList() {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-600">Bloglar yükleniyor...</div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 page-content pb-8 sm:pb-12 md:pb-16">
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="text-sm sm:text-base md:text-lg text-neutral-600">Bloglar yükleniyor...</div>
           </div>
         </main>
       </div>
@@ -85,9 +85,9 @@ export default function BlogList() {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-red-600">Hata: {error}</div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 page-content pb-8 sm:pb-12 md:pb-16">
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="text-sm sm:text-base md:text-lg text-red-600">Hata: {error}</div>
           </div>
         </main>
       </div>
@@ -98,15 +98,15 @@ export default function BlogList() {
     <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Blog</h1>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 page-content pb-8 sm:pb-12 md:pb-16">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-800 mb-6 sm:mb-8">Blog</h1>
 
         {blogs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">Henüz blog yazısı bulunmuyor.</p>
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-neutral-600 text-sm sm:text-base">Henüz blog yazısı bulunmuyor.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {blogs.map(blog => (              <div key={blog._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <Link href={`/blog/${blog._id}`}>                  <div className="relative aspect-[16/9] overflow-hidden">                    <ProductImage
                       src={getImageSrc(blog)}
@@ -115,10 +115,10 @@ export default function BlogList() {
                     />
                   </div>
                 </Link>
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{blog.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{blog.excerpt}</p>                  <div className="flex justify-between items-center text-xs text-gray-500">
-                    <span>Cardiolive</span>
+                <div className="p-3 sm:p-4">
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2">{blog.title}</h3>
+                  <p className="text-xs sm:text-sm text-neutral-600 mb-3 sm:mb-4 line-clamp-3">{blog.excerpt}</p>                  <div className="flex justify-between items-center text-xs text-neutral-500">
+                    <span>Kardiyolive</span>
                     <span>{formatDate(blog)}</span>
                   </div>
                 </div>

@@ -32,9 +32,9 @@ interface Settings {
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Settings>({
-    siteName: 'Cardiolive',
-    siteEmail: 'admin@cardiolive.com',
-    supportEmail: 'support@cardiolive.com',
+    siteName: 'Kardiyolive',
+    siteEmail: 'admin@Kardiyolive.com',
+    supportEmail: 'support@Kardiyolive.com',
     maintenanceMode: false,
     allowRegistration: true,
     emailNotifications: true,

@@ -104,7 +104,7 @@ export default function RegisterPage() {
               Hesap Oluşturun
             </h2>
             <p className="text-gray-600">
-              Cardiolive ailesine katılın
+              Kardiyolive ailesine katılın
             </p>
           </div>
 

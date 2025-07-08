@@ -14,11 +14,11 @@ COPY . .
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
-RUN adduser -S cardiolive -u 1001
+RUN adduser -S Kardiyolive -u 1001
 
 # Change ownership
-RUN chown -R cardiolive:nodejs /app
-USER cardiolive
+RUN chown -R Kardiyolive:nodejs /app
+USER Kardiyolive
 
 # Expose port
 EXPOSE 5000

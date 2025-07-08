@@ -106,7 +106,7 @@ git push origin railway-backend
 # Railway Dashboard:
 1. "New Project" tıklayın
 2. "Deploy from GitHub repo" seçin
-3. "cardiolive" repository'nizi seçin
+3. "Kardiyolive" repository'nizi seçin
 4. "railway-backend" branch'ini seçin
 5. Root directory: "backend" yazın
 6. "Deploy" tıklayın
@@ -123,7 +123,7 @@ git push origin railway-backend
 
 ```env
 # Database
-MONGO_URI=mongodb+srv://kardiyolive-admin:YOUR_PASSWORD@kardiyolive-cluster.xxxxx.mongodb.net/kardiyolive?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://kardiyolive:kardiyolive2548@kardiyolive.44a1l4a.mongodb.net/?retryWrites=true&w=majority&appName=kardiyolive
 
 # JWT
 JWT_SECRET=k4rd1y0l1v3_pr0duct1on_s3cr3t_2024_v3ry_s3cur3_k3y

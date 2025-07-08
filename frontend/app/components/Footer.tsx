@@ -15,8 +15,8 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center">
                 <Mail className="w-5 h-5 mr-2" />
-                <a href="mailto:info@cardiolive.com" className="hover:underline">
-                  info@cardiolive.com
+                <a href="mailto:info@Kardiyolive.com" className="hover:underline">
+                  info@Kardiyolive.com
                 </a>
               </div>
               <div className="flex items-center">

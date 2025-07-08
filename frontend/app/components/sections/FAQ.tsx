@@ -8,7 +8,7 @@ import Button from '../ui/Button';
 const faqs = [
   {
     question: 'Zeytinyağları nasıl temin edilmektedir?',
-    answer: 'Cardiolive\'ın zeytinleri, Ege ve Akdeniz bölgesinin verimli topraklarından elde edilmektedir. Zeytinler el ile özenle toplanır ve soğuk sıkım yöntemiyle işlenir. Modern teknolojilerle donatılmış tesislerimizde hijyenik koşullarda üretim yapılır.'
+    answer: 'Kardiyolive\'ın zeytinleri, Ege ve Akdeniz bölgesinin verimli topraklarından elde edilmektedir. Zeytinler el ile özenle toplanır ve soğuk sıkım yöntemiyle işlenir. Modern teknolojilerle donatılmış tesislerimizde hijyenik koşullarda üretim yapılır.'
   },
   {
     question: 'Zeytinyağları nasıl bu kadar düşük asit oranına sahip?',
@@ -38,7 +38,7 @@ export default function FAQ() {
           {/* Sol: Görsel */}          <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
             <ProductImage
               src="/about/olive-field.jpg"
-              alt="Cardiolive Zeytin Bahçeleri"
+              alt="Kardiyolive Zeytin Bahçeleri"
               className="object-cover w-full h-full"
             />
           </div>          {/* Sağ: SSS */}

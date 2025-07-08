@@ -1,4 +1,4 @@
-# Loki Configuration for Cardiolive E-commerce Platform
+# Loki Configuration for Kardiyolive E-commerce Platform
 # Centralized log aggregation and analysis
 
 auth_enabled: false

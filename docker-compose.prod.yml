@@ -117,7 +117,7 @@ services:
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: cardiolive-nginx
+    container_name: Kardiyolive-nginx
     restart: unless-stopped
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -125,7 +125,7 @@ services:
       - ./logs/nginx:/var/log/nginx
       - ./frontend/build:/usr/share/nginx/html:ro
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "80:80"
       - "443:443"
@@ -141,7 +141,7 @@ services:
   # Prometheus Monitoring
   prometheus:
     image: prom/prometheus:latest
-    container_name: cardiolive-prometheus
+    container_name: Kardiyolive-prometheus
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -156,7 +156,7 @@ services:
       - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
       - prometheus_data:/prometheus
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "9090:9090"
     depends_on:
@@ -165,7 +165,7 @@ services:
   # Grafana Dashboard
   grafana:
     image: grafana/grafana:latest
-    container_name: cardiolive-grafana
+    container_name: Kardiyolive-grafana
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:-admin}
@@ -177,7 +177,7 @@ services:
       - ./monitoring/grafana:/etc/grafana/provisioning:ro
       - ./logs/grafana:/var/log/grafana
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "3001:3000"
     depends_on:
@@ -186,7 +186,7 @@ services:
   # AlertManager
   alertmanager:
     image: prom/alertmanager:latest
-    container_name: cardiolive-alertmanager
+    container_name: Kardiyolive-alertmanager
     restart: unless-stopped
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
@@ -196,7 +196,7 @@ services:
       - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
       - alertmanager_data:/alertmanager
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "9093:9093"
     depends_on:
@@ -205,21 +205,21 @@ services:
   # Loki Log Aggregation
   loki:
     image: grafana/loki:latest
-    container_name: cardiolive-loki
+    container_name: Kardiyolive-loki
     restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
       - loki_data:/tmp/loki
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "3100:3100"
 
   # Promtail Log Collector
   promtail:
     image: grafana/promtail:latest
-    container_name: cardiolive-promtail
+    container_name: Kardiyolive-promtail
     restart: unless-stopped
     command: -config.file=/etc/promtail/config.yml
     volumes:
@@ -227,14 +227,14 @@ services:
       - ./logs:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     depends_on:
       - loki
 
   # Node Exporter for system metrics
   node-exporter:
     image: prom/node-exporter:latest
-    container_name: cardiolive-node-exporter
+    container_name: Kardiyolive-node-exporter
     restart: unless-stopped
     command:
       - '--path.procfs=/host/proc'
@@ -245,19 +245,19 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "9100:9100"
 
   # MongoDB Exporter
   mongodb-exporter:
     image: percona/mongodb_exporter:latest
-    container_name: cardiolive-mongodb-exporter
+    container_name: Kardiyolive-mongodb-exporter
     restart: unless-stopped
     environment:
-      MONGODB_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-strongpassword}@mongo:27017/cardiolive?authSource=admin
+      MONGODB_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-strongpassword}@mongo:27017/Kardiyolive?authSource=admin
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "9216:9216"
     depends_on:
@@ -267,12 +267,12 @@ services:
   # Redis Exporter
   redis-exporter:
     image: oliver006/redis_exporter:latest
-    container_name: cardiolive-redis-exporter
+    container_name: Kardiyolive-redis-exporter
     restart: unless-stopped
     environment:
       REDIS_ADDR: redis://redis:6379
     networks:
-      - cardiolive-network
+      - Kardiyolive-network
     ports:
       - "9121:9121"
     depends_on:

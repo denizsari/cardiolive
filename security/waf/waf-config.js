@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Web Application Firewall (WAF) Configuration for Cardiolive
+ * Web Application Firewall (WAF) Configuration for Kardiyolive
  * Advanced security layer for application protection
  * 
  * Features:

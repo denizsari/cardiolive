@@ -4,7 +4,7 @@
  * Hydration Fix Verification Script
  * 
  * This script checks for common SSR/hydration issues in the codebase
- * that we've been fixing throughout the CardioLive project.
+ * that we've been fixing throughout the Kardiyolive project.
  */
 
 const fs = require('fs');
@@ -205,7 +205,7 @@ console.log(`Total hydration fixes found: ${totalFixes}`);
 
 if (totalIssues === 0) {
   console.log('\n🎉 GREAT! No hydration issues detected!');
-  console.log('Your CardioLive project appears to be free of common SSR/hydration problems.');
+  console.log('Your Kardiyolive project appears to be free of common SSR/hydration problems.');
 } else {
   console.log('\n⚠️  Some hydration issues were found.');
   console.log('Please review the issues above and apply the appropriate fixes.');

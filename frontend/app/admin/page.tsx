@@ -133,7 +133,7 @@ export default function AdminDashboard() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Cardiolive yönetim paneline hoş geldiniz</p>
+          <p className="text-gray-600 mt-2">Kardiyolive yönetim paneline hoş geldiniz</p>
         </div>
         <DashboardStatsSkeleton />
         <TableSkeleton rows={5} columns={5} />
@@ -146,7 +146,7 @@ export default function AdminDashboard() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Cardiolive yönetim paneline hoş geldiniz</p>
+          <p className="text-gray-600 mt-2">Kardiyolive yönetim paneline hoş geldiniz</p>
         </div>
         <ApiErrorFallback 
           error={new Error(error || 'Unknown error')} 
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Cardiolive yönetim paneline hoş geldiniz</p>
+        <p className="text-gray-600 mt-2">Kardiyolive yönetim paneline hoş geldiniz</p>
       </div>
 
       {/* Stats Grid */}

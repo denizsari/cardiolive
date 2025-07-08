@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Complete GitHub Workflow Setup for CardioLive
+ * Complete GitHub Workflow Setup for Kardiyolive
  * 
  * This script sets up the complete professional GitHub workflow including:
  * - Branch protection rules
@@ -15,7 +15,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Setting up complete GitHub workflow for CardioLive...\n');
+console.log('🚀 Setting up complete GitHub workflow for Kardiyolive...\n');
 
 // Step 1: Install all necessary dependencies
 console.log('📦 Installing development dependencies...');
@@ -305,11 +305,11 @@ const securityPolicy = `# Security Policy
 
 ## Reporting a Vulnerability
 
-We take the security of CardioLive seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+We take the security of Kardiyolive seriously. If you believe you have found a security vulnerability, please report it to us as described below.
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them via email to [security@cardiolive.com](mailto:security@cardiolive.com).
+Instead, please report them via email to [security@Kardiyolive.com](mailto:security@Kardiyolive.com).
 
 Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:
 

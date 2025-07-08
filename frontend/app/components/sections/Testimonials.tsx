@@ -17,7 +17,7 @@ const testimonials = [
     location: 'İzmir',
     image: '/testimonials/avatar1.jpg',
     rating: 5,
-    comment: 'Cardiolive\'ın zeytinyağları gerçekten eşsiz bir lezzete sahip. Özellikle erken hasat zeytinyağı favorim oldu. Ailem ve ben artık başka marka kullanmıyoruz.',
+    comment: 'Kardiyolive\'ın zeytinyağları gerçekten eşsiz bir lezzete sahip. Özellikle erken hasat zeytinyağı favorim oldu. Ailem ve ben artık başka marka kullanmıyoruz.',
     title: 'Düzenli Müşteri'
   },
   {
@@ -65,7 +65,7 @@ export default function Testimonials() {
             Sizden Gelenler
           </h2>
           <p className="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed">
-            Müşterilerimizin deneyimleri ve değerlendirmeleri bizim için çok değerli. İşte onların Cardiolive hakkında söyledikleri.
+            Müşterilerimizin deneyimleri ve değerlendirmeleri bizim için çok değerli. İşte onların Kardiyolive hakkında söyledikleri.
           </p>
         </div>        {/* Testimonial Slider */}
         <Swiper

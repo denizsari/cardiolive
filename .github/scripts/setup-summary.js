@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Final CardioLive Setup Summary
+ * Final Kardiyolive Setup Summary
  * 
  * This script provides a comprehensive summary of all the changes
- * made to set up the professional GitHub workflow for CardioLive.
+ * made to set up the professional GitHub workflow for Kardiyolive.
  */
 
-console.log('🎉 CardioLive Professional GitHub Workflow Setup Complete!\n');
+console.log('🎉 Kardiyolive Professional GitHub Workflow Setup Complete!\n');
 
 const setupSummary = {
   '🔧 Infrastructure Setup': [
@@ -114,7 +114,7 @@ console.log('');
 console.log('2. Run branch protection setup:');
 console.log('   export GITHUB_TOKEN="your_token"');
 console.log('   export GITHUB_REPOSITORY_OWNER="your-username"');
-console.log('   export GITHUB_REPOSITORY_NAME="cardiolive"');
+console.log('   export GITHUB_REPOSITORY_NAME="Kardiyolive"');
 console.log('   node .github/scripts/setup-branch-protection.js');
 console.log('');
 console.log('3. Update CODEOWNERS with actual GitHub usernames');
@@ -165,5 +165,5 @@ console.log('• Keep dependencies updated with automated PRs');
 console.log('• Use feature flags for safer deployments');
 console.log('• Set up monitoring alerts for production issues');
 
-console.log('\n🎉 Your CardioLive project now has enterprise-grade GitHub workflows!');
+console.log('\n🎉 Your Kardiyolive project now has enterprise-grade GitHub workflows!');
 console.log('   Happy coding! 🚀');

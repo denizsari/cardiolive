@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CardioLive Production Deployment - Final Security Fixes
+# Kardiyolive Production Deployment - Final Security Fixes
 # This script addresses the remaining security vulnerabilities before production
 
 set -euo pipefail
@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}🔒 CardioLive - Final Security Hardening${NC}"
+echo -e "${BLUE}🔒 Kardiyolive - Final Security Hardening${NC}"
 echo "========================================"
 
 # Fix backend security vulnerabilities
@@ -80,7 +80,7 @@ NODE_ENV=production
 PORT=5000
 
 # Database - UPDATE WITH YOUR PRODUCTION MONGODB URI
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/cardiolive?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/Kardiyolive?retryWrites=true&w=majority
 
 # JWT - GENERATE SECURE RANDOM STRINGS (32+ characters each)
 JWT_SECRET=your_super_secure_jwt_secret_key_here_at_least_32_characters_long
@@ -156,8 +156,8 @@ cat > FINAL_DEPLOYMENT_CHECKLIST.md << 'EOF'
 ### Quick Deployment (recommended)
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-repo/cardiolive.git
-cd cardiolive
+git clone https://github.com/your-repo/Kardiyolive.git
+cd Kardiyolive
 
 # 2. Configure environment variables
 cp .env.production.template backend/.env
@@ -236,14 +236,14 @@ pm2 startup
 ```
 
 ### Monitoring
-- Application logs: `/var/log/cardiolive/`
+- Application logs: `/var/log/Kardiyolive/`
 - PM2 monitoring: `pm2 monit`
 - Database monitoring: MongoDB Atlas dashboard
 
 ---
 
 **🎉 CONGRATULATIONS!**  
-Your CardioLive e-commerce platform is now ready for production!
+Your Kardiyolive e-commerce platform is now ready for production!
 EOF
 
 echo -e "${GREEN}✅ Final deployment checklist created${NC}"
@@ -260,4 +260,4 @@ echo "2. Follow FINAL_DEPLOYMENT_CHECKLIST.md"
 echo "3. Configure production environment variables"
 echo "4. Deploy to production!"
 
-echo -e "\n${BLUE}🚀 CardioLive is now 100% PRODUCTION READY!${NC}"
+echo -e "\n${BLUE}🚀 Kardiyolive is now 100% PRODUCTION READY!${NC}"

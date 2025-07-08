@@ -1,8 +1,8 @@
-# 🔐 Cardiolive Güvenlik Rehberi
+# 🔐 Kardiyolive Güvenlik Rehberi
 
 ## 📋 **GÜVENLİK ÖVETLERİ**
 
-Bu dokümantasyon, Cardiolive e-ticaret platformunun güvenlik yapılandırmasını ve en iyi uygulamaları açıklar.
+Bu dokümantasyon, Kardiyolive e-ticaret platformunun güvenlik yapılandırmasını ve en iyi uygulamaları açıklar.
 
 ---
 
@@ -26,8 +26,8 @@ const JWT_CONFIG = {
   algorithm: 'HS256',
   
   // Token issuer ve audience
-  issuer: 'cardiolive-api',
-  audience: 'cardiolive-app'
+  issuer: 'Kardiyolive-api',
+  audience: 'Kardiyolive-app'
 };
 ```
 
@@ -71,7 +71,7 @@ const SESSION_CONFIG = {
   // Session store (Redis)
   store: new RedisStore({
     client: redisClient,
-    prefix: 'cardiolive:sess:'
+    prefix: 'Kardiyolive:sess:'
   })
 };
 ```
@@ -270,7 +270,7 @@ app.use(helmet({
       ],
       connectSrc: [
         "'self'",
-        "https://api.cardiolive.com",
+        "https://api.Kardiyolive.com",
         "https://analytics.google.com"
       ],
       mediaSrc: ["'self'"],
@@ -314,9 +314,9 @@ const corsOptions = {
   // İzin verilen origin'ler
   origin: (origin, callback) => {
     const allowedOrigins = [
-      'https://cardiolive.com',
-      'https://www.cardiolive.com',
-      'https://admin.cardiolive.com'
+      'https://Kardiyolive.com',
+      'https://www.Kardiyolive.com',
+      'https://admin.Kardiyolive.com'
     ];
     
     // Development modunda localhost'a izin ver
@@ -373,7 +373,7 @@ const securityLogger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'cardiolive-security' },
+  defaultMeta: { service: 'Kardiyolive-security' },
   transports: [
     new winston.transports.File({ 
       filename: 'logs/security.log',
@@ -491,7 +491,7 @@ const incidentResponse = {
     // Kullanıcı oturumunu sonlandır
     terminateUserSession: (userId) => {
       // Redis'ten session'ı sil
-      redisClient.del(`cardiolive:sess:${userId}`);
+      redisClient.del(`Kardiyolive:sess:${userId}`);
       
       logSecurityEvent('SESSION_TERMINATED', {
         userId,
@@ -613,7 +613,7 @@ const encryptSensitiveData = (data) => {
   const iv = crypto.randomBytes(16); // Initialization vector
   
   const cipher = crypto.createCipher(algorithm, secretKey);
-  cipher.setAAD(Buffer.from('cardiolive')); // Additional authenticated data
+  cipher.setAAD(Buffer.from('Kardiyolive')); // Additional authenticated data
   
   let encrypted = cipher.update(data, 'utf8', 'hex');
   encrypted += cipher.final('hex');
@@ -634,7 +634,7 @@ const decryptSensitiveData = (encryptedData) => {
   
   const decipher = crypto.createDecipher(algorithm, secretKey);
   decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
-  decipher.setAAD(Buffer.from('cardiolive'));
+  decipher.setAAD(Buffer.from('Kardiyolive'));
   
   let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');

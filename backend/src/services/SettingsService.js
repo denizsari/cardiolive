@@ -1,7 +1,7 @@
 /**
  * @fileoverview Settings Service - Business logic for application settings management
  * @description Handles settings operations, validation, and category filtering
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

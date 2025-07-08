@@ -1,7 +1,7 @@
 /**
  * @fileoverview Payment Service - Handles payment processing business logic
  * @description Service layer for payment operations, validation, and processing
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

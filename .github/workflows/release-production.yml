@@ -113,7 +113,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.version }}
           release_name: Release ${{ steps.tag.outputs.version }}
           body: |
-            ## 🚀 CardioLive Release ${{ steps.tag.outputs.version }}
+            ## 🚀 Kardiyolive Release ${{ steps.tag.outputs.version }}
             
             ### 📋 Changes in this release:
             ${{ steps.changelog.outputs.CHANGELOG }}

@@ -1,5 +1,5 @@
 /**
- * Promtail Configuration Generator for Cardiolive Platform
+ * Promtail Configuration Generator for Kardiyolive Platform
  * Collects and ships logs to Loki for centralized log management
  */
 
@@ -31,12 +31,12 @@ class PromtailConfigGenerator {
   addApplicationLogs() {
     // Backend application logs
     this.config.scrape_configs.push({
-      job_name: 'cardiolive-backend',
+      job_name: 'Kardiyolive-backend',
       static_configs: [
         {
           targets: ['localhost'],
           labels: {
-            job: 'cardiolive-backend',
+            job: 'Kardiyolive-backend',
             environment: process.env.NODE_ENV || 'development',
             service: 'backend',
             __path__: '/app/backend/logs/*.log'
@@ -46,7 +46,7 @@ class PromtailConfigGenerator {
       pipeline_stages: [
         {
           match: {
-            selector: '{job="cardiolive-backend"}',
+            selector: '{job="Kardiyolive-backend"}',
             stages: [
               {
                 json: {
@@ -310,9 +310,9 @@ class PromtailConfigGenerator {
     const dashboard = {
       dashboard: {
         id: null,
-        title: "Cardiolive - Log Analysis Dashboard",
-        description: "Centralized log analysis for Cardiolive e-commerce platform",
-        tags: ["cardiolive", "logs", "monitoring"],
+        title: "Kardiyolive - Log Analysis Dashboard",
+        description: "Centralized log analysis for Kardiyolive e-commerce platform",
+        tags: ["Kardiyolive", "logs", "monitoring"],
         timezone: "browser",
         panels: [
           {
@@ -321,7 +321,7 @@ class PromtailConfigGenerator {
             type: "graph",
             targets: [
               {
-                expr: 'sum by (service) (rate({job=~"cardiolive-.*|nginx-.*|mongodb|security-logs"}[5m]))',
+                expr: 'sum by (service) (rate({job=~"Kardiyolive-.*|nginx-.*|mongodb|security-logs"}[5m]))',
                 legendFormat: "{{service}}"
               }
             ],
@@ -391,7 +391,7 @@ class PromtailConfigGenerator {
             type: "logs",
             targets: [
               {
-                expr: '{job="cardiolive-backend"}'
+                expr: '{job="Kardiyolive-backend"}'
               }
             ],
             options: {

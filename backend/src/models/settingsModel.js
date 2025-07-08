@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const settingsSchema = new mongoose.Schema({
   // Site Information
-  siteName: { type: String, default: 'Cardiolive' },
-  siteEmail: { type: String, default: 'admin@cardiolive.com' },
-  supportEmail: { type: String, default: 'support@cardiolive.com' },
+  siteName: { type: String, default: 'Kardiyolive' },
+  siteEmail: { type: String, default: 'admin@Kardiyolive.com' },
+  supportEmail: { type: String, default: 'support@Kardiyolive.com' },
   contactPhone: { type: String, default: '' },
   address: { type: String, default: '' },
   
@@ -44,9 +44,9 @@ const settingsSchema = new mongoose.Schema({
   
   // SEO Settings
   seoSettings: {
-    metaTitle: { type: String, default: 'Cardiolive - Sağlık Ürünleri' },
+    metaTitle: { type: String, default: 'Kardiyolive - Sağlık Ürünleri' },
     metaDescription: { type: String, default: 'Kaliteli sağlık ürünleri ve medikal cihazlar' },
-    metaKeywords: { type: String, default: 'sağlık, medikal, cardiolive' },
+    metaKeywords: { type: String, default: 'sağlık, medikal, Kardiyolive' },
     siteVerification: {
       google: { type: String, default: '' },
       bing: { type: String, default: '' },

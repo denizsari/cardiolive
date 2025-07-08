@@ -1,10 +1,10 @@
-# 📊 CardioLive E-Ticaret Projesi Durum Raporu
+# 📊 Kardiyolive E-Ticaret Projesi Durum Raporu
 **Tarih:** 3 Temmuz 2025  
 **Durum:** ✅ Aktif Geliştirme - Temizlik Tamamlandı
 
 ## 🎯 Proje Özeti
 
-**CardioLive**, premium zeytinyağı ve doğal ürünler satan kapsamlı bir e-ticaret platformudur. Modern teknolojiler kullanılarak geliştirilmiş, production-ready bir sistemdir.
+**Kardiyolive**, premium zeytinyağı ve doğal ürünler satan kapsamlı bir e-ticaret platformudur. Modern teknolojiler kullanılarak geliştirilmiş, production-ready bir sistemdir.
 
 ## 🏗️ Mimari Yapı
 
@@ -25,7 +25,7 @@
 ## 📁 Proje Yapısı
 
 ```
-cardiolive/
+Kardiyolive/
 ├── 🎨 frontend/           # Next.js uygulaması
 ├── ⚙️ backend/           # Node.js API sunucusu
 ├── 📊 monitoring/        # Prometheus, Grafana, Loki
@@ -212,6 +212,6 @@ cardiolive/
 
 ## 🎉 Sonuç
 
-CardioLive projesi, modern e-ticaret standartlarını karşılayan, güvenli, performanslı ve ölçeklenebilir bir platformdur. Temizlik işlemleri tamamlanmış, kod kalitesi optimize edilmiş ve production deployment'a hazır durumdadır.
+Kardiyolive projesi, modern e-ticaret standartlarını karşılayan, güvenli, performanslı ve ölçeklenebilir bir platformdur. Temizlik işlemleri tamamlanmış, kod kalitesi optimize edilmiş ve production deployment'a hazır durumdadır.
 
 **Genel Durum: 🟢 MÜKEMMEL** ✨

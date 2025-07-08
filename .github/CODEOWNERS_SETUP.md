@@ -13,7 +13,7 @@ This file helps you configure the CODEOWNERS file with your actual GitHub userna
 If your GitHub username is `johndoe` and you have a team member `janedoe`, update like this:
 
 ```
-# CardioLive Code Owners
+# Kardiyolive Code Owners
 * @johndoe
 
 # Frontend team
@@ -34,7 +34,7 @@ If you have GitHub teams, you can use team names:
 
 ```
 # Using GitHub teams
-* @your-org/cardiolive-team
+* @your-org/Kardiyolive-team
 /frontend/ @your-org/frontend-team
 /backend/ @your-org/backend-team
 ```

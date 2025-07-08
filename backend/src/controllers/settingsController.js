@@ -1,7 +1,7 @@
 /**
  * @fileoverview Settings Controller - Handles application settings management
  * @description Manages application configuration, security settings, and business preferences
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

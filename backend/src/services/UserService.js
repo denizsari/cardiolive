@@ -116,8 +116,8 @@ class UserService extends BaseService {
 
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { 
       expiresIn: '1h',
-      issuer: 'cardiolive-api',
-      audience: 'cardiolive-app'
+      issuer: 'Kardiyolive-api',
+      audience: 'Kardiyolive-app'
     });
 
     const refreshToken = jwt.sign(
@@ -125,8 +125,8 @@ class UserService extends BaseService {
       process.env.JWT_REFRESH_SECRET, 
       { 
         expiresIn: '7d',
-        issuer: 'cardiolive-api',
-        audience: 'cardiolive-app'
+        issuer: 'Kardiyolive-api',
+        audience: 'Kardiyolive-app'
       }
     );
 

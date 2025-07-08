@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-06-05
 
 ### Added
-- Initial CardioLive e-commerce platform MVP
+- Initial Kardiyolive e-commerce platform MVP
 - User authentication and authorization system
 - Product catalog with categories and search
 - Shopping cart functionality

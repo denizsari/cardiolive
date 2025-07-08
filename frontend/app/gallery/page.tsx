@@ -81,7 +81,7 @@ export default function GalleryPage() {
           <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
             Üretim ve İşleme Galeri
           </h2>
-          <KardiyoliveGallery showFilter={true} />
+          <KardiyoliveGallery showFilter={false} />
         </section>
 
         {/* Catalog Downloads */}

@@ -22,8 +22,8 @@ const tokenBlacklist = new Set();
 const generateAccessToken = (payload) => {
   return jwt.sign(payload, JWT_CONFIG.access.secret, {
     expiresIn: JWT_CONFIG.access.expiresIn,
-    issuer: 'cardiolive-api',
-    audience: 'cardiolive-app'
+    issuer: 'Kardiyolive-api',
+    audience: 'Kardiyolive-app'
   });
 };
 
@@ -31,8 +31,8 @@ const generateAccessToken = (payload) => {
 const generateRefreshToken = (payload) => {
   return jwt.sign(payload, JWT_CONFIG.refresh.secret, {
     expiresIn: JWT_CONFIG.refresh.expiresIn,
-    issuer: 'cardiolive-api',
-    audience: 'cardiolive-app'
+    issuer: 'Kardiyolive-api',
+    audience: 'Kardiyolive-app'
   });
 };
 
@@ -59,8 +59,8 @@ const verifyAccessToken = (token) => {
     }
     
     return jwt.verify(token, JWT_CONFIG.access.secret, {
-      issuer: 'cardiolive-api',
-      audience: 'cardiolive-app'
+      issuer: 'Kardiyolive-api',
+      audience: 'Kardiyolive-app'
     });
   } catch (error) {
     throw new Error('Invalid or expired access token');
@@ -75,8 +75,8 @@ const verifyRefreshToken = (token) => {
     }
     
     return jwt.verify(token, JWT_CONFIG.refresh.secret, {
-      issuer: 'cardiolive-api',
-      audience: 'cardiolive-app'
+      issuer: 'Kardiyolive-api',
+      audience: 'Kardiyolive-app'
     });
   } catch (error) {
     throw new Error('Invalid or expired refresh token');

@@ -125,7 +125,7 @@ jobs:
     if: needs.prepare.outputs.environment == 'staging'
     environment:
       name: staging
-      url: https://staging.cardiolive.com
+      url: https://staging.Kardiyolive.com
     
     steps:
       - name: Checkout code
@@ -142,7 +142,7 @@ jobs:
         run: |
           echo "🧪 Running smoke tests on staging..."
           # Add smoke tests for staging environment
-          curl -f https://staging.cardiolive.com/health || exit 1
+          curl -f https://staging.Kardiyolive.com/health || exit 1
           echo "✅ Smoke tests passed"
 
       - name: Notify deployment
@@ -156,7 +156,7 @@ jobs:
     if: needs.prepare.outputs.environment == 'production'
     environment:
       name: production
-      url: https://cardiolive.com
+      url: https://Kardiyolive.com
     
     steps:
       - name: Checkout code
@@ -180,8 +180,8 @@ jobs:
         run: |
           echo "🏥 Running health checks on production..."
           # Add comprehensive health checks
-          curl -f https://cardiolive.com/health || exit 1
-          curl -f https://api.cardiolive.com/health || exit 1
+          curl -f https://Kardiyolive.com/health || exit 1
+          curl -f https://api.Kardiyolive.com/health || exit 1
           echo "✅ Health checks passed"
 
       - name: Update monitoring

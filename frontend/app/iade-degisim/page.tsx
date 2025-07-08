@@ -14,7 +14,7 @@ export default function IadeDegisimPage() {
           <Package className="w-16 h-16 text-[#70BB1B] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-4">İade & Değişim</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Cardiolive olarak müşteri memnuniyeti bizim için önceliklidir. 
+            Kardiyolive olarak müşteri memnuniyeti bizim için önceliklidir. 
             İade ve değişim süreçlerimizle ilgili detaylı bilgileri aşağıda bulabilirsiniz.
           </p>
         </div>
@@ -322,7 +322,7 @@ export default function IadeDegisimPage() {
                   <Mail className="w-5 h-5 text-[#70BB1B] mr-2" />
                   <h3 className="font-medium text-gray-900">E-posta Desteği</h3>
                 </div>
-                <p className="text-gray-700 mb-2">iade@cardiolive.com</p>
+                <p className="text-gray-700 mb-2">iade@Kardiyolive.com</p>
                 <p className="text-sm text-gray-500">
                   24 saat içinde yanıt alırsınız
                 </p>

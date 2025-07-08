@@ -41,7 +41,7 @@ export default function ContactUs() {
         </form>
         <div className="mt-8">
           <h2 className="text-xl font-bold text-gray-900 mb-2">İletişim Bilgileri</h2>
-          <p className="text-lg text-gray-700">E-posta: info@cardiolive.com</p>
+          <p className="text-lg text-gray-700">E-posta: info@Kardiyolive.com</p>
           <p className="text-lg text-gray-700">Telefon: +90 123 456 7890</p>
         </div>      </main>
 

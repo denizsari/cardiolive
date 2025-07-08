@@ -82,7 +82,7 @@ export default function LoginPage() {
               Hesabınıza Giriş Yapın
             </h2>
             <p className="text-gray-600">
-              Cardiolive ailesine hoş geldiniz
+              Kardiyolive ailesine hoş geldiniz
             </p>
           </div>
 

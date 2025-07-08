@@ -14,7 +14,7 @@ export default function KisiselVerilerPolitikasiPage() {
           <Shield className="w-16 h-16 text-[#70BB1B] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Kişisel Veriler Politikası</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Cardiolive olarak kişisel verilerinizin güvenliği bizim için büyük önem taşımaktadır. 
+            Kardiyolive olarak kişisel verilerinizin güvenliği bizim için büyük önem taşımaktadır. 
             6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında verilerinizi nasıl işlediğimizi açıklıyoruz.
           </p>
         </div>
@@ -35,17 +35,17 @@ export default function KisiselVerilerPolitikasiPage() {
                   <div>
                     <h3 className="font-medium text-gray-900 mb-2">Şirket Bilgileri:</h3>
                     <ul className="text-gray-700 space-y-1">
-                      <li><strong>Unvan:</strong> Cardiolive Sağlık Ürünleri Ltd. Şti.</li>
+                      <li><strong>Unvan:</strong> Kardiyolive Sağlık Ürünleri Ltd. Şti.</li>
                       <li><strong>Adres:</strong> [Şirket Adresi], İstanbul</li>
                       <li><strong>Telefon:</strong> +90 541 555 55 75</li>
-                      <li><strong>E-posta:</strong> info@cardiolive.com</li>
+                      <li><strong>E-posta:</strong> info@Kardiyolive.com</li>
                     </ul>
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900 mb-2">KVKK İletişim:</h3>
                     <ul className="text-gray-700 space-y-1">
                       <li><strong>KVKK Sorumlusu:</strong> [İsim Soyisim]</li>
-                      <li><strong>E-posta:</strong> kvkk@cardiolive.com</li>
+                      <li><strong>E-posta:</strong> kvkk@Kardiyolive.com</li>
                       <li><strong>Telefon:</strong> +90 541 555 55 76</li>
                       <li><strong>Adres:</strong> Yukarıda belirtilen adres</li>
                     </ul>
@@ -272,7 +272,7 @@ export default function KisiselVerilerPolitikasiPage() {
               <div className="bg-white rounded-lg p-4">
                 <h3 className="font-medium text-gray-900 mb-3">Elektronik Başvuru:</h3>
                 <div className="space-y-2">
-                  <p className="text-gray-700"><strong>E-posta:</strong> kvkk@cardiolive.com</p>
+                  <p className="text-gray-700"><strong>E-posta:</strong> kvkk@Kardiyolive.com</p>
                   <p className="text-gray-700"><strong>Konu:</strong> "KVKK Başvurusu" yazınız</p>
                   <p className="text-gray-700"><strong>İçerik:</strong> Kimlik bilgileri ve talebinizi detaylı açıklayınız</p>
                 </div>
@@ -282,7 +282,7 @@ export default function KisiselVerilerPolitikasiPage() {
                 <div className="space-y-2">
                   <p className="text-gray-700"><strong>Adres:</strong></p>
                   <p className="text-gray-700">
-                    Cardiolive Sağlık Ürünleri Ltd. Şti.<br />
+                    Kardiyolive Sağlık Ürünleri Ltd. Şti.<br />
                     KVKK Birimi<br />
                     [Şirket Adresi]<br />
                     İstanbul, Türkiye
@@ -328,12 +328,12 @@ export default function KisiselVerilerPolitikasiPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Genel Sorular:</h3>
-                <p className="text-gray-700">info@cardiolive.com</p>
+                <p className="text-gray-700">info@Kardiyolive.com</p>
                 <p className="text-gray-700">+90 541 555 55 75</p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">KVKK Başvuruları:</h3>
-                <p className="text-gray-700">kvkk@cardiolive.com</p>
+                <p className="text-gray-700">kvkk@Kardiyolive.com</p>
                 <p className="text-gray-700">+90 541 555 55 76</p>
               </div>
             </div>

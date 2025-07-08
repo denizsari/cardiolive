@@ -1,4 +1,4 @@
-name: CardioLive CI/CD Pipeline
+name: Kardiyolive CI/CD Pipeline
 
 on:
   push:
@@ -66,7 +66,7 @@ jobs:
       - name: Run backend tests
         working-directory: ./backend
         env:
-          MONGODB_URI: mongodb://root:password@localhost:27017/cardiolive_test?authSource=admin
+          MONGODB_URI: mongodb://root:password@localhost:27017/Kardiyolive_test?authSource=admin
           JWT_SECRET: test_jwt_secret_for_ci
           JWT_REFRESH_SECRET: test_refresh_secret_for_ci
           NODE_ENV: test
@@ -91,7 +91,7 @@ jobs:
 
       - name: Integration tests
         env:
-          MONGODB_URI: mongodb://root:password@localhost:27017/cardiolive_test?authSource=admin
+          MONGODB_URI: mongodb://root:password@localhost:27017/Kardiyolive_test?authSource=admin
           JWT_SECRET: test_jwt_secret_for_ci
           JWT_REFRESH_SECRET: test_refresh_secret_for_ci
           NODE_ENV: test
@@ -141,7 +141,7 @@ jobs:
       - name: OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: 'Cardiolive'
+          project: 'Kardiyolive'
           path: '.'
           format: 'HTML'
           args: >

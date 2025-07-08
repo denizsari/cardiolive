@@ -47,7 +47,7 @@ Once secrets are added, run the branch protection setup script:
 # Set environment variables (replace with your values)
 export GITHUB_TOKEN="your_github_token_here"
 export GITHUB_REPOSITORY_OWNER="your-github-username"
-export GITHUB_REPOSITORY_NAME="cardiolive"
+export GITHUB_REPOSITORY_NAME="Kardiyolive"
 
 # Run the setup script
 node .github/scripts/setup-branch-protection.js

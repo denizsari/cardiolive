@@ -13,21 +13,21 @@ import BlogPreview from './components/sections/BlogPreview';
 import Testimonials from './components/sections/Testimonials';
 import Footer from './components/Footer';
 import KardiyoliveGallery from './components/KardiyoliveGallery';
-import OrderDisabledNotice from './components/OrderDisabledNotice';
+
 
 const images = [
   {
-    url: '/slider/image1.jpg',
+    url: '/images/gallery/771A9890.JPG',
     title: 'Premium Zeytinyağı',
     description: 'Doğanın en saf halinde, özenle üretilen premium kalite zeytinyağları'
   },
   {
-    url: '/slider/image2.jpg',
+    url: '/images/gallery/771A9891.JPG',
     title: 'Geleneksel Üretim',
     description: 'Nesiller boyu süren geleneksel yöntemlerle işlenen doğal ürünler'
   },
   {
-    url: '/slider/image3.jpg',
+    url: '/images/gallery/771A9892.JPG',
     title: 'Kalite Garantisi',
     description: 'Her damla kalitesiyle Kardiyolive güvencesi taşıyan ürünler'
   },
@@ -37,7 +37,9 @@ export default function Home() {
   const router = useRouter();
   const isClient = useIsClient();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);// Auto-advance slider
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Auto-advance slider
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isTransitioning) {
@@ -47,28 +49,16 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [isTransitioning]);
-  const nextSlide = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setCurrentSlide((prev) => (prev + 1) % images.length);
-      setTimeout(() => setIsTransitioning(false), 1000);
-    }
-  };
 
-  const prevSlide = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-      setTimeout(() => setIsTransitioning(false), 1000);
-    }
-  };
   const goToSlide = (index: number) => {
     if (!isTransitioning && index !== currentSlide) {
       setIsTransitioning(true);
       setCurrentSlide(index);
       setTimeout(() => setIsTransitioning(false), 1000);
     }
-  };  const handleProductsClick = () => {
+  };
+
+  const handleProductsClick = () => {
     console.log('Navigating to products page...');
     router.push('/products');
   };
@@ -76,7 +66,9 @@ export default function Home() {
   const handleAboutClick = () => {
     console.log('Navigating to about page...');
     router.push('/about');
-  };  // SEO ve Analytics için structured data injection
+  };
+
+  // SEO ve Analytics için structured data injection
   useEffect(() => {
     if (!isClient) return;
 
@@ -114,7 +106,10 @@ export default function Home() {
           urlTemplate: 'https://kardiyolive.com/products?search={search_term_string}',
         },
         'query-input': 'required name=search_term_string',
-      },    };    // Structured data'yı head'e ekleme
+      },
+    };
+
+    // Structured data'yı head'e ekleme
     const addStructuredData = (data: Record<string, unknown>, id: string) => {
       safeDocument((document) => {
         const existingScript = document.getElementById(id);
@@ -151,7 +146,8 @@ export default function Home() {
           metaKeywords = document.createElement('meta');
           metaKeywords.setAttribute('name', 'keywords');
           document.head.appendChild(metaKeywords);
-        }        metaKeywords.setAttribute('content', 'zeytinyağı, organik, doğal, kardiyolive, zeytin, premium, kalite, sızma, soğuk sıkım, ege, türkiye');
+        }
+        metaKeywords.setAttribute('content', 'zeytinyağı, organik, doğal, kardiyolive, zeytin, premium, kalite, sızma, soğuk sıkım, ege, türkiye');
       });
     };
 
@@ -159,6 +155,7 @@ export default function Home() {
       updateMetaTags();
     }
   }, [isClient]);
+
   return (
     <>
       <main className="min-h-screen bg-white">
@@ -190,14 +187,25 @@ export default function Home() {
               </h1>
               <p className="text-xl md:text-2xl mb-8 drop-shadow-md">
                 {images[currentSlide].description}
-              </p>              <div className="flex flex-col sm:flex-row gap-4 justify-center">                <button 
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
                   onClick={() => {
                     console.log('🟢 PRODUCTS BUTTON CLICKED - Going to /products page');
                     handleProductsClick();
                   }}
                   onMouseEnter={() => console.log('Products button hover')}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 text-lg transform hover:scale-105 shadow-lg cursor-pointer"
-                  style={{ zIndex: 100 }}
+                  className="text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 text-lg transform hover:scale-105 shadow-lg cursor-pointer"
+                  style={{ 
+                    zIndex: 100,
+                    backgroundColor: 'var(--primary-green)',
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--primary-green-hover)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--primary-green)';
+                  }}
                 >
                   Ürünleri İncele
                 </button>
@@ -207,35 +215,23 @@ export default function Home() {
                     handleAboutClick();
                   }}
                   onMouseEnter={() => console.log('About button hover')}
-                  className="border-2 border-white text-white hover:bg-white hover:text-green-600 px-8 py-4 rounded-lg font-semibold transition-all duration-300 text-lg transform hover:scale-105 backdrop-blur-sm cursor-pointer"
-                  style={{ zIndex: 100 }}
+                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 text-lg transform hover:scale-105 backdrop-blur-sm cursor-pointer"
+                  style={{ 
+                    zIndex: 100,
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = 'white';
+                    e.currentTarget.style.color = 'var(--primary-green)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'white';
+                  }}
                 >
                   Hakkımızda
                 </button>
               </div>
-  
             </div>
-          </div>          
-          {/* Navigation - Prev/Next Arrows */}
-          <div className="absolute inset-0 flex items-center justify-between px-6 pointer-events-none" style={{ zIndex: 20 }}>
-            <button 
-              onClick={() => {
-                console.log('◀️ PREV BUTTON CLICKED');
-                prevSlide();
-              }}
-              className="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
-            >
-              ←
-            </button>
-            <button 
-              onClick={() => {
-                console.log('▶️ NEXT BUTTON CLICKED');
-                nextSlide();
-              }}
-              className="w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl font-bold transition-all duration-300 pointer-events-auto"
-            >
-              →
-            </button>
           </div>
           
           {/* Bottom controls - Slide indicators */}
@@ -273,72 +269,47 @@ export default function Home() {
         <BlogPreview />
         <Testimonials />
 
-        {/* Hero Section */}
-        <section className="relative h-screen flex items-center justify-center">
-          <KardiyoliveGallery />
-          
-          {/* Hero Content Overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-            <div className="text-center text-white px-4 max-w-4xl">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Premium Zeytinyağı ve Doğal Ürünler
-              </h1>
-              <p className="text-xl md:text-2xl mb-8 opacity-90">
-                Ege'nin bereketli topraklarından sofranıza
-              </p>
-              
-              {/* WhatsApp Order Notice */}
-              <div className="max-w-md mx-auto">
-                <OrderDisabledNotice variant="card" />
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Order Notice Banner */}
-        <section className="container mx-auto px-4 py-8">
-          <OrderDisabledNotice variant="banner" />
-        </section>
 
         {/* Features Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16" style={{ backgroundColor: 'var(--bg-secondary)' }}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--neutral-800)' }}>
                 Neden Kardiyolive?
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p className="max-w-2xl mx-auto" style={{ color: 'var(--neutral-600)' }}>
                 Premium kaliteli ürünlerimizle sağlıklı yaşamınıza katkı sağlıyoruz
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center p-6 bg-white rounded-lg shadow-sm">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--bg-accent)' }}>
                   <span className="text-2xl">🫒</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">%100 Doğal</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--neutral-800)' }}>%100 Doğal</h3>
+                <p style={{ color: 'var(--neutral-600)' }}>
                   Kimyasal katkı maddesi içermeyen, tamamen doğal ürünler
                 </p>
               </div>
 
               <div className="text-center p-6 bg-white rounded-lg shadow-sm">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--bg-accent)' }}>
                   <span className="text-2xl">🥇</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Premium Kalite</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--neutral-800)' }}>Premium Kalite</h3>
+                <p style={{ color: 'var(--neutral-600)' }}>
                   En yüksek kalite standartlarında üretilmiş ürünler
                 </p>
               </div>
 
               <div className="text-center p-6 bg-white rounded-lg shadow-sm">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--bg-accent)' }}>
                   <span className="text-2xl">🚚</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Hızlı Teslimat</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--neutral-800)' }}>Hızlı Teslimat</h3>
+                <p style={{ color: 'var(--neutral-600)' }}>
                   WhatsApp üzerinden sipariş, hızlı kargo ile kapınızda
                 </p>
               </div>
@@ -346,24 +317,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="py-16 bg-green-600 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Size Nasıl Yardımcı Olabiliriz?
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              WhatsApp üzerinden 7/24 müşteri desteği
-            </p>
-            
-            <div className="max-w-sm mx-auto">
-              <OrderDisabledNotice 
-                variant="card" 
-                className="bg-white text-gray-800 border-0"
-              />
-            </div>
-          </div>
-        </section>
+
       </main>
       <Footer />
     </>

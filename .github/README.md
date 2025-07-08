@@ -1,6 +1,6 @@
-# CardioLive GitHub Workflow Setup
+# Kardiyolive GitHub Workflow Setup
 
-This document outlines the complete professional GitHub workflow implementation for the CardioLive project, including branch protection, automated testing, security scanning, and deployment pipelines.
+This document outlines the complete professional GitHub workflow implementation for the Kardiyolive project, including branch protection, automated testing, security scanning, and deployment pipelines.
 
 ## 🏗️ Architecture Overview
 
@@ -53,7 +53,7 @@ This document outlines the complete professional GitHub workflow implementation 
 
 1. **Run the complete setup script:**
    ```bash
-   cd d:/expoProjects/cardiolive
+   cd d:/expoProjects/Kardiyolive
    node .github/scripts/setup-complete-workflow.js
    ```
 
@@ -62,7 +62,7 @@ This document outlines the complete professional GitHub workflow implementation 
    # Set your GitHub token
    export GITHUB_TOKEN="your_github_token_here"
    export GITHUB_REPOSITORY_OWNER="your-username"
-   export GITHUB_REPOSITORY_NAME="cardiolive"
+   export GITHUB_REPOSITORY_NAME="Kardiyolive"
    
    # Run branch protection setup
    node .github/scripts/setup-branch-protection.js

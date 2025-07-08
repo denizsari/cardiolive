@@ -1,9 +1,9 @@
 {
   "dashboard": {
     "id": null,
-    "title": "Cardiolive E-commerce Platform - Performance Monitoring",
-    "description": "Comprehensive monitoring dashboard for Cardiolive e-commerce platform including API performance, database metrics, and business KPIs",
-    "tags": ["cardiolive", "ecommerce", "monitoring", "performance"],
+    "title": "Kardiyolive E-commerce Platform - Performance Monitoring",
+    "description": "Comprehensive monitoring dashboard for Kardiyolive e-commerce platform including API performance, database metrics, and business KPIs",
+    "tags": ["Kardiyolive", "ecommerce", "monitoring", "performance"],
     "timezone": "browser",
     "panels": [
       {

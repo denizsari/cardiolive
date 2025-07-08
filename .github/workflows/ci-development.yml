@@ -97,7 +97,7 @@ jobs:
         working-directory: backend
         env:
           NODE_ENV: test
-          MONGO_URI: mongodb://admin:password@localhost:27017/cardiolive_test?authSource=admin
+          MONGO_URI: mongodb://admin:password@localhost:27017/Kardiyolive_test?authSource=admin
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-secret-key
           JWT_REFRESH_SECRET: test-refresh-secret-key
@@ -205,7 +205,7 @@ jobs:
       - name: 🧪 Run integration tests
         env:
           NODE_ENV: test
-          MONGO_URI: mongodb://admin:password@localhost:27017/cardiolive_test?authSource=admin
+          MONGO_URI: mongodb://admin:password@localhost:27017/Kardiyolive_test?authSource=admin
         run: npm run test:integration || true
 
   # ============================================
@@ -223,8 +223,8 @@ jobs:
 
       - name: 🐳 Build Docker images
         run: |
-          docker build -t cardiolive-backend:staging ./backend
-          docker build -t cardiolive-frontend:staging ./frontend
+          docker build -t Kardiyolive-backend:staging ./backend
+          docker build -t Kardiyolive-frontend:staging ./frontend
 
       - name: 📝 Create deployment summary
         run: |

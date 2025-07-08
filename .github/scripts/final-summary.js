@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * CardioLive Final Setup Summary
+ * Kardiyolive Final Setup Summary
  * 
  * This script provides a summary of all completed setup steps.
  */
@@ -22,7 +22,7 @@ function colorLog(color, message) {
 
 function showFinalSummary() {
   console.log('\n' + '='.repeat(80));
-  colorLog('cyan', '🎉 CardioLive Final GitHub Workflow Setup - COMPLETED! 🎉');
+  colorLog('cyan', '🎉 Kardiyolive Final GitHub Workflow Setup - COMPLETED! 🎉');
   console.log('='.repeat(80));
   
   console.log('\n✅ SUCCESSFULLY COMPLETED TASKS:');
@@ -73,7 +73,7 @@ function showFinalSummary() {
   console.log('');
   
   colorLog('blue', '1. 🔑 ADD GITHUB SECRETS');
-  console.log('   Go to: https://github.com/denizsari/cardiolive/settings/secrets/actions');
+  console.log('   Go to: https://github.com/denizsari/Kardiyolive/settings/secrets/actions');
   console.log('   Add these secrets:');
   console.log('   • GITHUB_TOKEN: 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');
   console.log('   • LHCI_GITHUB_APP_TOKEN: cnQAb5yjXI:69941614:fuft3gpCAmplpg');
@@ -111,7 +111,7 @@ function showFinalSummary() {
   console.log('• CHANGELOG.md - Project changelog');
   
   console.log('\n' + '='.repeat(80));
-  colorLog('green', '🌟 CONGRATULATIONS! CardioLive is production-ready! 🌟');
+  colorLog('green', '🌟 CONGRATULATIONS! Kardiyolive is production-ready! 🌟');
   console.log('='.repeat(80) + '\n');
 }
 

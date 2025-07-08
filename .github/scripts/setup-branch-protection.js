@@ -3,11 +3,11 @@
 /**
  * GitHub Branch Protection Setup Script
  * 
- * This script sets up branch protection rules for the CardioLive project.
+ * This script sets up branch protection rules for the Kardiyolive project.
  * It requires a GitHub token with admin access to the repository.
  * 
  * Usage:
- * GITHUB_TOKEN=your_token GITHUB_REPOSITORY_OWNER=username GITHUB_REPOSITORY_NAME=cardiolive node setup-branch-protection.js
+ * GITHUB_TOKEN=your_token GITHUB_REPOSITORY_OWNER=username GITHUB_REPOSITORY_NAME=Kardiyolive node setup-branch-protection.js
  */
 
 const { Octokit } = require('@octokit/rest');
@@ -44,7 +44,7 @@ async function getConfiguration() {
   }
 
   if (!REPO_NAME) {
-    REPO_NAME = await prompt('Enter repository name (default: cardiolive): ') || 'cardiolive';
+    REPO_NAME = await prompt('Enter repository name (default: Kardiyolive): ') || 'Kardiyolive';
   }
 
   console.log(`\n📋 Configuration:`);
@@ -62,7 +62,7 @@ const octokit = new Octokit({
 
 async function setupBranchProtection() {
   try {
-    console.log('🔧 Setting up branch protection rules for CardioLive...');
+    console.log('🔧 Setting up branch protection rules for Kardiyolive...');
 
     // Protection rules for main branch
     const mainBranchProtection = {
@@ -150,7 +150,7 @@ async function setupBranchProtection() {
 
 // Create CODEOWNERS file if it doesn't exist
 async function createCodeowners() {
-  const codeownersContent = `# CardioLive Code Owners
+  const codeownersContent = `# Kardiyolive Code Owners
 # These owners will be requested for review when someone opens a pull request.
 
 # Global ownership

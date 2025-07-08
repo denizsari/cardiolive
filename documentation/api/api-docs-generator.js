@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Comprehensive API Documentation Generator for Cardiolive
+ * Comprehensive API Documentation Generator for Kardiyolive
  * Swagger/OpenAPI 3.0 specification generator
  * 
  * Features:
@@ -26,10 +26,10 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Cardiolive E-Commerce API',
+      title: 'Kardiyolive E-Commerce API',
       version: '1.0.0',
       description: `
-        Comprehensive API documentation for the Cardiolive e-commerce platform.
+        Comprehensive API documentation for the Kardiyolive e-commerce platform.
         
         This API provides endpoints for:
         - User authentication and management        - Product catalog and management
@@ -53,9 +53,9 @@ const swaggerOptions = {
         All endpoints return standardized error responses with appropriate HTTP status codes.
       `,
       contact: {
-        name: 'Cardiolive Support',
-        email: 'support@cardiolive.com',
-        url: 'https://cardiolive.com/support'
+        name: 'Kardiyolive Support',
+        email: 'support@Kardiyolive.com',
+        url: 'https://Kardiyolive.com/support'
       },
       license: {
         name: 'MIT',
@@ -68,7 +68,7 @@ const swaggerOptions = {
         description: 'Development server'
       },
       {
-        url: 'https://api.cardiolive.com',
+        url: 'https://api.Kardiyolive.com',
         description: 'Production server'
       }
     ],
@@ -776,7 +776,7 @@ const swaggerUiOptions = {
     .swagger-ui .info .description { color: #6b7280; }
     .swagger-ui .scheme-container { background: #f8fafc; padding: 20px; border-radius: 8px; }
   `,
-  customSiteTitle: 'Cardiolive API Documentation',
+  customSiteTitle: 'Kardiyolive API Documentation',
   customfavIcon: '/favicon.ico'
 };
 

@@ -56,7 +56,7 @@ export function MobileAppShell({ children }: MobileAppShellProps) {
 
           {/* Logo */}
           <Link href="/" className="flex-1 flex justify-center">
-            <span className="text-xl font-bold text-red-600">CardioLive</span>
+            <span className="text-xl font-bold text-red-600">Kardiyolive</span>
           </Link>
 
           {/* Action Buttons */}

@@ -1,5 +1,5 @@
 /**
- * Cache Integration Setup for Cardiolive Backend
+ * Cache Integration Setup for Kardiyolive Backend
  * Integrates Redis caching with existing API endpoints
  */
 

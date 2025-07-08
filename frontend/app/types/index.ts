@@ -1,4 +1,4 @@
-// filepath: d:\expoProjects\cardiolive\frontend\app\types\index.ts
+// filepath: d:\expoProjects\Kardiyolive\frontend\app\types\index.ts
 
 export interface User {
   _id: string;

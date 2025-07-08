@@ -1,7 +1,7 @@
 /**
  * @fileoverview Blog Controller - Handles blog management operations
  * @description Manages blog posts, categories, and content management
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

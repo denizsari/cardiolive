@@ -1,7 +1,7 @@
 /**
  * @fileoverview Review Controller - Handles review management operations
  * @description Manages product reviews, ratings, and moderation
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

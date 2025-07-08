@@ -1,5 +1,5 @@
 /**
- * Redis Cache Manager for Cardiolive E-commerce Platform
+ * Redis Cache Manager for Kardiyolive E-commerce Platform
  * Advanced caching layer with intelligent cache strategies
  */
 
@@ -79,7 +79,7 @@ class RedisCacheManager {
    */
   generateKey(namespace, identifier) {
     const env = process.env.NODE_ENV || 'development';
-    return `cardiolive:${env}:${namespace}:${identifier}`;
+    return `Kardiyolive:${env}:${namespace}:${identifier}`;
   }
 
   /**

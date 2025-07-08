@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Git Hooks Setup Script for CardioLive
+ * Git Hooks Setup Script for Kardiyolive
  * 
  * This script sets up pre-commit and pre-push hooks using Husky
  * for code quality, linting, and testing automation.
@@ -11,7 +11,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🪝 Setting up Git hooks for CardioLive...');
+console.log('🪝 Setting up Git hooks for Kardiyolive...');
 
 // Check if we're in a git repository
 try {

@@ -1,6 +1,6 @@
-## 🚀 Contributing to CardioLive
+## 🚀 Contributing to Kardiyolive
 
-Thank you for your interest in contributing to CardioLive! This document provides guidelines and instructions for contributing to our project.
+Thank you for your interest in contributing to Kardiyolive! This document provides guidelines and instructions for contributing to our project.
 
 ## 📋 Table of Contents
 
@@ -30,8 +30,8 @@ We are committed to providing a welcoming and inclusive environment for all cont
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/cardiolive.git
-   cd cardiolive
+   git clone https://github.com/your-username/Kardiyolive.git
+   cd Kardiyolive
    ```
 
 2. **Switch to development branch:**
@@ -305,6 +305,6 @@ Contributors will be acknowledged in:
 
 ---
 
-**Thank you for contributing to CardioLive! 🚀**
+**Thank you for contributing to Kardiyolive! 🚀**
 
 For questions or clarification, please don't hesitate to reach out through our communication channels.

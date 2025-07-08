@@ -91,23 +91,24 @@ function ProductsContent() {
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
       <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 page-content pb-8 sm:pb-12 md:pb-16">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-800 mb-2">
             {searchQuery ? `"${searchQuery}" için arama sonuçları` : 'Tüm Ürünler'}
           </h1>
           {searchQuery && (
-            <p className="text-gray-600">
+            <p className="text-neutral-600 text-sm sm:text-base">
               {products.length} ürün bulundu
             </p>
           )}
         </div>        {/* Kategori Filtreleme */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-6 sm:mb-8 flex flex-wrap gap-2 sm:gap-3">
           {categories.map((cat) => (
             <Button
               key={cat}
               variant={selectedCategory === cat ? 'primary' : 'outline'}
               size="sm"
+              className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
               onClick={() => setSelectedCategory(cat)}
             >
               {cat}
@@ -115,15 +116,15 @@ function ProductsContent() {
           ))}
         </div>        {/* Loading State */}
         {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {[...Array(8)].map((_, index) => (
               <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse">
-                <div className="w-full h-64 bg-gray-300"></div>
-                <div className="p-4">
-                  <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                  <div className="h-6 bg-gray-300 rounded w-1/2 mb-4"></div>
-                  <div className="h-10 bg-gray-300 rounded"></div>
+                <div className="w-full h-48 sm:h-56 md:h-64 bg-gray-300"></div>
+                <div className="p-3 sm:p-4">
+                  <div className="h-3 sm:h-4 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-3 sm:h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 sm:h-5 md:h-6 bg-gray-300 rounded w-1/2 mb-3 sm:mb-4"></div>
+                  <div className="h-8 sm:h-9 md:h-10 bg-gray-300 rounded"></div>
                 </div>
               </div>
             ))}
@@ -189,7 +190,7 @@ function ProductsContent() {
         
         {/* Ürün Listesi */}
         {!loading && !error && filteredProducts.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">          {filteredProducts.map(product => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">          {filteredProducts.map(product => (
             <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group">              <div className="relative aspect-square overflow-hidden">
                 <ProductImage
                   src={getImageSrc(product.images)}
@@ -202,25 +203,25 @@ function ProductsContent() {
                       href={`/products/${product._id}`}
                       className="bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
                     >
-                      <Eye size={20} className="text-gray-700" />
+                      <Eye size={16} className="text-gray-700" />
                     </Link>                    <Button
                       variant="primary"
                       onClick={() => handleAddToCart(product)}
-                      className="bg-[#70BB1B] p-2 rounded-full shadow-lg hover:bg-[#5ea516] transition-colors"
+                      className="bg-primary p-2 rounded-full shadow-lg hover:bg-primary-hover transition-colors"
                     >
-                      <ShoppingCart size={20} className="text-white" />
+                      <ShoppingCart size={16} className="text-white" />
                     </Button>
                   </div>
                 </div>
               </div>
-              <div className="p-4">                <h3 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h3>
-                <p className="text-[#70BB1B] font-bold text-xl mb-3">{product.price} TL</p>
+              <div className="p-3 sm:p-4">                <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-800 mb-2 line-clamp-2">{product.name}</h3>
+                <p className="text-primary font-bold text-lg sm:text-xl mb-3">{product.price} TL</p>
                 <Button
                   onClick={() => handleAddToCart(product)}
-                  className="w-full"
-                  size="md"
+                  className="w-full text-xs sm:text-sm"
+                  size="sm"
                 >
-                  <ShoppingCart size={18} className="mr-2" />
+                  <ShoppingCart size={14} className="mr-2" />
                   Sepete Ekle
                 </Button>
               </div>
@@ -236,24 +237,8 @@ function ProductsContent() {
 // Main component with Suspense wrapper
 export default function ProductsPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Premium Ürünlerimiz
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Doğanın en kaliteli ürünlerini özenle seçtik
-          </p>
-        </div>
-        
-        {/* Order Disabled Notice */}
-        <OrderDisabledNotice variant="banner" className="mb-8" />
-        
-        <Suspense fallback={<div>Loading...</div>}>
-          <ProductsContent />
-        </Suspense>
-      </div>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }

@@ -1,8 +1,8 @@
 // Simplified API Response Utilities
-// Provides consistent response handling for CardioLive API
+// Provides consistent response handling for Kardiyolive API
 
 // Simplified API Response Utilities
-// Provides consistent response handling for CardioLive API
+// Provides consistent response handling for Kardiyolive API
 
 /**
  * Safely extracts data from API responses with different structures

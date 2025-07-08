@@ -1,10 +1,10 @@
-# Grafana Configuration for Cardiolive E-commerce Platform
+# Grafana Configuration for Kardiyolive E-commerce Platform
 # Production-ready monitoring setup
 
 global:
   # The smarthost and SMTP sender used for mail notifications.
   smtp_smarthost: 'localhost:587'
-  smtp_from: 'alerts@cardiolive.com'
+  smtp_from: 'alerts@Kardiyolive.com'
 
 # Datasources configuration
 apiVersion: 1
@@ -31,7 +31,7 @@ rule_files:
 providers:
   - name: 'default'
     orgId: 1
-    folder: 'Cardiolive'
+    folder: 'Kardiyolive'
     type: file
     disableDeletion: false
     updateIntervalSeconds: 10
@@ -46,14 +46,14 @@ notifiers:
     settings:
       url: ${SLACK_WEBHOOK_URL}
       channel: '#alerts'
-      title: 'Cardiolive Alert'
+      title: 'Kardiyolive Alert'
       text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
       
   - name: email-alerts
     type: email
     settings:
-      addresses: 'admin@cardiolive.com;devops@cardiolive.com'
-      subject: 'Cardiolive Alert: {{ .GroupLabels.alertname }}'
+      addresses: 'admin@Kardiyolive.com;devops@Kardiyolive.com'
+      subject: 'Kardiyolive Alert: {{ .GroupLabels.alertname }}'
 
 # Security settings
 security:
@@ -77,7 +77,7 @@ database:
 auth:
   anonymous:
     enabled: false
-    org_name: Cardiolive
+    org_name: Kardiyolive
     org_role: Viewer
 
 # Users settings

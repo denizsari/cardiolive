@@ -1,130 +1,110 @@
-import type { Metadata } from "next";
-import { Inter, Playfair_Display, Abril_Fatface } from "next/font/google";
-import "./globals.css";
-import { ReactNode } from "react";
-import Header from "@/components/Header";
-import { CartProvider } from "./contexts/CartContext";
-import ReactQueryProvider from "./providers/ReactQueryProvider";
+import type { Metadata } from 'next';
+import './globals.css';
 import { Toaster } from 'react-hot-toast';
-import { EnhancedErrorBoundary } from "./components/ErrorBoundary";
-import { ToastProvider } from "./components/ui/Toast";
-import { PWAInstallBanner } from "./components/PWAInstallBanner";
-import { Analytics } from "./components/Analytics";
+import ReactQueryProvider from './providers/ReactQueryProvider';
+import { CartProvider } from './contexts/CartContext';
+import { Inter } from 'next/font/google';
+import Script from 'next/script';
+import { EnhancedErrorBoundary } from './components/ErrorBoundary';
 import WhatsAppWidget from './components/WhatsAppWidget';
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
-
-const abril = Abril_Fatface({
-  variable: "--font-abril",
-  subsets: ["latin"],
-  weight: "400",
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: {
-    default: "CardioLive - Kaliteli Kardiyoloji Ürünleri",
-    template: "%s | CardioLive"
-  },
-  description: "Kardiyoloji alanında en kaliteli ürünler ve profesyonel hizmetler. Stethoskop, tansiyon aleti, EKG cihazları ve daha fazlası.",
-  keywords: ["kardiyoloji", "stethoskop", "tansiyon aleti", "EKG", "medical equipment"],
-  authors: [{ name: "CardioLive" }],
-  creator: "CardioLive",
-  publisher: "CardioLive",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL('https://cardiolive.com'),
-  alternates: {
-    canonical: '/',
-  },
+  title: 'Kardiyolive - Premium Zeytinyağı ve Doğal Ürünler',
+  description: 'Ege\'nin en kaliteli zeytinlerinden elde edilen organik zeytinyağları ve doğal ürünler. Premium kalite, doğal lezzet.',
+  keywords: 'zeytinyağı, organik, doğal, kardiyolive, zeytin, premium, kalite, sızma, soğuk sıkım',
+  authors: [{ name: 'Kardiyolive' }],
+  viewport: 'width=device-width, initial-scale=1',
+  robots: 'index, follow',
   openGraph: {
-    title: "CardioLive - Kaliteli Kardiyoloji Ürünleri",
-    description: "Kardiyoloji alanında en kaliteli ürünler ve profesyonel hizmetler",
-    url: "https://cardiolive.com",
-    siteName: "CardioLive",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "CardioLive - Kaliteli Kardiyoloji Ürünleri"
-      }
-    ],
-    locale: "tr_TR",
-    type: "website",
+    title: 'Kardiyolive - Premium Zeytinyağı ve Doğal Ürünler',
+    description: 'Ege\'nin en kaliteli zeytinlerinden elde edilen organik zeytinyağları ve doğal ürünler.',
+    type: 'website',
+    locale: 'tr_TR',
+    siteName: 'Kardiyolive',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "CardioLive - Kaliteli Kardiyoloji Ürünleri",
-    description: "Kardiyoloji alanında en kaliteli ürünler ve profesyonel hizmetler",
-    images: ["/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'Kardiyolive - Premium Zeytinyağı',
+    description: 'Ege\'nin en kaliteli zeytinlerinden elde edilen organik zeytinyağları.',
   },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "CardioLive",
-  },
-  verification: {
-    google: "your-google-verification-code",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+  alternates: {
+    canonical: 'https://kardiyolive.com',
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="tr" className={`${inter.variable} ${playfair.variable} ${abril.variable}`}>
+    <html lang="tr">
       <head>
-        <meta name="theme-color" content="#0f172a" />
+        {/* Ek Meta Etiketleri */}
+        <meta name="theme-color" content="#70BB1B" />
+        <meta name="msapplication-TileColor" content="#70BB1B" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Kardiyolive" />
+        
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.svg" />
+        
+        {/* Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* Preconnect for external resources */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        
+        {/* Critical CSS for above-the-fold content */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .loading-placeholder {
+              background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+              background-size: 200% 100%;
+              animation: loading 1.5s infinite;
+            }
+            @keyframes loading {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          `
+        }} />
+        
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+        </Script>
       </head>
-      <body className={`${inter.variable} font-sans`}>
-        <Analytics />
+      <body className={`${inter.className} antialiased`}>
         <EnhancedErrorBoundary>
           <ReactQueryProvider>
             <CartProvider>
-              <ToastProvider>
-                <Header />
-                <PWAInstallBanner />
-                <main>{children}</main>
+              <div className="min-h-screen bg-white">
+                {children}
                 <Toaster 
-                  position="top-right"
+                  position="bottom-right"
                   toastOptions={{
-                    duration: 4000,
                     style: {
-                      background: '#fff',
-                      color: '#333',
+                      background: '#363636',
+                      color: '#fff',
                     },
                     success: {
                       style: {
-                        background: '#10b981',
+                        background: '#4ade80',
                         color: '#fff',
                       },
                     },
@@ -136,43 +116,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     },
                   }}
                 />
-                {/* WhatsApp Widget - Global */}
-                <WhatsAppWidget 
+                
+                {/* WhatsApp Widget - Global Floating */}
+                <WhatsAppWidget
                   phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
-                  message="Merhaba! Kardiyolive ürünleri hakkında bilgi almak istiyorum."
-                  position="bottom-right"
                   showPopup={true}
+                  className="fixed bottom-6 right-6 z-50"
                 />
-              </ToastProvider>
-              
-              {/* WhatsApp Widget - Global */}
-              <WhatsAppWidget 
-                phoneNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}
-                message="Merhaba! Kardiyolive ürünleri hakkında bilgi almak istiyorum."
-                position="bottom-right"
-                showPopup={true}
-              />
+              </div>
             </CartProvider>
           </ReactQueryProvider>
         </EnhancedErrorBoundary>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
       </body>
     </html>
-  )
+  );
 }

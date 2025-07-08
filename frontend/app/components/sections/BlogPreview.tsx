@@ -58,7 +58,7 @@ export default function BlogPreview() {
         {/* Başlık */}
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Cardiolive ile Sağlıklı Yaşamın Sırları
+            Kardiyolive ile Sağlıklı Yaşamın Sırları
           </h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
             Zeytinyağı kültürü, sağlıklı yaşam ve sürdürülebilir tarım hakkında bilgi edinmek için blog yazılarımızı keşfedin.

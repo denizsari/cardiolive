@@ -77,25 +77,22 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-[#70BB1B]">
-            Cardiolive
+          <Link href="/" className="text-2xl font-bold text-primary">
+            Kardiyolive
           </Link>          {/* Masaüstü Menü */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            <Link href="/" className="text-neutral-700 hover:text-primary transition-colors">
               Ana Sayfa
             </Link>
-            <Link href="/products" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            <Link href="/products" className="text-neutral-700 hover:text-primary transition-colors">
               Mağaza
             </Link>
-            <Link href="/gallery" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
-              Galeri
-            </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            <Link href="/blog" className="text-neutral-700 hover:text-primary transition-colors">
               Blog
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            <Link href="/about" className="text-neutral-700 hover:text-primary transition-colors">
               Hakkımızda
-            </Link>            <Link href="/contact" className="text-gray-700 hover:text-[#70BB1B] transition-colors">
+            </Link>            <Link href="/contact" className="text-neutral-700 hover:text-primary transition-colors">
               İletişim
             </Link>
           </nav>{/* Sağ: Arama, Sepet ve Hesap */}
@@ -262,13 +259,6 @@ export default function Header() {
                 onClick={closeMenus}
               >
                 Mağaza
-              </Link>
-              <Link 
-                href="/gallery" 
-                className="block px-3 py-2 text-gray-700 hover:text-[#70BB1B] transition-colors"
-                onClick={closeMenus}
-              >
-                Galeri
               </Link>
               <Link 
                 href="/blog" 

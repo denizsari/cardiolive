@@ -3,7 +3,7 @@
 /**
  * GitHub Repository Secrets Setup Script
  * 
- * This script helps set up repository secrets for the CardioLive project.
+ * This script helps set up repository secrets for the Kardiyolive project.
  * Since we can't set secrets programmatically, this script provides instructions.
  */
 
@@ -40,7 +40,7 @@ function showSecretsSetup() {
   console.log('');
   
   console.log('📝 Steps to add secrets:');
-  console.log('1. Go to: https://github.com/denizsari/cardiolive/settings/secrets/actions');
+  console.log('1. Go to: https://github.com/denizsari/Kardiyolive/settings/secrets/actions');
   console.log('2. Click "New repository secret"');
   console.log('3. Add each secret with the exact name and value shown above');
   console.log('');

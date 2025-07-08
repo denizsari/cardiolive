@@ -1,4 +1,4 @@
-# 🧹 Cardiolive Proje Temizlik Raporu
+# 🧹 Kardiyolive Proje Temizlik Raporu
 
 **Tarih:** 3 Haziran 2025  
 **Durum:** ✅ Başarıyla Tamamlandı
@@ -107,14 +107,14 @@
 
 ## 🔄 Yapılması Gerekenler
 
-1. **Yedek Kontrol**: `cardiolive_backup_*` klasörü saklanabilir
+1. **Yedek Kontrol**: `Kardiyolive_backup_*` klasörü saklanabilir
 2. **Test Çalıştırma**: Temizlik sonrası testlerin çalıştığını kontrol et
 3. **Deploy Test**: Production deployment'ının çalıştığını kontrol et
 4. **Dokümantasyon Güncellemesi**: Kalan dokümanları gözden geçir
 
 ## 💾 Yedek Bilgisi
 
-**Yedek Klasörü:** `d:\expoProjects\cardiolive_backup_20250603_111049`  
+**Yedek Klasörü:** `d:\expoProjects\Kardiyolive_backup_20250603_111049`  
 **Yedek Zamanı:** 3 Haziran 2025, 11:10:49  
 **Durum:** ✅ Güvenli olarak saklandı
 

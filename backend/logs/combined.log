@@ -161,3 +161,14 @@
 {"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-06 06:08:21:821"}
 {"email":"test@example.com","level":"info","message":"User registered successfully","timestamp":"2025-07-06 06:08:23:823","userId":"6869e8a7c9c24003b0fcf292"}
 {"email":"test@example.com","event":"user_registered","level":"info","message":"Auth: user_registered","timestamp":"2025-07-06 06:08:23:823","userId":"6869e8a7c9c24003b0fcf292"}
+{"level":"info","message":"Connecting to MongoDB...","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"info","message":"🚀 Server is running on http://localhost:5000","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"info","message":"📊 Environment: development","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"info","message":"🔗 Health check: http://localhost:5000/health","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"info","message":"🔐 CSRF token: http://localhost:5000/api/csrf-token","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"debug","message":"GET /health","timestamp":"2025-07-09 00:49:51:4951"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-07-09 00:49:52:4952"}
+{"level":"debug","message":"GET /api/products","timestamp":"2025-07-09 00:49:56:4956"}
+{"category":"business","event":"products_viewed","filters":{},"level":"info","message":"Business: products_viewed","options":{"limit":10,"page":1,"sort":"-createdAt"},"resultCount":10,"timestamp":"2025-07-09 00:49:56:4956"}
+{"level":"info","message":"SIGINT received, shutting down gracefully","timestamp":"2025-07-09 00:51:05:515"}
+{"level":"info","message":"MongoDB connection closed","timestamp":"2025-07-09 00:51:05:515"}

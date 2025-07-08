@@ -99,7 +99,7 @@ function OrderSuccessContent() {
                   <Mail className="text-[#70BB1B]" size={20} />
                   <div>
                     <p className="font-medium">E-posta</p>
-                    <p className="text-gray-600">info@cardiolive.com</p>
+                    <p className="text-gray-600">info@Kardiyolive.com</p>
                   </div>
                 </div>
               </div>

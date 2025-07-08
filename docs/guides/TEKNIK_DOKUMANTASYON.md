@@ -1,4 +1,4 @@
-# 🔧 Cardiolive Teknik Dokümantasyonu
+# 🔧 Kardiyolive Teknik Dokümantasyonu
 
 ## 📋 **İÇİNDEKİLER**
 1. [Sistem Mimarisi](#sistem-mimarisi)
@@ -247,8 +247,8 @@ const JWT_CONFIG = {
   accessTokenExpiry: '15m',
   refreshTokenExpiry: '7d',
   algorithm: 'HS256',
-  issuer: 'cardiolive-api',
-  audience: 'cardiolive-app'
+  issuer: 'Kardiyolive-api',
+  audience: 'Kardiyolive-app'
 };
 ```
 
@@ -287,7 +287,7 @@ const SECURITY_HEADERS = {
 ```javascript
 const CORS_CONFIG = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://cardiolive.com'] 
+    ? ['https://Kardiyolive.com'] 
     : ['http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],

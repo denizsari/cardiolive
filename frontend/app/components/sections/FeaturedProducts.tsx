@@ -12,8 +12,8 @@ const categories = [
   {
     href: "/products?category=zeytinyagi",
     image: "/products/olive-oil-category.jpg",
-    title: "Cardiolive Zeytin ve Zeytinyağları",
-    alt: "Cardiolive Zeytin ve Zeytinyağları"
+    title: "Kardiyolive Zeytin ve Zeytinyağları",
+    alt: "Kardiyolive Zeytin ve Zeytinyağları"
   },
   {
     href: "/products?category=zeytinyaglari",
@@ -59,24 +59,24 @@ export default function FeaturedProducts() {
     return '/products/placeholder.jpg';
   };
   return (
-    <section data-section="products" className="py-16 bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
+    <section data-section="products" className="py-8 sm:py-12 md:py-16 bg-white" style={{ fontFamily: 'var(--font-inter)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">        {/* Kategori Kartları */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 md:mb-16">
           {categories.map((category, index) => (
-            <Link key={index} href={category.href} className="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+            <Link key={index} href={category.href} className="group relative aspect-[4/3] overflow-hidden rounded-xl md:rounded-2xl shadow-lg md:shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 md:hover:-translate-y-2">
               <ProductImage
                 src={category.image}
                 alt={category.alt}
                 className="object-cover transform group-hover:scale-110 transition-transform duration-700 w-full h-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-[#70BB1B]/80 transition-all duration-500">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                  <h3 className="text-white text-2xl font-bold mb-6 drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-300">{category.title}</h3>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-primary/80 transition-all duration-500">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 sm:p-4 md:p-6">
+                  <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-300">{category.title}</h3>
                   <div className="transform group-hover:scale-110 transition-transform duration-300">
                     <Button 
                       variant="secondary"
                       size="sm"
-                      className="bg-white text-[#70BB1B] px-10 py-4 rounded-full text-lg font-bold hover:bg-[#70BB1B] hover:text-white transition-all duration-300 border-0 shadow-2xl"
+                      className="bg-white text-primary px-4 sm:px-6 md:px-10 py-2 sm:py-3 md:py-4 rounded-full text-sm sm:text-base md:text-lg font-bold hover:bg-primary hover:text-white transition-all duration-300 border-0 shadow-2xl"
                     >
                       Şimdi Keşfet!
                     </Button>
@@ -86,40 +86,40 @@ export default function FeaturedProducts() {
             </Link>
           ))}
         </div>        {/* Popüler Ürünler Başlığı */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-[#70BB1B]"></div>
-            <span className="text-[#70BB1B] font-semibold text-lg tracking-wider">POPÜLER</span>
-            <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-[#70BB1B]"></div>
+        <div className="text-center mb-8 md:mb-16 page-content">
+          <div className="inline-flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+            <div className="w-8 md:w-12 h-0.5 bg-gradient-to-r from-transparent to-primary"></div>
+            <span className="text-primary font-semibold text-sm md:text-lg tracking-wider">POPÜLER</span>
+            <div className="w-8 md:w-12 h-0.5 bg-gradient-to-l from-transparent to-primary"></div>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-800 mb-4 md:mb-6 px-4">
             Öne Çıkan Ürünlerimiz
           </h2>
-          <div className="max-w-4xl mx-auto">
-            <p className="text-gray-600 text-lg leading-relaxed">
-              Popüler ürünlerimiz, Cardiolive doğallık ve kaliteyi bir araya getiren zeytin, zeytinyağı ve zeytinyağı bazlı sabunlarından oluşmaktadır. El işçiliği ile özenle toplanan zeytinlerimiz ve soğuk sıkım zeytinyağlarımız, besin değerlerini ve lezzetlerini koruyarak sofralarınıza geliyor.
+          <div className="max-w-4xl mx-auto px-4">
+            <p className="text-neutral-600 text-sm sm:text-base md:text-lg leading-relaxed">
+              Popüler ürünlerimiz, Kardiyolive doğallık ve kaliteyi bir araya getiren zeytin, zeytinyağı ve zeytinyağı bazlı sabunlarından oluşmaktadır. El işçiliği ile özenle toplanan zeytinlerimiz ve soğuk sıkım zeytinyağlarımız, besin değerlerini ve lezzetlerini koruyarak sofralarınıza geliyor.
             </p>
           </div>
-        </div>{/* Ürün Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        </div>        {/* Ürün Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {loading ? (
             // Loading skeleton
             [...Array(4)].map((_, index) => (
               <div key={index} className="group relative">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
+                <div className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
                   <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse"></div>
-                  <div className="p-6">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-3"></div>
-                    <div className="h-6 bg-gray-200 rounded animate-pulse mb-3"></div>
-                    <div className="h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="p-3 sm:p-4 md:p-6">
+                    <div className="h-3 sm:h-4 bg-gray-200 rounded animate-pulse mb-2 sm:mb-3"></div>
+                    <div className="h-4 sm:h-5 md:h-6 bg-gray-200 rounded animate-pulse mb-2 sm:mb-3"></div>
+                    <div className="h-8 sm:h-9 md:h-10 bg-gray-200 rounded-full animate-pulse"></div>
                   </div>
                 </div>
               </div>
             ))
           ) : products.length > 0 ? (            products.map((product) => (
-              <div key={product._id} className="group relative transform hover:-translate-y-2 transition-transform duration-300">
+              <div key={product._id} className="group relative transform hover:-translate-y-1 md:hover:-translate-y-2 transition-transform duration-300">
                 {/* Ürün Kartı */}
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
+                <div className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
                   {/* Ürün Görseli */}
                   <Link href={`/products/${product._id}`}>
                     <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
@@ -133,20 +133,20 @@ export default function FeaturedProducts() {
                   </Link>
 
                   {/* Ürün Bilgileri */}
-                  <div className="p-6">
+                  <div className="p-3 sm:p-4 md:p-6">
                     <Link href={`/products/${product._id}`}>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 min-h-[56px] hover:text-[#70BB1B] transition-colors duration-300">
+                      <h3 className="text-sm sm:text-base md:text-lg font-semibold text-neutral-800 mb-2 sm:mb-3 line-clamp-2 min-h-[40px] sm:min-h-[48px] md:min-h-[56px] hover:text-primary transition-colors duration-300">
                         {product.name}
                       </h3>
                     </Link>
-                    <div className="flex flex-col gap-4">
-                      <span className="text-2xl font-bold text-[#70BB1B]">
+                    <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
+                      <span className="text-lg sm:text-xl md:text-2xl font-bold text-primary">
                         {product.price.toLocaleString('tr-TR')} TL
                       </span>
                       <Button 
                         variant="outline"
                         size="sm"
-                        className="w-full bg-gradient-to-r from-[#70BB1B] to-[#5da315] text-white py-3 rounded-full text-sm font-bold hover:from-[#5da315] hover:to-[#4a8f0f] transition-all duration-300 border-0 shadow-lg transform hover:scale-105"
+                        className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm font-bold hover:from-primary-hover hover:to-primary-dark transition-all duration-300 border-0 shadow-lg transform hover:scale-105"
                       >
                         SEPETE EKLE
                       </Button>

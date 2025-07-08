@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Enhanced Security Headers Configuration for Cardiolive
+ * Enhanced Security Headers Configuration for Kardiyolive
  * Advanced Content Security Policy and security header management
  * 
  * Features:

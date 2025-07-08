@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
           <Shield className="w-16 h-16 text-[#70BB1B] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Kişisel Veriler Politikası</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Cardiolive olarak kişisel verilerinizin güvenliği bizim için büyük önem taşımaktadır. 
+            Kardiyolive olarak kişisel verilerinizin güvenliği bizim için büyük önem taşımaktadır. 
             Bu politika, verilerinizi nasıl topladığımızı, işlediğimizi ve koruduğumuzu açıklar.
           </p>
         </div>
@@ -142,12 +142,12 @@ export default function PrivacyPolicyPage() {
                   <div className="space-y-3">
                     <div>
                       <h4 className="font-medium text-gray-900">E-posta:</h4>
-                      <p className="text-sm text-gray-700">kvkk@cardiolive.com</p>
+                      <p className="text-sm text-gray-700">kvkk@Kardiyolive.com</p>
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Posta Adresi:</h4>
                       <p className="text-sm text-gray-700">
-                        Cardiolive KVKK Birimi<br />
+                        Kardiyolive KVKK Birimi<br />
                         [Adres bilgisi]<br />
                         İstanbul, Türkiye
                       </p>
@@ -198,11 +198,11 @@ export default function PrivacyPolicyPage() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <h3 className="font-medium text-gray-900">Genel Sorular:</h3>
-                <p className="text-gray-700">info@cardiolive.com</p>
+                <p className="text-gray-700">info@Kardiyolive.com</p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">KVKK Başvuruları:</h3>
-                <p className="text-gray-700">kvkk@cardiolive.com</p>
+                <p className="text-gray-700">kvkk@Kardiyolive.com</p>
               </div>
             </div>
           </section>

@@ -1,6 +1,6 @@
 # 🔄 Git Workflow Guide
 
-This document outlines the Git workflow for the CardioLive project, including branching strategy, commit conventions, and best practices.
+This document outlines the Git workflow for the Kardiyolive project, including branching strategy, commit conventions, and best practices.
 
 ## 📊 Branching Strategy Overview
 

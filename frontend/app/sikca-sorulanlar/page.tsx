@@ -18,8 +18,8 @@ const faqData: FAQItem[] = [
   {
     id: 1,
     category: 'Genel',
-    question: 'Cardiolive nedir ve ne tür ürünler satmaktadır?',
-    answer: 'Cardiolive, kaliteli sağlık ürünleri ve zeytinyağı çeşitleri satan bir e-ticaret platformudur. Doğal, organik ve sertifikalı ürünler sunarak müşterilerimizin sağlıklı yaşam tarzına katkıda bulunmayı hedefliyoruz. Ürün portföyümüzde extra virgin zeytinyağı, organik gıda takviyeleri, doğal kozmetik ürünleri ve sağlık destekleyici besinler bulunmaktadır.',
+    question: 'Kardiyolive nedir ve ne tür ürünler satmaktadır?',
+    answer: 'Kardiyolive, kaliteli sağlık ürünleri ve zeytinyağı çeşitleri satan bir e-ticaret platformudur. Doğal, organik ve sertifikalı ürünler sunarak müşterilerimizin sağlıklı yaşam tarzına katkıda bulunmayı hedefliyoruz. Ürün portföyümüzde extra virgin zeytinyağı, organik gıda takviyeleri, doğal kozmetik ürünleri ve sağlık destekleyici besinler bulunmaktadır.',
     icon: Heart
   },
   {
@@ -123,7 +123,7 @@ const faqData: FAQItem[] = [
     id: 15,
     category: 'Üyelik ve Hesap',
     question: 'Hesabımı nasıl silebilirim?',
-    answer: 'Hesabınızı silmek için müşteri hizmetlerine başvurmanız gerekmektedir. KVKK kapsamında kişisel verilerinizin silinmesi talebi için kvkk@cardiolive.com adresine e-posta gönderebilirsiniz.',
+    answer: 'Hesabınızı silmek için müşteri hizmetlerine başvurmanız gerekmektedir. KVKK kapsamında kişisel verilerinizin silinmesi talebi için kvkk@Kardiyolive.com adresine e-posta gönderebilirsiniz.',
     icon: Shield
   },
 
@@ -219,7 +219,7 @@ export default function SikcaSorulanlarPage() {
           <HelpCircle className="w-16 h-16 text-[#70BB1B] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Sıkça Sorulan Sorular</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Cardiolive hakkında merak ettiğiniz konularda size yardımcı olmak için 
+            Kardiyolive hakkında merak ettiğiniz konularda size yardımcı olmak için 
             en sık sorulan soruları derledik. Aradığınızı bulamıyorsanız bizimle iletişime geçin.
           </p>
         </div>
@@ -340,10 +340,10 @@ export default function SikcaSorulanlarPage() {
                 24 saat içinde yanıt
               </p>
               <a 
-                href="mailto:info@cardiolive.com" 
+                href="mailto:info@Kardiyolive.com" 
                 className="text-white underline hover:no-underline"
               >
-                info@cardiolive.com
+                info@Kardiyolive.com
               </a>
             </div>
             

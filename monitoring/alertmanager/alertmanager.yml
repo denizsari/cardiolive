@@ -1,10 +1,10 @@
-# AlertManager Configuration for Cardiolive E-commerce Platform
+# AlertManager Configuration for Kardiyolive E-commerce Platform
 # Advanced alerting with multiple notification channels
 
 global:
   # SMTP configuration for email alerts
   smtp_smarthost: '${SMTP_SMARTHOST:-localhost:587}'
-  smtp_from: '${SMTP_FROM:-alerts@cardiolive.com}'
+  smtp_from: '${SMTP_FROM:-alerts@Kardiyolive.com}'
   smtp_auth_username: '${SMTP_USERNAME}'
   smtp_auth_password: '${SMTP_PASSWORD}'
   smtp_require_tls: true
@@ -74,8 +74,8 @@ receivers:
   # Default alerts receiver
   - name: 'default-alerts'
     email_configs:
-      - to: '${DEFAULT_EMAIL:-admin@cardiolive.com}'
-        subject: '[Cardiolive] {{ .GroupLabels.alertname }} Alert'
+      - to: '${DEFAULT_EMAIL:-admin@Kardiyolive.com}'
+        subject: '[Kardiyolive] {{ .GroupLabels.alertname }} Alert'
         body: |
           {{ range .Alerts }}
           Alert: {{ .Annotations.summary }}
@@ -90,8 +90,8 @@ receivers:
   # Critical alerts - multiple channels
   - name: 'critical-alerts'
     email_configs:
-      - to: '${CRITICAL_EMAIL:-admin@cardiolive.com,devops@cardiolive.com}'
-        subject: '🚨 [CRITICAL] Cardiolive Alert: {{ .GroupLabels.alertname }}'
+      - to: '${CRITICAL_EMAIL:-admin@Kardiyolive.com,devops@Kardiyolive.com}'
+        subject: '🚨 [CRITICAL] Kardiyolive Alert: {{ .GroupLabels.alertname }}'
         body: |
           🚨 CRITICAL ALERT 🚨
           
@@ -132,8 +132,8 @@ receivers:
   # Business impact alerts
   - name: 'business-alerts'
     email_configs:
-      - to: '${BUSINESS_EMAIL:-business@cardiolive.com,management@cardiolive.com}'
-        subject: '📊 [BUSINESS IMPACT] Cardiolive: {{ .GroupLabels.alertname }}'
+      - to: '${BUSINESS_EMAIL:-business@Kardiyolive.com,management@Kardiyolive.com}'
+        subject: '📊 [BUSINESS IMPACT] Kardiyolive: {{ .GroupLabels.alertname }}'
         body: |
           📊 BUSINESS IMPACT ALERT
           
@@ -166,8 +166,8 @@ receivers:
   # Security alerts
   - name: 'security-alerts'
     email_configs:
-      - to: '${SECURITY_EMAIL:-security@cardiolive.com,admin@cardiolive.com}'
-        subject: '🔒 [SECURITY] Cardiolive Alert: {{ .GroupLabels.alertname }}'
+      - to: '${SECURITY_EMAIL:-security@Kardiyolive.com,admin@Kardiyolive.com}'
+        subject: '🔒 [SECURITY] Kardiyolive Alert: {{ .GroupLabels.alertname }}'
         body: |
           🔒 SECURITY ALERT
           
@@ -198,8 +198,8 @@ receivers:
   # Database alerts
   - name: 'database-alerts'
     email_configs:
-      - to: '${DATABASE_EMAIL:-dba@cardiolive.com,devops@cardiolive.com}'
-        subject: '🗄️ [DATABASE] Cardiolive Alert: {{ .GroupLabels.alertname }}'
+      - to: '${DATABASE_EMAIL:-dba@Kardiyolive.com,devops@Kardiyolive.com}'
+        subject: '🗄️ [DATABASE] Kardiyolive Alert: {{ .GroupLabels.alertname }}'
         body: |
           🗄️ DATABASE ALERT
           
@@ -222,8 +222,8 @@ receivers:
   # Infrastructure alerts
   - name: 'infrastructure-alerts'
     email_configs:
-      - to: '${INFRA_EMAIL:-infra@cardiolive.com,devops@cardiolive.com}'
-        subject: '🏗️ [INFRASTRUCTURE] Cardiolive: {{ .GroupLabels.alertname }}'
+      - to: '${INFRA_EMAIL:-infra@Kardiyolive.com,devops@Kardiyolive.com}'
+        subject: '🏗️ [INFRASTRUCTURE] Kardiyolive: {{ .GroupLabels.alertname }}'
         body: |
           🏗️ INFRASTRUCTURE ALERT
           

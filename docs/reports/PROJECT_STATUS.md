@@ -1,4 +1,4 @@
-# 🫒 Cardiolive E-ticaret Platformu - Proje Durumu
+# 🫒 Kardiyolive E-ticaret Platformu - Proje Durumu
 
 ## 📊 **PROJE DURUMU: %100 TAMAMLANDI** ✅
 

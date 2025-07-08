@@ -1,4 +1,4 @@
-# 🚀 CardioLive Çalıştırma Kılavuzu
+# 🚀 Kardiyolive Çalıştırma Kılavuzu
 
 ## Ana Klasörden Tek Komutla Çalıştırma
 

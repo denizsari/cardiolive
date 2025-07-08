@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Intrusion Detection System (IDS) for Cardiolive
+ * Intrusion Detection System (IDS) for Kardiyolive
  * Real-time monitoring and threat detection
  * 
  * Features:

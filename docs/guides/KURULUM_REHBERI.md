@@ -1,4 +1,4 @@
-# 🚀 Cardiolive Kurulum Rehberi
+# 🚀 Kardiyolive Kurulum Rehberi
 
 ## 📋 **ÖN GEREKSINIMLER**
 
@@ -30,8 +30,8 @@ npm --version   # >= 9.0.0
 
 ### **1. Projeyi Klonlama**
 ```bash
-git clone https://github.com/yourusername/cardiolive.git
-cd cardiolive
+git clone https://github.com/yourusername/Kardiyolive.git
+cd Kardiyolive
 ```
 
 ### **2. Environment Dosyalarını Oluşturma**
@@ -65,8 +65,8 @@ docker-compose logs -f
 ### **1. Proje Klonlama ve Bağımlılıklar**
 ```bash
 # Projeyi klonla
-git clone https://github.com/yourusername/cardiolive.git
-cd cardiolive
+git clone https://github.com/yourusername/Kardiyolive.git
+cd Kardiyolive
 
 # Ana dizin bağımlılıklarını yükle
 npm install
@@ -130,7 +130,7 @@ sudo systemctl enable mongod
 #### **Ana Dizin .env**
 ```env
 # Database
-MONGODB_URI=mongodb://localhost:27017/cardiolive
+MONGODB_URI=mongodb://localhost:27017/Kardiyolive
 REDIS_URL=redis://localhost:6379
 
 # JWT
@@ -153,7 +153,7 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/cardiolive
+MONGODB_URI=mongodb://localhost:27017/Kardiyolive
 REDIS_URL=redis://localhost:6379
 
 # JWT Secrets
@@ -255,7 +255,7 @@ curl http://localhost:5000/api/health/redis
 ### **2. Test Kullanıcısı ile Giriş**
 ```bash
 # Varsayılan admin hesabı
-Email: admin@cardiolive.com
+Email: admin@Kardiyolive.com
 Şifre: Admin123!
 
 # Test kullanıcısı oluştur
@@ -353,7 +353,7 @@ chmod 644 backend/.env
 ```bash
 # Backend debug modu
 cd backend
-DEBUG=cardiolive:* npm run dev
+DEBUG=Kardiyolive:* npm run dev
 
 # Frontend debug modu  
 cd frontend
@@ -367,7 +367,7 @@ NODE_OPTIONS='--inspect' npm run dev
 
 # MongoDB shell komutları
 mongosh
-use cardiolive
+use Kardiyolive
 db.products.find().limit(5)
 db.users.countDocuments()
 ```
@@ -412,7 +412,7 @@ cd monitoring
 ```bash
 # Production environment variables
 NODE_ENV=production
-DATABASE_URL=mongodb://production-server:27017/cardiolive
+DATABASE_URL=mongodb://production-server:27017/Kardiyolive
 REDIS_URL=redis://production-server:6379
 JWT_SECRET=super-secure-production-secret
 ```
@@ -445,10 +445,10 @@ docker-compose -f docker-compose.ssl.yml up -d
 
 Kurulum sırasında sorun yaşarsanız:
 
-1. **GitHub Issues:** [Proje Issues Sayfası](https://github.com/yourusername/cardiolive/issues)
+1. **GitHub Issues:** [Proje Issues Sayfası](https://github.com/yourusername/Kardiyolive/issues)
 2. **Dokümantasyon:** Bu rehberi tekrar gözden geçirin
 3. **Log Kontrolü:** Error loglarını kontrol edin
-4. **Community:** Stack Overflow'da 'cardiolive' tag'i ile soru sorun
+4. **Community:** Stack Overflow'da 'Kardiyolive' tag'i ile soru sorun
 
 ---
 

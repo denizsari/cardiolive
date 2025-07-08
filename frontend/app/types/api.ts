@@ -1,4 +1,4 @@
-// Standardized API Response Types for CardioLive
+// Standardized API Response Types for Kardiyolive
 // This file contains all standardized response interfaces
 
 import { 

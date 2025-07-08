@@ -1,7 +1,7 @@
 /**
  * @fileoverview Payment Controller - Handles payment processing operations
  * @description Manages payment processing, validation, and payment methods
- * @author Cardiolive E-commerce Platform
+ * @author Kardiyolive E-commerce Platform
  * @version 1.0.0
  */
 

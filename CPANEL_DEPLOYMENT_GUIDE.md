@@ -99,7 +99,7 @@ public_html/
 
 #### Environment Variables (Railway):
 ```env
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/kardiyolive
+MONGO_URI=mongodb+srv://kardiyolive:kardiyolive2548@kardiyolive.44a1l4a.mongodb.net/?retryWrites=true&w=majority&appName=kardiyolive
 JWT_SECRET=your_jwt_secret
 FRONTEND_URL=https://yourdomain.com
 CORS_ORIGIN=https://yourdomain.com
@@ -558,8 +558,8 @@ Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains
 
 ### 1. **Hazırlık (Local)**
 ```bash
-git clone https://github.com/denizsari/cardiolive.git
-cd cardiolive/frontend
+git clone https://github.com/denizsari/Kardiyolive.git
+cd Kardiyolive/frontend
 npm install
 npm run build
 ```
