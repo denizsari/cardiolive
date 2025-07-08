@@ -34,7 +34,8 @@
     "nodemailer": "^6.9.7",
     "winston": "^3.10.0",
     "compression": "^1.7.4",
-    "express-slow-down": "^1.6.0"
+    "express-slow-down": "^1.6.0",
+    "cookie-parser": "^1.4.6"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",
